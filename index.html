@@ -58,6 +58,10 @@
     nav .lang { margin-left: 1.4rem; font-size: 0.9rem; color: var(--muted); }
     nav .lang a { margin: 0 0.15rem; text-decoration: none; color: var(--muted); }
     nav .lang a.active { color: var(--ink); font-weight: 700; }
+    @media (max-width: 720px) {
+      nav .links a { display: none; }
+      nav .lang { margin-left: 0; }
+    }
 
     .hero {
       max-width: 1080px; margin: 0 auto; padding: 4.5rem 1.5rem 0;
