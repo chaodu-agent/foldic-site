@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Foldic — Your Photos albums, mirrored to real folders</title>
-  <meta name="description" content="Foldic mirrors your Apple Photos albums — including iCloud Shared Albums — to plain folders on your Mac, automatically and incrementally. Your photos, in files you own.">
+  <meta name="description" content="Foldic mirrors your Apple Photos albums — including iCloud Shared Albums — to plain folders on your Mac, automatically and incrementally. Your photos and videos — all files you own.">
   <meta property="og:title" content="Foldic">
   <meta property="og:description" content="Your Photos albums, mirrored to real folders on your Mac — automatically, in original quality.">
   <meta property="og:image" content="https://foldic.app/app-window.png">
@@ -83,8 +83,11 @@
       padding: 0 0.06em;
     }
     .hero p.sub {
-      color: var(--muted); font-size: 1.18rem; max-width: 620px;
+      color: var(--muted); font-size: 1.18rem; max-width: 720px;
       margin: 1.2rem auto 0;
+    }
+    @media (max-width: 600px) {
+      .desktop-br { display: none; }
     }
     .cta-row { margin-top: 2rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .cta {
@@ -190,7 +193,7 @@
 
   <header class="hero">
     <h1>Your Photos albums,<br>mirrored to <em>real folders</em></h1>
-    <p class="sub">Foldic keeps a folder-for-folder copy of your Apple Photos albums on your Mac — automatically, incrementally, in original quality. Your photos, in files you own.</p>
+    <p class="sub">Foldic automatically and incrementally backs up your Apple Photos albums<br class="desktop-br">to real folders on your Mac, in original quality.<br class="desktop-br">Your photos and videos — all files you own.</p>
     <div class="cta-row">
       <a class="cta" href="#" aria-disabled="true"> Mac App Store <small>coming soon</small></a>
       <a class="cta secondary" href="#how">See how it works</a>
