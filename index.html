@@ -12,24 +12,26 @@
   <link rel="icon" type="image/png" href="/icon.png">
   <style>
     :root {
-      --green: #3DCB6E;
-      --green-deep: #1FA24F;
-      --green-tint: #eafaf0;
-      --ink: #14231a;
-      --muted: #5f7568;
-      --bg: #fcfefc;
-      --card: #ffffff;
-      --border: rgba(31, 162, 79, 0.14);
-      --shadow: 0 24px 80px rgba(20, 60, 35, 0.18);
+      --green: #A9B64B;
+      --green-deep: #3A4A26;
+      --green-tint: #E4E6D0;
+      --ink: #2E3B20;
+      --muted: #6E7A5B;
+      --bg: #F5F3EA;
+      --card: #EFEDDE;
+      --border: rgba(58, 74, 38, 0.16);
+      --shadow: 0 24px 80px rgba(46, 59, 32, 0.22);
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --green-tint: #12271a;
-        --ink: #eaf5ee;
-        --muted: #93a89a;
-        --bg: #0b120d;
-        --card: #131e16;
-        --border: rgba(61, 203, 110, 0.16);
+        --green: #A9B64B;
+        --green-deep: #C3CE72;
+        --green-tint: #2A3319;
+        --ink: #EDEFDC;
+        --muted: #A3AC88;
+        --bg: #171C0F;
+        --card: #202716;
+        --border: rgba(169, 182, 75, 0.2);
         --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
       }
     }
@@ -59,16 +61,16 @@
       text-align: center;
     }
     .hero h1 {
+      font-family: "New York", Georgia, "Times New Roman", serif;
       font-size: clamp(2.4rem, 6vw, 3.6rem);
       line-height: 1.12;
-      letter-spacing: -0.03em;
-      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-weight: 700;
       max-width: 780px; margin: 0 auto;
     }
     .hero h1 em {
-      font-style: normal;
-      background: linear-gradient(120deg, var(--green-deep), var(--green));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
+      font-style: italic;
+      color: var(--green-deep);
     }
     .hero p.sub {
       color: var(--muted); font-size: 1.18rem; max-width: 620px;
@@ -92,7 +94,7 @@
     }
     .product::before {
       content: ""; position: absolute; inset: 12% 6% -4%;
-      background: radial-gradient(60% 60% at 50% 40%, rgba(61,203,110,0.28), transparent 70%);
+      background: radial-gradient(60% 60% at 50% 40%, rgba(169,182,75,0.35), transparent 70%);
       filter: blur(40px); z-index: 0;
     }
     .product img {
@@ -128,7 +130,7 @@
       max-width: 880px; margin: 0 auto; padding: 4.5rem 1.5rem 1rem;
       text-align: center;
     }
-    h2.section-title { font-size: 2rem; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+    h2.section-title { font-family: "New York", Georgia, "Times New Roman", serif; font-size: 2rem; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
     p.section-sub { color: var(--muted); max-width: 540px; margin: 0 auto 2.4rem; }
     .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.6rem; text-align: left; }
     .step .num {
@@ -179,7 +181,7 @@
     <h1>Your Photos albums,<br>mirrored to <em>real folders</em></h1>
     <p class="sub">Foldic keeps a folder-for-folder copy of your Apple Photos albums on your Mac — automatically, incrementally, in original quality. Your photos, in files you own.</p>
     <div class="cta-row">
-      <a class="cta" href="#" aria-disabled="true"> Mac App Store <small>coming soon · $9.99</small></a>
+      <a class="cta" href="#" aria-disabled="true"> Mac App Store <small>coming soon</small></a>
       <a class="cta secondary" href="#how">See how it works</a>
     </div>
     <div class="product">
@@ -270,7 +272,7 @@
 
   <div class="bottom-cta">
     <h2>Own your photo library.</h2>
-    <a class="cta" href="#" aria-disabled="true"> Mac App Store <small>coming soon · $9.99</small></a>
+    <a class="cta" href="#" aria-disabled="true"> Mac App Store <small>coming soon</small></a>
   </div>
 
   <footer>
