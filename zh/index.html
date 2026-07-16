@@ -251,6 +251,12 @@
       <p>iCloud 同步到 Mac 後就會出現。讓 Photos.app 保持開啟能加快 iCloud 送達；Foldic 也會每幾分鐘重新檢查圖庫。</p>
     </details>
     <details>
+      <summary>什麼是共享相簿？如何用 Foldic 備份？</summary>
+      <p>共享相簿是可邀請他人瀏覽或共同新增內容的 iCloud 相簿，和「iCloud 共享圖庫」不同。先確認共享相簿已在 Mac 的 Photos.app 出現且同步完成；Foldic 會以 <strong>shared</strong> 標記它。像一般相簿一樣同步後，Foldic 會把你目前可存取的所有內容匯出到專屬資料夾。</p>
+      <p>Foldic 是單向備份：不會發佈、編輯或還原共享相簿裡的內容。共享相簿不一定提供原上傳者的完整原始檔，因此 Foldic 會匯出 Apple Photos 提供給你的最高可用版本。</p>
+      <p>若擁有者移除你的存取權、刪除共享相簿，或將項目從共享相簿移除，Foldic 下次掃描後會將受影響的本機匯出檔標記為孤兒檔案，但絕不會自動刪除它們。</p>
+    </details>
+    <details>
       <summary>從相簿移除，或從 Apple Photos 圖庫刪除照片，會怎樣？</summary>
       <p>取決於你從哪裡移除。若從某個相簿移除照片，照片仍會留在 Photos 圖庫與其他相簿。Foldic 下次掃描後，只會將該相簿資料夾內的匯出副本標記為孤兒檔案。</p>
       <p>若從 Photos 圖庫刪除照片，Apple 會將它移到「最近刪除」，並從所有包含它的相簿移除。Foldic 下次掃描後，所有受影響的匯出副本都會標記為孤兒檔案：包括各相簿資料夾的副本，以及已啟用時的 All Photos mirror。</p>
