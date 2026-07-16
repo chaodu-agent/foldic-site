@@ -279,8 +279,10 @@
       <p>As soon as iCloud syncs them to your Mac. Keeping Photos.app running makes iCloud deliver faster; Foldic also re-checks your library every few minutes.</p>
     </details>
     <details>
-      <summary>What happens if I delete a photo from Apple Photos?</summary>
-      <p>Albums in Apple Photos are references, not separate copies. Removing a photo from an album leaves it in your library and in any other albums. Deleting it from your Photos library removes it from every album (and sends it to Recently Deleted). Foldic never deletes your exported files automatically: it flags the affected local copies as orphaned so you can review and remove them yourself.</p>
+      <summary>What happens if I remove or delete a photo in Apple Photos?</summary>
+      <p>It depends on where you remove it. If you remove a photo from an album, it remains in your Photos Library and in any other albums. After Foldic scans again, only the exported copy in that album’s folder is marked as orphaned.</p>
+      <p>If you delete a photo from your Photos Library, Apple moves it to Recently Deleted and removes that photo from every album that contains it. After Foldic scans again, all affected exported copies — including copies in album folders and, if enabled, the All Photos mirror — are marked as orphaned.</p>
+      <p>Foldic never deletes exported files automatically. You decide whether to keep or remove orphaned files.</p>
     </details>
     <details>
       <summary>Does Foldic collect any data?</summary>

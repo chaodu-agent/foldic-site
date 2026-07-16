@@ -251,8 +251,10 @@
       <p>iCloud 同步到 Mac 後就會出現。讓 Photos.app 保持開啟能加快 iCloud 送達；Foldic 也會每幾分鐘重新檢查圖庫。</p>
     </details>
     <details>
-      <summary>從 Apple Photos 刪除照片後會怎樣？</summary>
-      <p>Apple Photos 的相簿只是照片的分類，不是另一份副本。從某個相簿「移除」照片，照片仍會留在圖庫與其他相簿；但從圖庫刪除照片，則會從所有相簿消失，並移到「最近刪除」。Foldic 不會自動刪除已匯出的本機檔案：它會將受影響的副本標記為孤兒檔案，交由你確認後自行處理。</p>
+      <summary>從相簿移除，或從 Apple Photos 圖庫刪除照片，會怎樣？</summary>
+      <p>取決於你從哪裡移除。若從某個相簿移除照片，照片仍會留在 Photos 圖庫與其他相簿。Foldic 下次掃描後，只會將該相簿資料夾內的匯出副本標記為孤兒檔案。</p>
+      <p>若從 Photos 圖庫刪除照片，Apple 會將它移到「最近刪除」，並從所有包含它的相簿移除。Foldic 下次掃描後，所有受影響的匯出副本都會標記為孤兒檔案：包括各相簿資料夾的副本，以及已啟用時的 All Photos mirror。</p>
+      <p>Foldic 絕不會自動刪除已匯出的檔案；是否保留或移除孤兒檔案，由你決定。</p>
     </details>
     <details>
       <summary>Foldic 會收集任何資料嗎？</summary>
