@@ -88,10 +88,13 @@
     .cta-row { margin-top: 2rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .cta {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      background: var(--ink); color: var(--bg);
+      background: #2E3B20; color: #F5F3EA;
       padding: 0.85rem 1.5rem; border-radius: 12px;
       text-decoration: none; font-weight: 600; font-size: 0.98rem;
       transition: transform 0.15s ease;
+    }
+    @media (prefers-color-scheme: dark) {
+      .cta { background: #EDEFDC; color: #171C0F; }
     }
     .cta:hover { transform: translateY(-1px); }
     .cta.secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
