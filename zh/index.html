@@ -85,6 +85,9 @@
       padding: 0 0.06em;
     }
     .hero p.sub { color: var(--muted); font-size: 1.15rem; max-width: 600px; margin: 1.3rem auto 0; }
+    @media (max-width: 600px) {
+      .desktop-br { display: none; }
+    }
     .cta-row { margin-top: 2rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .cta {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -162,7 +165,7 @@
 
   <header class="hero">
     <h1>你的 iPhone 相簿，<br>同步成<em>真正的資料夾</em></h1>
-    <p class="sub">Foldic 自動、增量地把 Apple Photos 相簿以原始畫質備份到 Mac 上的資料夾。你的照片，屬於你的檔案。</p>
+    <p class="sub">Foldic 自動、增量地把 Apple Photos 相簿<br class="desktop-br">以原始畫質備份到 Mac 上的資料夾。<br class="desktop-br">你的照片，屬於你的檔案。</p>
     <div class="cta-row">
       <a class="cta" href="#" aria-disabled="true"> Mac App Store <small>即將上架</small></a>
       <a class="cta secondary" href="#how">了解運作方式</a>
