@@ -177,6 +177,19 @@
       color: var(--muted); font-size: 0.88rem;
     }
     footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.5rem; }
+
+    /* Japanese typography: heavy gothic (sans) headlines per JP convention —
+       serif headlines read as literary, not product marketing. */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro JP", "Hiragino Sans",
+                   "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", sans-serif;
+    }
+    .hero h1, h2.section-title, .bottom-cta h2 {
+      font-family: inherit;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .hero h1 { line-height: 1.25; }
   </style>
 </head>
 <body>
