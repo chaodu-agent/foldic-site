@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Foldic — 写真アルバムを、本物のフォルダへ</title>
-  <meta name="description" content="Foldic は Apple 写真のアルバム（iCloud 共有アルバムを含む）を Mac 上の普通のフォルダへ、自動・増分でミラーリングします。写真もビデオも、すべてあなたが所有するファイルに。">
+  <title>Foldic — 사진 앨범을 진짜 폴더로</title>
+  <meta name="description" content="Foldic는 Apple 사진 앱의 앨범(iCloud 공유 앨범 포함)을 Mac의 일반 폴더로 자동·증분 미러링합니다. 사진과 동영상 모두, 내가 소유하는 파일로.">
   <meta property="og:title" content="Foldic">
-  <meta property="og:description" content="写真アルバムを Mac 上の本物のフォルダへ — 自動で、オリジナル画質のまま。">
-  <meta property="og:image" content="https://foldic.app/app-window-ja.png">
-  <meta property="og:url" content="https://foldic.app/ja/">
+  <meta property="og:description" content="사진 앨범을 Mac의 진짜 폴더로 — 자동으로, 원본 화질 그대로.">
+  <meta property="og:image" content="https://foldic.app/app-window.png">
+  <meta property="og:url" content="https://foldic.app/ko/">
   <link rel="icon" type="image/png" href="/icon.png">
   <link rel="shortcut icon" href="/favicon.ico">
   <style>
@@ -178,41 +178,42 @@
     }
     footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.5rem; }
 
-    /* Japanese typography: heavy gothic (sans) headlines per JP convention —
-       serif headlines read as literary, not product marketing. */
+    /* Korean typography: sans headlines (serif reads as literary here too). */
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro JP", "Hiragino Sans",
-                   "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro KR", "Apple SD Gothic Neo",
+                   "Malgun Gothic", "Noto Sans KR", sans-serif;
     }
     .hero h1, h2.section-title, .bottom-cta h2 {
       font-family: inherit;
       font-weight: 800;
-      letter-spacing: 0;
+      letter-spacing: -0.01em;
     }
-    .hero h1 { line-height: 1.25; }
+    .hero h1 { line-height: 1.28; }
+    /* Korean wraps on spaces; keep words intact. */
+    .hero p.sub, .feature p, .step p, .faq details p { word-break: keep-all; }
   </style>
 </head>
 <body>
   <nav>
     <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
     <div class="links">
-      <a href="#features">機能</a>
-      <a href="#how">使い方</a>
-      <a href="#faq">よくある質問</a>
-      <a href="mailto:support@foldic.app">サポート</a>
-      <span class="lang"><a href="/zh/">中文</a>|<a class="active" href="/ja/">日本語</a>|<a href="/ko/">한국어</a>|<a href="/">EN</a></span>
+      <a href="#features">기능</a>
+      <a href="#how">사용 방법</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="mailto:support@foldic.app">지원</a>
+      <span class="lang"><a href="/zh/">中文</a>|<a href="/ja/">日本語</a>|<a class="active" href="/ko/">한국어</a>|<a href="/">EN</a></span>
     </div>
   </nav>
 
   <header class="hero">
-    <h1>写真アルバムを、<br><em>本物のフォルダ</em>へ</h1>
-    <p class="sub">Foldic は Apple 写真のアルバムを、Mac 上の本物のフォルダへ<br class="desktop-br">自動・増分でバックアップします。オリジナル画質のまま。<br class="desktop-br">写真もビデオも、すべてあなたが所有するファイルに。</p>
+    <h1>사진 앨범을<br><em>진짜 폴더</em>로</h1>
+    <p class="sub">Foldic는 Apple 사진 앱의 앨범을 Mac의 진짜 폴더로<br class="desktop-br">자동·증분 방식으로 백업합니다. 원본 화질 그대로.<br class="desktop-br">사진과 동영상 모두, 내가 소유하는 파일로.</p>
     <div class="cta-row">
-      <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store でダウンロード</a>
-      <a class="cta secondary" href="#how">使い方を見る</a>
+      <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store에서 다운로드</a>
+      <a class="cta secondary" href="#how">사용 방법 보기</a>
     </div>
     <div class="product">
-      <img src="/app-window-ja.png" alt="アルバム一覧と同期状態を表示する Foldic" loading="eager">
+      <img src="/app-window.png" alt="앨범 목록과 동기화 상태를 표시하는 Foldic" loading="eager">
     </div>
   </header>
 
@@ -220,103 +221,103 @@
     <div class="features-grid">
       <div class="feature">
         <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
-        <h3>本物のファイル、本物のフォルダ</h3>
-        <p>アルバムはそれぞれ普通のフォルダになり、オリジナルの写真とビデオが入ります。独自形式のライブラリはなし — 自由にバックアップ、閲覧、永久保存できるファイルです。</p>
+        <h3>진짜 파일, 진짜 폴더</h3>
+        <p>모든 앨범이 원본 사진과 동영상이 담긴 일반 폴더가 됩니다. 독점 라이브러리 형식이 없어 어디서든 열어보고, 백업하고, 영구히 보관할 수 있습니다.</p>
       </div>
       <div class="feature">
         <div class="icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></div>
-        <h3>常に同期</h3>
-        <p>Foldic は写真ライブラリを監視し、新しい写真が届くと自動で書き出します — アルバム専用の一方向 Dropbox のように。</p>
+        <h3>항상 최신 상태</h3>
+        <p>Foldic는 사진 라이브러리를 지켜보며 새 사진이 도착하는 대로 내보냅니다. 앨범 전용 단방향 Dropbox처럼.</p>
       </div>
       <div class="feature">
         <div class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <h3>共有アルバムにも対応</h3>
-        <p>家族や友人の iCloud 共有アルバムもミラーリング — みんなの写真を、あなたのディスクにファイルとして保存。</p>
+        <h3>공유 앨범도 지원</h3>
+        <p>가족과 친구의 iCloud 공유 앨범도 함께 미러링됩니다. 모두의 사진을 내 디스크에 파일로 저장합니다.</p>
       </div>
       <div class="feature">
         <div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <h3>プライバシー第一</h3>
-        <p>すべて Mac 上でサンドボックス化されて動作。アカウント不要、クラウド不要、解析なし — データが外部に出ることはありません。</p>
+        <h3>설계부터 프라이버시 우선</h3>
+        <p>전부 Mac에서 샌드박스로 실행됩니다. 계정도, 클라우드 서비스도, 분석도 없습니다. 데이터가 기기를 떠나지 않습니다.</p>
       </div>
       <div class="feature">
         <div class="icon"><svg viewBox="0 0 24 24"><path d="M20 16.6A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.3M12 12v9M8 17l4 4 4-4"/></svg></div>
-        <h3>iCloud のオリジナルも</h3>
-        <p>「Mac のストレージを最適化」を使っていても大丈夫。書き出し時に必要なオリジナルを iCloud からダウンロードします。</p>
+        <h3>iCloud 원본도</h3>
+        <p>'Mac 저장 공간 최적화'를 사용해도 괜찮습니다. 내보내는 동안 필요한 원본을 iCloud에서 내려받습니다.</p>
       </div>
       <div class="feature">
         <div class="icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div>
-        <h3>きれいなミラー</h3>
-        <p>増分書き出しはディスク上の既存ファイルをスキップ。写真がアルバムから外れると孤立ファイルとして表示し、撮影日時も保持します。</p>
+        <h3>깔끔한 미러</h3>
+        <p>증분 내보내기는 디스크에 있는 파일을 건너뜁니다. 사진이 앨범에서 빠지면 남겨진 파일을 표시하고, 촬영 날짜도 유지합니다.</p>
       </div>
     </div>
   </section>
 
   <section class="how" id="how">
-    <h2 class="section-title">3 ステップ、あとは自動</h2>
-    <p class="section-sub">設定は一度だけ。あとは Foldic がフォルダを最新に保ちます。</p>
+    <h2 class="section-title">3단계, 그다음은 자동</h2>
+    <p class="section-sub">한 번만 설정하세요. 그다음부터 Foldic가 폴더를 최신으로 유지합니다.</p>
     <div class="steps">
       <div class="step">
         <div class="num">1</div>
-        <h3>写真へのアクセスを許可</h3>
-        <p>Foldic は Apple の PhotoKit でアルバムを読み取ります — 厳密に読み取り専用です。</p>
+        <h3>사진 접근 권한 허용</h3>
+        <p>Foldic는 Apple의 PhotoKit으로 앨범을 읽습니다. 철저히 읽기 전용입니다.</p>
       </div>
       <div class="step">
         <div class="num">2</div>
-        <h3>フォルダを選択</h3>
-        <p>Mac 本体、外付けドライブ、NAS のいずれでも。アルバムごとにサブフォルダになります。</p>
+        <h3>폴더 선택</h3>
+        <p>Mac 내부, 외장 드라이브, NAS 마운트 어디든 가능합니다. 앨범마다 하위 폴더가 생깁니다.</p>
       </div>
       <div class="step">
         <div class="num">3</div>
-        <h3>同期</h3>
-        <p>オリジナルを増分で書き出し。新しい写真も自動で続きます。</p>
+        <h3>동기화</h3>
+        <p>원본을 증분 방식으로 내보내고, 새 사진도 자동으로 따라갑니다.</p>
       </div>
     </div>
   </section>
 
   <section class="faq" id="faq">
-    <h2 class="section-title" style="text-align:center">よくある質問</h2>
+    <h2 class="section-title" style="text-align:center">자주 묻는 질문</h2>
     <details>
-      <summary>Foldic は写真ライブラリを変更しますか？</summary>
-      <p>いいえ。Foldic は厳密に一方向です。Apple の PhotoKit でアルバムを読み取り、選択したフォルダにファイルを書き込むだけ。「写真」内のコンテンツを編集・削除・並べ替えすることは一切ありません。</p>
+      <summary>Foldic가 사진 라이브러리를 변경하나요?</summary>
+      <p>아니요. Foldic는 철저히 단방향입니다. Apple의 PhotoKit으로 앨범을 읽고 선택한 폴더에 파일을 씁니다. 사진 앱 안의 어떤 것도 편집·삭제·재정렬하지 않습니다.</p>
     </details>
     <details>
-      <summary>写真はどこに保存されますか？</summary>
-      <p>選択したフォルダへ — Mac 本体、外付けドライブ、NAS マウントのいずれでも。アルバムごとにサブフォルダになり、オリジナル画質のファイルが入ります。</p>
+      <summary>사진은 어디에 저장되나요?</summary>
+      <p>선택한 폴더에 저장됩니다. Mac 내부, 외장 드라이브, NAS 마운트 모두 가능합니다. 앨범마다 원본 화질 파일이 담긴 하위 폴더가 생깁니다.</p>
     </details>
     <details>
-      <summary>Live Photos はどうなりますか？</summary>
-      <p>両方書き出されます：静止画とペアのビデオファイルです。</p>
+      <summary>Live Photos는 어떻게 되나요?</summary>
+      <p>둘 다 내보냅니다. 정지 이미지와 짝지어진 동영상 파일 모두입니다.</p>
     </details>
     <details>
-      <summary>iPhone の写真はどのくらいで反映されますか？</summary>
-      <p>iCloud が Mac に同期した時点で反映されます。写真.app を開いたままにすると iCloud の配信が速くなります。Foldic も数分ごとにライブラリを再チェックします。</p>
+      <summary>iPhone 사진은 얼마나 빨리 반영되나요?</summary>
+      <p>iCloud가 Mac으로 동기화하는 즉시 반영됩니다. 사진 앱을 실행해 두면 iCloud 전달이 빨라지며, Foldic도 몇 분마다 라이브러리를 다시 확인합니다.</p>
     </details>
     <details>
-      <summary>iCloud 共有アルバムをバックアップするには？</summary>
-      <p>共有アルバムは、招待した相手が閲覧・投稿できるアルバムで、「iCloud 共有ライブラリ」とは別のものです。まず共有アルバムが Mac の写真.app に表示され同期が完了していることを確認してください。Foldic は <strong>shared</strong> と表示します。ほかのアルバムと同じように同期すると、現在アクセスできるすべての項目が専用フォルダへ書き出されます。</p>
-      <p>Foldic は一方向です。共有アルバムへの投稿・編集・復元は行いません。共有アルバムは投稿者のフル画質ファイルを提供するとは限らないため、Foldic は Apple 写真が提供する最高画質バージョンを書き出します。</p>
-      <p>オーナーがアクセス権を取り消したり、共有アルバムや項目を削除した場合、Foldic は次回スキャン後に該当するローカルの書き出しファイルを孤立ファイルとして表示します。自動で削除することはありません。</p>
+      <summary>iCloud 공유 앨범은 어떻게 백업하나요?</summary>
+      <p>공유 앨범은 초대받은 사람이 보거나 사진을 추가할 수 있는 앨범으로, 'iCloud 공유 라이브러리'와는 다릅니다. 먼저 Mac의 사진 앱에서 공유 앨범이 표시되고 동기화가 끝났는지 확인하세요. Foldic는 이를 <strong>shared</strong>로 표시합니다. 다른 앨범처럼 동기화하면 현재 접근 가능한 모든 항목을 전용 폴더로 내보냅니다.</p>
+      <p>Foldic는 단방향입니다. 공유 앨범에 게시·편집·복원하지 않습니다. 공유 앨범은 원본 업로더의 최고 화질 파일을 항상 제공하지는 않으므로, Foldic는 Apple 사진이 제공하는 최고 화질 버전을 내보냅니다.</p>
+      <p>소유자가 접근 권한을 취소하거나 공유 앨범 또는 항목을 삭제하면, Foldic는 다음 스캔 후 해당 로컬 파일을 남겨진 파일로 표시합니다. 자동으로 삭제하지는 않습니다.</p>
     </details>
     <details>
-      <summary>スマートアルバムはバックアップできますか？</summary>
-      <p>スマートアルバムは「お気に入り」「ビデオ」など、条件に基づく動的なビューです。Foldic が現在バックアップできるのは通常のアルバム、iCloud 共有アルバム、All Photos です。その他のスマートアルバムを個別のフォルダとしてミラーリングすることはまだできません。</p>
-      <p>それらの写真を今すぐ確実にバックアップするには、All Photos を同期するか、残したい写真を通常のアルバムに追加してから同期してください。</p>
+      <summary>스마트 앨범도 백업하나요?</summary>
+      <p>스마트 앨범은 '즐겨찾는 항목', '비디오'처럼 조건에 따라 실시간으로 구성되는 보기입니다. Foldic는 현재 일반 앨범, iCloud 공유 앨범, All Photos를 백업합니다. 그 외 스마트 앨범을 별도 폴더로 미러링하지는 않습니다.</p>
+      <p>해당 사진을 지금 확실히 백업하려면 All Photos를 동기화하거나, 보관하려는 사진을 일반 앨범에 추가한 뒤 동기화하세요.</p>
     </details>
     <details>
-      <summary>Apple 写真で写真を外したり削除したりするとどうなりますか？</summary>
-      <p>どこから外すかによります。アルバムから写真を外した場合、写真はライブラリと他のアルバムに残ります。Foldic の次回スキャン後、そのアルバムのフォルダ内の書き出しコピーだけが孤立ファイルとして表示されます。</p>
-      <p>ライブラリから写真を削除すると、Apple は「最近削除した項目」へ移動し、その写真を含むすべてのアルバムから取り除きます。Foldic の次回スキャン後、影響を受けたすべての書き出しコピー（各アルバムのフォルダ、有効な場合は All Photos ミラーを含む）が孤立ファイルとして表示されます。</p>
-      <p>Foldic が書き出したファイルを自動で削除することはありません。孤立ファイルを残すか消すかはあなたが決めます。</p>
+      <summary>사진 앱에서 사진을 앨범에서 빼거나 삭제하면 어떻게 되나요?</summary>
+      <p>어디에서 빼는지에 따라 다릅니다. 앨범에서 사진을 빼면 사진은 라이브러리와 다른 앨범에 남습니다. Foldic가 다시 스캔한 뒤에는 해당 앨범 폴더의 사본만 남겨진 파일로 표시됩니다.</p>
+      <p>라이브러리에서 사진을 삭제하면 Apple은 이를 '최근 삭제된 항목'으로 옮기고 해당 사진이 포함된 모든 앨범에서 제거합니다. Foldic가 다시 스캔한 뒤에는 영향을 받은 모든 사본(앨범 폴더의 사본과, 사용 중이라면 All Photos 미러 포함)이 남겨진 파일로 표시됩니다.</p>
+      <p>Foldic는 내보낸 파일을 자동으로 삭제하지 않습니다. 남겨진 파일을 보관할지 지울지는 사용자가 결정합니다.</p>
     </details>
     <details>
-      <summary>Foldic はデータを収集しますか？</summary>
-      <p>一切収集しません。解析なし、テレメトリなし、アカウント不要。詳しくは<a href="/privacy/">プライバシーポリシー</a>をご覧ください。</p>
+      <summary>Foldic가 데이터를 수집하나요?</summary>
+      <p>전혀 수집하지 않습니다. 분석도, 텔레메트리도, 계정도 없습니다. 자세한 내용은 <a href="/privacy/">개인정보 처리방침</a>을 참고하세요.</p>
     </details>
   </section>
 
   <div class="bottom-cta">
-    <h2>あなたの写真を、あなたのものに。</h2>
-    <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store でダウンロード</a>
+    <h2>내 사진 라이브러리를 내 것으로.</h2>
+    <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store에서 다운로드</a>
   </div>
 
   <footer>
