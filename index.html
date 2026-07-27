@@ -9,6 +9,11 @@
   <meta property="og:description" content="Your Photos albums, mirrored to real folders on your Mac — automatically, in original quality.">
   <meta property="og:image" content="https://foldic.app/app-window.png">
   <meta property="og:url" content="https://foldic.app">
+  <link rel="alternate" hreflang="en" href="https://foldic.app/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://foldic.app/zh/">
+  <link rel="alternate" hreflang="ja" href="https://foldic.app/ja/">
+  <link rel="alternate" hreflang="ko" href="https://foldic.app/ko/">
+  <link rel="alternate" hreflang="x-default" href="https://foldic.app/">
   <link rel="icon" type="image/png" href="/icon.png">
   <link rel="shortcut icon" href="/favicon.ico">
   <style>
@@ -178,6 +183,38 @@
     }
     footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.5rem; }
   </style>
+  <script>
+    // Remember an explicit language choice; the root page honours it on
+    // future visits instead of re-guessing from the browser locale.
+    document.addEventListener("click", function (event) {
+      var link = event.target.closest(".lang a");
+      if (!link) return;
+      try { localStorage.setItem("foldic-lang", link.getAttribute("href")); } catch (e) {}
+    });
+  </script>
+  <script>
+    // First visit only: route to the matching translation. An explicit choice
+    // (stored on click) and ?lang=en both win, so nobody gets trapped.
+    (function () {
+      var params = new URLSearchParams(location.search);
+      if (params.get("lang") === "en") return;
+      var saved = null;
+      try { saved = localStorage.getItem("foldic-lang"); } catch (e) {}
+      if (saved) {
+        if (saved !== "/") location.replace(saved);
+        return;
+      }
+      var map = [[/^zh/i, "/zh/"], [/^ja/i, "/ja/"], [/^ko/i, "/ko/"]];
+      var langs = navigator.languages && navigator.languages.length
+        ? navigator.languages : [navigator.language || ""];
+      for (var i = 0; i < langs.length; i++) {
+        for (var j = 0; j < map.length; j++) {
+          if (map[j][0].test(langs[i])) { location.replace(map[j][1]); return; }
+        }
+        if (/^en/i.test(langs[i])) return; // English preferred before any match
+      }
+    })();
+  </script>
 </head>
 <body>
   <nav>

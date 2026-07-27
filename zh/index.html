@@ -9,6 +9,11 @@
   <meta property="og:description" content="你的 iPhone 相簿，同步成 Mac 上真正的資料夾 — 全自動、原始畫質。">
   <meta property="og:image" content="https://foldic.app/app-window-zh.png">
   <meta property="og:url" content="https://foldic.app/zh/">
+  <link rel="alternate" hreflang="en" href="https://foldic.app/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://foldic.app/zh/">
+  <link rel="alternate" hreflang="ja" href="https://foldic.app/ja/">
+  <link rel="alternate" hreflang="ko" href="https://foldic.app/ko/">
+  <link rel="alternate" hreflang="x-default" href="https://foldic.app/">
   <link rel="icon" type="image/png" href="/icon.png">
   <link rel="shortcut icon" href="/favicon.ico">
   <style>
@@ -150,6 +155,15 @@
     footer { border-top: 1px solid var(--border); padding: 2.2rem 1.5rem; text-align: center; color: var(--muted); font-size: 0.88rem; }
     footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.5rem; }
   </style>
+  <script>
+    // Remember an explicit language choice; the root page honours it on
+    // future visits instead of re-guessing from the browser locale.
+    document.addEventListener("click", function (event) {
+      var link = event.target.closest(".lang a");
+      if (!link) return;
+      try { localStorage.setItem("foldic-lang", link.getAttribute("href")); } catch (e) {}
+    });
+  </script>
 </head>
 <body>
   <nav>
