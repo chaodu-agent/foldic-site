@@ -97,6 +97,49 @@
     @media (max-width: 600px) {
       .desktop-br { display: none; }
     }
+    /* Platform switcher: one purchase covers Mac and iPhone, but the apps
+       differ enough that showing both at once would muddle the pitch. */
+    .platform-switch {
+      display: inline-flex; gap: 0.25rem; margin: 0 auto 1.6rem;
+      padding: 0.25rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .platform-switch button {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font: inherit; font-size: 0.92rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.42rem 1.05rem; border-radius: 999px;
+    }
+    .platform-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    .platform-switch svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    body[data-platform="mac"] .for-iphone,
+    body[data-platform="iphone"] .for-mac { display: none; }
+    /* An iPhone screenshot is portrait: constrain it instead of letting it
+       tower over the fold. */
+    .product img.phone { max-width: 300px; border-radius: 34px; }
+    /* The iPhone app ships after the Mac one; flip data-ios-live on <body data-platform="mac" data-ios-live="false"> to
+       "true" the day it is approved and the real button takes over. */
+    body[data-ios-live="false"] .ios-live { display: none; }
+    body[data-ios-live="true"] .ios-soon { display: none; }
+    .cta.pending {
+      background: transparent; color: var(--muted);
+      border: 1.5px dashed var(--border); cursor: default;
+    }
+    .cta.pending:hover { transform: none; }
+    .compare { max-width: 900px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+    .compare table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .compare th, .compare td { text-align: left; padding: 0.85rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .compare th { font-weight: 700; }
+    .compare thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .compare td.yes { color: var(--ink); }
+    .compare td.no { color: var(--muted); }
+    .compare caption { caption-side: bottom; margin-top: 1rem; color: var(--muted); font-size: 0.88rem; text-align: left; }
+    @media (max-width: 620px) {
+      .compare th, .compare td { padding: 0.7rem 0.4rem; font-size: 0.88rem; }
+    }
     .cta-row { margin-top: 2rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .cta {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -222,14 +265,36 @@
   </nav>
 
   <header class="hero">
-    <h1>写真アルバムを、<br><em>本物のフォルダ</em>へ</h1>
-    <p class="sub">Foldic は Apple 写真のアルバムを、Mac 上の本物のフォルダへ<br class="desktop-br">自動・増分でバックアップします。オリジナル画質のまま。<br class="desktop-br">写真もビデオも、すべてあなたが所有するファイルに。</p>
-    <div class="cta-row">
+    <div class="platform-switch" role="tablist" aria-label="プラットフォームを選択">
+      <button type="button" role="tab" data-platform-tab="mac" aria-selected="true">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Mac
+      </button>
+      <button type="button" role="tab" data-platform-tab="iphone" aria-selected="false">
+        <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 19h2"/></svg>iPhone
+      </button>
+    </div>
+
+    <h1 class="for-mac">写真アルバムを、<br><em>本物のフォルダ</em>へ</h1>
+    <p class="sub for-mac">Foldic は Apple 写真のアルバムを、Mac 上の本物のフォルダへ<br class="desktop-br">自動・増分でバックアップします。オリジナル画質のまま。<br class="desktop-br">写真もビデオも、すべてあなたが所有するファイルに。</p>
+
+    <h1 class="for-iphone">写真をそのまま<br><em>ポケットの SSD</em> へ</h1>
+    <p class="sub for-iphone">USB-C SSD を iPhone につなぐだけで、Foldic が「写真」アプリの<br class="desktop-br">アルバムをオリジナル画質のまま、通常のフォルダとして直接書き出します。<br class="desktop-br">Mac もクラウドも不要。どこにもアップロードしません。</p>
+
+    <div class="cta-row for-mac">
       <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store でダウンロード</a>
       <a class="cta secondary" href="#how">使い方を見る</a>
     </div>
-    <div class="product">
+    <div class="cta-row for-iphone">
+      <a class="cta ios-live" href="https://apps.apple.com/us/app/foldic/id6791302558"> App Store でダウンロード<small>一度の購入で Mac と iPhone の両方に</small></a>
+      <span class="cta pending ios-soon">iPhone 版は近日公開<small>審査に提出済み — Mac 版は公開中</small></span>
+      <a class="cta secondary" href="#compare">Mac と iPhone の違い</a>
+    </div>
+
+    <div class="product for-mac">
       <img src="/app-window-ja.png" alt="アルバム一覧と同期状態を表示する Foldic" loading="eager">
+    </div>
+    <div class="product for-iphone">
+      <img class="phone" src="/ios-app-window-ja.png" alt="外付けドライブへアルバムをコピーする iPhone 版 Foldic" loading="lazy">
     </div>
   </header>
 
@@ -290,8 +355,78 @@
     </div>
   </section>
 
+  <section class="compare" id="compare">
+    <h2 class="section-title" style="text-align:center">Mac と iPhone</h2>
+    <p class="section-sub" style="text-align:center">一度の購入で両方に。ただし想定する場面が違うため、まったく同じではありません。</p>
+    <table>
+      <thead>
+        <tr><th scope="col">&nbsp;</th><th scope="col">Mac</th><th scope="col">iPhone</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">アルバムをフォルダへ書き出し</th>
+          <td class="yes">対応</td>
+          <td class="yes">対応</td>
+        </tr>
+        <tr>
+          <th scope="row">iCloud 共有アルバム</th>
+          <td class="yes">対応</td>
+          <td class="yes">対応</td>
+        </tr>
+        <tr>
+          <th scope="row">保存先</th>
+          <td>任意のフォルダ — 内蔵・外付け・ネットワーク</td>
+          <td>USB-C ドライブへ直接、または「ファイル」アプリが扱える場所</td>
+        </tr>
+        <tr>
+          <th scope="row">iPhone の写真を取り込むのに iCloud が必要</th>
+          <td class="no">必要 — iCloud 写真経由で Mac に届きます</td>
+          <td class="yes">不要 — 端末から直接</td>
+        </tr>
+        <tr>
+          <th scope="row">オフラインで使える</th>
+          <td class="yes">はい（Flickr タブを除く）</td>
+          <td class="yes">はい — オリジナルが iCloud にある場合を除く</td>
+        </tr>
+        <tr>
+          <th scope="row">Flickr のアルバム</th>
+          <td class="yes">対応（専用タブ）</td>
+          <td class="no">非対応</td>
+        </tr>
+        <tr>
+          <th scope="row">バックグラウンドで継続</th>
+          <td class="yes">はい、メニューバーから</td>
+          <td class="no">コピー中は Foldic を画面に表示したままに</td>
+        </tr>
+        <tr>
+          <th scope="row">写真の変化を検知して自動開始</th>
+          <td class="yes">はい</td>
+          <td class="no">Foldic を開いて開始します</td>
+        </tr>
+      </tbody>
+      <caption>iPhone でのバックグラウンド制限は機能不足ではなく iOS の仕様です。アプリが画面から離れると外付けドライブを保持できません。コピーは中断地点から再開できるため、大きなライブラリは数回に分けて処理できます。</caption>
+    </table>
+  </section>
+
   <section class="faq" id="faq">
     <h2 class="section-title" style="text-align:center">よくある質問</h2>
+    <details>
+      <summary>Mac と iPhone で 2 回購入が必要ですか？</summary>
+      <p>いいえ。Foldic はユニバーサル購入です。一度購入すれば、同じ Apple アカウントでサインインしたどの端末でも両方使えます。サブスクリプションもアプリ内課金もありません。</p>
+    </details>
+    <details>
+      <summary>iPhone 版に必要なものは？</summary>
+      <p>USB-C ポートのある iPhone と、読み取れるドライブ（exFAT・FAT32・APFS のいずれか）です。バスパワーの NVMe SSD が最適で、速度の上限はディスクではなく写真側になります。回転式ドライブは別途電源が必要な場合があります。「ファイル」アプリが扱える場所へもコピーできますが、外付けドライブが本来の使い方です。</p>
+    </details>
+    <details>
+      <summary>iPhone 版はインターネットや iCloud が必要ですか？</summary>
+      <p>コピー自体はネットワークを一切使いません。写真は端末から接続したドライブへ直接書き込まれ、Foldic も Apple も含めどのサービスにもアップロードされません。機内でも実行できます。</p>
+      <p>例外は「ストレージを最適化」です。オリジナルが iPhone ではなく iCloud にある場合、書き出す前にダウンロードが必要で、これには接続が必要です。端末上にある写真は完全にオフラインでコピーされます。</p>
+    </details>
+    <details>
+      <summary>iPhone でアプリを離れるとコピーが止まります</summary>
+      <p>iOS では画面から離れたアプリが外付けドライブを保持できないため、Foldic はコピー中に画面を点灯させたまま、前面に置いておくようお願いしています。切り替えても失われるものはありません。コピーは増分方式で、再開すると中断地点から続きます。大きなライブラリは数回に分けて完了できます。</p>
+    </details>
     <details>
       <summary>Foldic は写真ライブラリを変更しますか？</summary>
       <p>いいえ。Foldic は厳密に一方向です。Apple の PhotoKit でアルバムを読み取り、選択したフォルダにファイルを書き込むだけ。「写真」内のコンテンツを編集・削除・並べ替えすることは一切ありません。</p>
@@ -339,5 +474,35 @@
   <footer>
     <p>© 2026 Foldic · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">support@foldic.app</a></p>
   </footer>
+  <script>
+    // Platform switch. Defaults to the device you are reading on, so someone on
+    // an iPhone is not pitched the Mac app first. #iphone in the URL wins, which
+    // makes the iPhone view linkable.
+    (function () {
+      var body = document.body;
+      var tabs = Array.prototype.slice.call(document.querySelectorAll("[data-platform-tab]"));
+      function select(platform, remember) {
+        body.setAttribute("data-platform", platform);
+        tabs.forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.dataset.platformTab === platform));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-platform", platform); } catch (error) {}
+        }
+      }
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () { select(tab.dataset.platformTab, true); });
+      });
+      var initial = "mac";
+      if (/iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)) initial = "iphone";
+      try {
+        var saved = localStorage.getItem("foldic-platform");
+        if (saved === "mac" || saved === "iphone") initial = saved;
+      } catch (error) {}
+      if (location.hash === "#iphone") initial = "iphone";
+      if (location.hash === "#mac") initial = "mac";
+      select(initial, false);
+    })();
+  </script>
 </body>
 </html>

@@ -97,6 +97,49 @@
     @media (max-width: 600px) {
       .desktop-br { display: none; }
     }
+    /* Platform switcher: one purchase covers Mac and iPhone, but the apps
+       differ enough that showing both at once would muddle the pitch. */
+    .platform-switch {
+      display: inline-flex; gap: 0.25rem; margin: 0 auto 1.6rem;
+      padding: 0.25rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .platform-switch button {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font: inherit; font-size: 0.92rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.42rem 1.05rem; border-radius: 999px;
+    }
+    .platform-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    .platform-switch svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    body[data-platform="mac"] .for-iphone,
+    body[data-platform="iphone"] .for-mac { display: none; }
+    /* An iPhone screenshot is portrait: constrain it instead of letting it
+       tower over the fold. */
+    .product img.phone { max-width: 300px; border-radius: 34px; }
+    /* The iPhone app ships after the Mac one; flip data-ios-live on <body data-platform="mac" data-ios-live="false"> to
+       "true" the day it is approved and the real button takes over. */
+    body[data-ios-live="false"] .ios-live { display: none; }
+    body[data-ios-live="true"] .ios-soon { display: none; }
+    .cta.pending {
+      background: transparent; color: var(--muted);
+      border: 1.5px dashed var(--border); cursor: default;
+    }
+    .cta.pending:hover { transform: none; }
+    .compare { max-width: 900px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+    .compare table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .compare th, .compare td { text-align: left; padding: 0.85rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .compare th { font-weight: 700; }
+    .compare thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .compare td.yes { color: var(--ink); }
+    .compare td.no { color: var(--muted); }
+    .compare caption { caption-side: bottom; margin-top: 1rem; color: var(--muted); font-size: 0.88rem; text-align: left; }
+    @media (max-width: 620px) {
+      .compare th, .compare td { padding: 0.7rem 0.4rem; font-size: 0.88rem; }
+    }
     .cta-row { margin-top: 2rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .cta {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -223,14 +266,36 @@
   </nav>
 
   <header class="hero">
-    <h1>사진 앨범을<br><em>진짜 폴더</em>로</h1>
-    <p class="sub">Foldic는 Apple 사진 앱의 앨범을 Mac의 진짜 폴더로<br class="desktop-br">자동·증분 방식으로 백업합니다. 원본 화질 그대로.<br class="desktop-br">사진과 동영상 모두, 내가 소유하는 파일로.</p>
-    <div class="cta-row">
+    <div class="platform-switch" role="tablist" aria-label="플랫폼 선택">
+      <button type="button" role="tab" data-platform-tab="mac" aria-selected="true">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Mac
+      </button>
+      <button type="button" role="tab" data-platform-tab="iphone" aria-selected="false">
+        <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 19h2"/></svg>iPhone
+      </button>
+    </div>
+
+    <h1 class="for-mac">사진 앨범을<br><em>진짜 폴더</em>로</h1>
+    <p class="sub for-mac">Foldic는 Apple 사진 앱의 앨범을 Mac의 진짜 폴더로<br class="desktop-br">자동·증분 방식으로 백업합니다. 원본 화질 그대로.<br class="desktop-br">사진과 동영상 모두, 내가 소유하는 파일로.</p>
+
+    <h1 class="for-iphone">사진을 곧바로<br><em>주머니 속 SSD</em>로</h1>
+    <p class="sub for-iphone">USB-C SSD를 iPhone에 연결하면 Foldic이 사진 앱의 앨범을<br class="desktop-br">원본 화질 그대로, 일반 폴더로 드라이브에 바로 복사합니다.<br class="desktop-br">Mac도 클라우드도 필요 없고, 어디에도 업로드하지 않습니다.</p>
+
+    <div class="cta-row for-mac">
       <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store에서 다운로드</a>
       <a class="cta secondary" href="#how">사용 방법 보기</a>
     </div>
-    <div class="product">
+    <div class="cta-row for-iphone">
+      <a class="cta ios-live" href="https://apps.apple.com/us/app/foldic/id6791302558"> App Store에서 다운로드<small>한 번 구매로 Mac과 iPhone 모두</small></a>
+      <span class="cta pending ios-soon">iPhone 버전 출시 예정<small>심사 제출 완료 — Mac 버전은 이용 가능</small></span>
+      <a class="cta secondary" href="#compare">Mac과 iPhone 차이</a>
+    </div>
+
+    <div class="product for-mac">
       <img src="/app-window.png" alt="앨범 목록과 동기화 상태를 표시하는 Foldic" loading="eager">
+    </div>
+    <div class="product for-iphone">
+      <img class="phone" src="/ios-app-window.png" alt="외장 드라이브로 앨범을 복사하는 iPhone의 Foldic" loading="lazy">
     </div>
   </header>
 
@@ -291,8 +356,78 @@
     </div>
   </section>
 
+  <section class="compare" id="compare">
+    <h2 class="section-title" style="text-align:center">Mac과 iPhone</h2>
+    <p class="section-sub" style="text-align:center">한 번 구매로 둘 다 사용할 수 있습니다. 다만 쓰이는 상황이 달라 완전히 같지는 않습니다.</p>
+    <table>
+      <thead>
+        <tr><th scope="col">&nbsp;</th><th scope="col">Mac</th><th scope="col">iPhone</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">앨범을 폴더로 내보내기</th>
+          <td class="yes">지원</td>
+          <td class="yes">지원</td>
+        </tr>
+        <tr>
+          <th scope="row">iCloud 공유 앨범</th>
+          <td class="yes">지원</td>
+          <td class="yes">지원</td>
+        </tr>
+        <tr>
+          <th scope="row">파일이 저장되는 곳</th>
+          <td>모든 폴더 — 내장, 외장, 네트워크 마운트</td>
+          <td>USB-C 드라이브에 바로, 또는 파일 앱이 접근할 수 있는 위치</td>
+        </tr>
+        <tr>
+          <th scope="row">iPhone 사진을 가져오려면 iCloud 필요</th>
+          <td class="no">필요 — iCloud 사진을 통해 Mac에 도착합니다</td>
+          <td class="yes">불필요 — 기기에서 바로</td>
+        </tr>
+        <tr>
+          <th scope="row">오프라인 사용</th>
+          <td class="yes">가능, Flickr 탭 제외</td>
+          <td class="yes">가능 — 원본이 iCloud에 있는 경우 제외</td>
+        </tr>
+        <tr>
+          <th scope="row">Flickr 앨범</th>
+          <td class="yes">지원, 별도 탭</td>
+          <td class="no">미포함</td>
+        </tr>
+        <tr>
+          <th scope="row">백그라운드에서 계속 동작</th>
+          <td class="yes">가능, 메뉴 바에서</td>
+          <td class="no">복사 중에는 Foldic을 화면에 두세요</td>
+        </tr>
+        <tr>
+          <th scope="row">사진이 바뀌면 자동으로 시작</th>
+          <td class="yes">예</td>
+          <td class="no">Foldic을 열고 직접 시작합니다</td>
+        </tr>
+      </tbody>
+      <caption>iPhone의 백그라운드 제한은 기능이 없어서가 아니라 iOS의 동작입니다. 앱이 화면에서 벗어나면 외장 드라이브를 계속 열어 둘 수 없습니다. 복사는 중단된 지점부터 이어지므로 큰 라이브러리는 여러 번에 나눠 끝낼 수 있습니다.</caption>
+    </table>
+  </section>
+
   <section class="faq" id="faq">
     <h2 class="section-title" style="text-align:center">자주 묻는 질문</h2>
+    <details>
+      <summary>Mac과 iPhone에서 각각 구매해야 하나요?</summary>
+      <p>아니요. Foldic은 유니버설 구매입니다. 한 번 구매하면 같은 Apple 계정으로 로그인한 기기에서 두 플랫폼 모두 사용할 수 있습니다. 구독도, 앱 내 구매도 없습니다.</p>
+    </details>
+    <details>
+      <summary>iPhone 버전에는 무엇이 필요한가요?</summary>
+      <p>USB-C 포트가 있는 iPhone과 읽을 수 있는 드라이브(exFAT, FAT32, APFS)가 필요합니다. 버스 전원 NVMe SSD가 가장 잘 맞습니다. 속도의 한계가 디스크가 아니라 사진 쪽에 있을 정도로 빠릅니다. 회전식 드라이브는 별도 전원이 필요할 수 있습니다. 파일 앱이 접근할 수 있는 위치로도 복사할 수 있지만, 외장 드라이브가 이 버전의 핵심입니다.</p>
+    </details>
+    <details>
+      <summary>iPhone 버전에 인터넷이나 iCloud가 필요한가요?</summary>
+      <p>복사 자체는 네트워크를 전혀 사용하지 않습니다. 사진은 기기에서 연결된 드라이브로 직접 기록되며 Foldic이든 Apple이든 어떤 서비스로도 업로드되지 않습니다. 비행기 안에서도 할 수 있습니다.</p>
+      <p>예외는 저장 공간 최적화입니다. 원본이 기기 대신 iCloud에 있다면 기록하기 전에 내려받아야 하고, 이때는 연결이 필요합니다. 기기에 있는 사진은 완전히 오프라인으로 복사됩니다.</p>
+    </details>
+    <details>
+      <summary>iPhone에서 앱을 벗어나면 복사가 멈춥니다</summary>
+      <p>iOS는 화면에서 벗어난 앱이 외장 드라이브를 계속 열어 두도록 허용하지 않습니다. 그래서 Foldic은 복사 중 화면을 켜 둔 상태로 유지하고 앱을 앞에 두도록 안내합니다. 전환해도 잃는 것은 없습니다. 복사는 증분 방식이라 다시 시작하면 중단된 지점부터 이어집니다. 큰 라이브러리는 여러 번에 나눠 끝낼 수 있습니다.</p>
+    </details>
     <details>
       <summary>Foldic가 사진 라이브러리를 변경하나요?</summary>
       <p>아니요. Foldic는 철저히 단방향입니다. Apple의 PhotoKit으로 앨범을 읽고 선택한 폴더에 파일을 씁니다. 사진 앱 안의 어떤 것도 편집·삭제·재정렬하지 않습니다.</p>
@@ -340,5 +475,35 @@
   <footer>
     <p>© 2026 Foldic · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">support@foldic.app</a></p>
   </footer>
+  <script>
+    // Platform switch. Defaults to the device you are reading on, so someone on
+    // an iPhone is not pitched the Mac app first. #iphone in the URL wins, which
+    // makes the iPhone view linkable.
+    (function () {
+      var body = document.body;
+      var tabs = Array.prototype.slice.call(document.querySelectorAll("[data-platform-tab]"));
+      function select(platform, remember) {
+        body.setAttribute("data-platform", platform);
+        tabs.forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.dataset.platformTab === platform));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-platform", platform); } catch (error) {}
+        }
+      }
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () { select(tab.dataset.platformTab, true); });
+      });
+      var initial = "mac";
+      if (/iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)) initial = "iphone";
+      try {
+        var saved = localStorage.getItem("foldic-platform");
+        if (saved === "mac" || saved === "iphone") initial = saved;
+      } catch (error) {}
+      if (location.hash === "#iphone") initial = "iphone";
+      if (location.hash === "#mac") initial = "mac";
+      select(initial, false);
+    })();
+  </script>
 </body>
 </html>

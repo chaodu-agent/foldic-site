@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Foldic — Your Photos albums, mirrored to real folders</title>
-  <meta name="description" content="Foldic mirrors your Apple Photos albums — including iCloud Shared Albums — to plain folders on your Mac, automatically and incrementally. Your photos and videos — all files you own.">
+  <meta name="description" content="Foldic mirrors your Apple Photos albums — including iCloud Shared Albums — to plain folders: automatically on your Mac, or straight onto a USB-C drive from your iPhone. Your photos and videos — all files you own.">
   <meta property="og:title" content="Foldic">
-  <meta property="og:description" content="Your Photos albums, mirrored to real folders on your Mac — automatically, in original quality.">
+  <meta property="og:description" content="Your Photos albums, mirrored to real folders — automatically on your Mac, or straight onto a USB-C drive from your iPhone. Original quality.">
   <meta property="og:image" content="https://foldic.app/app-window.png">
   <meta property="og:url" content="https://foldic.app">
   <link rel="alternate" hreflang="en" href="https://foldic.app/">
@@ -96,6 +96,49 @@
     }
     @media (max-width: 600px) {
       .desktop-br { display: none; }
+    }
+    /* Platform switcher: one purchase covers Mac and iPhone, but the apps
+       differ enough that showing both at once would muddle the pitch. */
+    .platform-switch {
+      display: inline-flex; gap: 0.25rem; margin: 0 auto 1.6rem;
+      padding: 0.25rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .platform-switch button {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font: inherit; font-size: 0.92rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.42rem 1.05rem; border-radius: 999px;
+    }
+    .platform-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    .platform-switch svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    body[data-platform="mac"] .for-iphone,
+    body[data-platform="iphone"] .for-mac { display: none; }
+    /* An iPhone screenshot is portrait: constrain it instead of letting it
+       tower over the fold. */
+    .product img.phone { max-width: 300px; border-radius: 34px; }
+    /* The iPhone app ships after the Mac one; flip data-ios-live on <body> to
+       "true" the day it is approved and the real button takes over. */
+    body[data-ios-live="false"] .ios-live { display: none; }
+    body[data-ios-live="true"] .ios-soon { display: none; }
+    .cta.pending {
+      background: transparent; color: var(--muted);
+      border: 1.5px dashed var(--border); cursor: default;
+    }
+    .cta.pending:hover { transform: none; }
+    .compare { max-width: 900px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+    .compare table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .compare th, .compare td { text-align: left; padding: 0.85rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .compare th { font-weight: 700; }
+    .compare thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .compare td.yes { color: var(--ink); }
+    .compare td.no { color: var(--muted); }
+    .compare caption { caption-side: bottom; margin-top: 1rem; color: var(--muted); font-size: 0.88rem; text-align: left; }
+    @media (max-width: 620px) {
+      .compare th, .compare td { padding: 0.7rem 0.4rem; font-size: 0.88rem; }
     }
     .cta-row { margin-top: 2rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .cta {
@@ -219,7 +262,7 @@
     })();
   </script>
 </head>
-<body>
+<body data-platform="mac" data-ios-live="false">
   <nav>
     <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
     <div class="links">
@@ -232,14 +275,36 @@
   </nav>
 
   <header class="hero">
-    <h1>Your Photos albums,<br>mirrored to <em>real folders</em></h1>
-    <p class="sub">Foldic automatically and incrementally backs up your Apple Photos albums<br class="desktop-br">to real folders on your Mac, in original quality.<br class="desktop-br">Your photos and videos — all files you own.</p>
-    <div class="cta-row">
+    <div class="platform-switch" role="tablist" aria-label="Choose platform">
+      <button type="button" role="tab" data-platform-tab="mac" aria-selected="true">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Mac
+      </button>
+      <button type="button" role="tab" data-platform-tab="iphone" aria-selected="false">
+        <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 19h2"/></svg>iPhone
+      </button>
+    </div>
+
+    <h1 class="for-mac">Your Photos albums,<br>mirrored to <em>real folders</em></h1>
+    <p class="sub for-mac">Foldic automatically and incrementally backs up your Apple Photos albums<br class="desktop-br">to real folders on your Mac, in original quality.<br class="desktop-br">Your photos and videos — all files you own.</p>
+
+    <h1 class="for-iphone">Photos straight to<br>an <em>SSD in your pocket</em></h1>
+    <p class="sub for-iphone">Plug a USB-C SSD into your iPhone and Foldic copies albums from Photos<br class="desktop-br">directly onto the drive, in original quality, as plain folders.<br class="desktop-br">No Mac, no cloud service, no uploading anywhere.</p>
+
+    <div class="cta-row for-mac">
       <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Download on the Mac App Store</a>
       <a class="cta secondary" href="#how">See how it works</a>
     </div>
-    <div class="product">
+    <div class="cta-row for-iphone">
+      <a class="cta ios-live" href="https://apps.apple.com/us/app/foldic/id6791302558"> Download on the App Store<small>One purchase covers Mac and iPhone</small></a>
+      <span class="cta pending ios-soon">Coming to iPhone<small>Submitted for review — the Mac app is available now</small></span>
+      <a class="cta secondary" href="#compare">Mac vs iPhone</a>
+    </div>
+
+    <div class="product for-mac">
       <img src="/app-window.png" alt="Foldic showing a list of Photos albums with their sync status" loading="eager">
+    </div>
+    <div class="product for-iphone">
+      <img class="phone" src="/ios-app-window.png" alt="Foldic on iPhone showing albums being copied to an attached drive" loading="lazy">
     </div>
   </header>
 
@@ -300,8 +365,82 @@
     </div>
   </section>
 
+  <section class="compare" id="compare">
+    <h2 class="section-title" style="text-align:center">Mac and iPhone</h2>
+    <p class="section-sub" style="text-align:center">One purchase covers both. They are built for different moments, so they are not identical.</p>
+    <table>
+      <thead>
+        <tr><th scope="col">&nbsp;</th><th scope="col">Mac</th><th scope="col">iPhone</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Photos albums to folders</th>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <th scope="row">iCloud Shared Albums</th>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <th scope="row">Where files go</th>
+          <td>Any folder — internal disk, external drive or a network mount</td>
+          <td>Straight onto a USB-C drive, or anywhere the Files app can reach</td>
+        </tr>
+        <tr>
+          <th scope="row">Needs iCloud to get iPhone photos</th>
+          <td class="no">Yes — they reach the Mac through iCloud Photos</td>
+          <td class="yes">No — straight off the device</td>
+        </tr>
+        <tr>
+          <th scope="row">Works offline</th>
+          <td class="yes">Yes, except the Flickr tab</td>
+          <td class="yes">Yes — unless originals still live in iCloud</td>
+        </tr>
+        <tr>
+          <th scope="row">Flickr albums</th>
+          <td class="yes">Yes, a second tab</td>
+          <td class="no">Not included</td>
+        </tr>
+        <tr>
+          <th scope="row">Keeps working in the background</th>
+          <td class="yes">Yes, from the menu bar</td>
+          <td class="no">Keep Foldic on screen while it copies</td>
+        </tr>
+        <tr>
+          <th scope="row">Starts on its own when photos change</th>
+          <td class="yes">Yes</td>
+          <td class="no">You open Foldic and start it</td>
+        </tr>
+      </tbody>
+      <caption>
+        The background limits on iPhone are iOS behaviour, not a missing feature: apps cannot hold an
+        external drive open once they leave the screen. Copying resumes where it stopped, so a large
+        library can be done in several sittings.
+      </caption>
+    </table>
+  </section>
+
   <section class="faq" id="faq">
     <h2 class="section-title" style="text-align:center">FAQ</h2>
+    <details>
+      <summary>Do I have to buy Foldic twice for Mac and iPhone?</summary>
+      <p>No. Foldic is a universal purchase: buy it once and it works on both, on any device signed in to your Apple Account. There is no subscription and nothing to unlock inside the app.</p>
+    </details>
+    <details>
+      <summary>What does the iPhone version need?</summary>
+      <p>An iPhone with a USB-C port and a drive it can read — exFAT, FAT32 and APFS all work. A bus-powered NVMe SSD is the natural pairing: fast enough that the copy is limited by your photos, not the disk. A spinning drive may need its own power supply. You can also copy to anywhere the Files app can reach, but an attached drive is the point of it.</p>
+    </details>
+    <details>
+      <summary>Does the iPhone version need internet or iCloud?</summary>
+      <p>The copy itself never goes near the network: photos move from your device to the attached drive, and nothing is uploaded to any service, Foldic's or Apple's. You can do it on a plane.</p>
+      <p>The one exception is Optimized Storage. If your library keeps full-resolution originals in iCloud rather than on the phone, those have to be fetched before they can be written, and that needs a connection. Photos already on the device are copied offline.</p>
+    </details>
+    <details>
+      <summary>Why does copying stop when I leave the app on iPhone?</summary>
+      <p>iOS does not let an app keep an external drive open once it is off screen, so Foldic keeps the screen awake and asks you to leave it in front while a copy runs. Nothing is lost if you do switch away: copying is incremental, and starting it again continues where it stopped. A large library can be done across several sittings.</p>
+    </details>
     <details>
       <summary>Does Foldic modify my Photos library?</summary>
       <p>No. Foldic is strictly one-way: it reads your albums through Apple's PhotoKit and writes files to a folder you choose. It never edits, deletes, or reorganizes anything in Photos.</p>
@@ -349,5 +488,35 @@
   <footer>
     <p>© 2026 Foldic · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">support@foldic.app</a></p>
   </footer>
+  <script>
+    // Platform switch. Defaults to the device you are reading on, so someone on
+    // an iPhone is not pitched the Mac app first. #iphone in the URL wins, which
+    // makes the iPhone view linkable.
+    (function () {
+      var body = document.body;
+      var tabs = Array.prototype.slice.call(document.querySelectorAll("[data-platform-tab]"));
+      function select(platform, remember) {
+        body.setAttribute("data-platform", platform);
+        tabs.forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.dataset.platformTab === platform));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-platform", platform); } catch (error) {}
+        }
+      }
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () { select(tab.dataset.platformTab, true); });
+      });
+      var initial = "mac";
+      if (/iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)) initial = "iphone";
+      try {
+        var saved = localStorage.getItem("foldic-platform");
+        if (saved === "mac" || saved === "iphone") initial = saved;
+      } catch (error) {}
+      if (location.hash === "#iphone") initial = "iphone";
+      if (location.hash === "#mac") initial = "mac";
+      select(initial, false);
+    })();
+  </script>
 </body>
 </html>
