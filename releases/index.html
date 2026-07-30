@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foldic — Releases</title>
+  <meta name="description" content="Release history for Foldic on the Mac App Store.">
+  <meta property="og:title" content="Foldic — Releases">
+  <meta property="og:description" content="Release history for Foldic on the Mac App Store.">
+  <meta property="og:image" content="https://foldic.app/app-window.png">
+  <meta property="og:url" content="https://foldic.app/releases/">
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <style>
+    :root {
+      --green: #A9B64B;
+      --green-deep: #3A4A26;
+      --green-tint: #E4E6D0;
+      --ink: #2E3B20;
+      --muted: #6E7A5B;
+      --bg: #F5F3EA;
+      --card: #EFEDDE;
+      --border: rgba(58, 74, 38, 0.16);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #A9B64B;
+        --green-deep: #C3CE72;
+        --green-tint: #2A3319;
+        --ink: #EDEFDC;
+        --muted: #A3AC88;
+        --bg: #171C0F;
+        --card: #202716;
+        --border: rgba(169, 182, 75, 0.2);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 860px; margin: 0 auto; padding: 0.9rem 1.5rem;
+      backdrop-filter: saturate(180%) blur(16px);
+    }
+    nav .brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--ink); }
+    nav .brand img { width: 28px; height: 28px; border-radius: 7px; }
+    .lang-switch {
+      display: inline-flex; gap: 0.25rem;
+      padding: 0.22rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .lang-switch button {
+      font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.3rem 0.75rem; border-radius: 999px;
+    }
+    .lang-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+    h1 {
+      font-size: clamp(2rem, 5vw, 2.6rem);
+      line-height: 1.1; letter-spacing: -0.015em; font-weight: 700;
+    }
+    p.sub { color: var(--muted); font-size: 1.08rem; margin-top: 0.6rem; }
+    .release-list { margin-top: 2.4rem; display: flex; flex-direction: column; gap: 1rem; }
+    .release {
+      display: block; text-decoration: none; color: var(--ink);
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.15rem 1.4rem;
+      transition: transform 0.15s ease;
+    }
+    a.release:hover { transform: translateY(-1px); border-color: var(--green); }
+    .release .row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .release .version { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em; }
+    .release .when { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+    .release .blurb { color: var(--muted); font-size: 0.93rem; margin-top: 0.25rem; }
+    .release .more { color: var(--green-deep); font-size: 0.88rem; font-weight: 600; margin-top: 0.4rem; display: inline-block; }
+    .latest-badge {
+      font-size: 0.72rem; font-weight: 700; color: var(--green-deep);
+      background: var(--green-tint); border-radius: 999px;
+      padding: 0.1rem 0.55rem; margin-left: 0.5rem; vertical-align: 0.12em;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.2rem 1.5rem; text-align: center;
+      color: var(--muted); font-size: 0.88rem;
+    }
+    footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.5rem; }
+    main[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
+    <div class="lang-switch" role="tablist" aria-label="Language">
+      <button type="button" role="tab" data-lang-tab="en" aria-selected="true">EN</button>
+      <button type="button" role="tab" data-lang-tab="zh" aria-selected="false">中文</button>
+      <button type="button" role="tab" data-lang-tab="ja" aria-selected="false">日本語</button>
+      <button type="button" role="tab" data-lang-tab="ko" aria-selected="false">한국어</button>
+    </div>
+  </nav>
+
+  <!-- ============================== EN ============================== -->
+  <main data-lang-page="en">
+    <h1>Releases</h1>
+    <p class="sub">What each version of Foldic for Mac brought, newest first.</p>
+    <div class="release-list">
+      <a class="release" href="/releases/v0.5.0/">
+        <div class="row"><span class="version">0.5.0<span class="latest-badge">Latest</span></span><span class="when">July 30, 2026</span></div>
+        <p class="blurb">Readable file names, a faster startup scan, and reliability fixes across the board.</p>
+        <span class="more">Read the release notes →</span>
+      </a>
+      <div class="release">
+        <div class="row"><span class="version">0.4.1</span><span class="when">July 29, 2026</span></div>
+        <p class="blurb">Fixed Flickr sign-in behind corporate or antivirus TLS inspection, reopening from the Dock, and a first-close hint.</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.4.0</span><span class="when">July 2026</span></div>
+        <p class="blurb">Flickr tab: mirror your Flickr albums to folders alongside Photos, included free.</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.3.0</span><span class="when">July 24, 2026</span></div>
+        <p class="blurb">First release on the Mac App Store.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================== ZH ============================== -->
+  <main data-lang-page="zh" hidden>
+    <h1>版本紀錄</h1>
+    <p class="sub">Foldic for Mac 每個版本帶來了什麼，由新到舊。</p>
+    <div class="release-list">
+      <a class="release" href="/releases/v0.5.0/">
+        <div class="row"><span class="version">0.5.0<span class="latest-badge">最新</span></span><span class="when">2026 年 7 月 30 日</span></div>
+        <p class="blurb">更好懂的檔名、更快的啟動掃描，以及全面的穩定性修正。</p>
+        <span class="more">閱讀版本說明 →</span>
+      </a>
+      <div class="release">
+        <div class="row"><span class="version">0.4.1</span><span class="when">2026 年 7 月 29 日</span></div>
+        <p class="blurb">修正企業或防毒軟體 TLS 檢測環境下無法登入 Flickr 的問題、Dock 重新開啟視窗，以及首次關閉視窗的提示。</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.4.0</span><span class="when">2026 年 7 月</span></div>
+        <p class="blurb">新增 Flickr 分頁：將 Flickr 相簿鏡射到資料夾，與「照片」並行，免費內建。</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.3.0</span><span class="when">2026 年 7 月 24 日</span></div>
+        <p class="blurb">首次在 Mac App Store 上架。</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================== JA ============================== -->
+  <main data-lang-page="ja" hidden>
+    <h1>リリース</h1>
+    <p class="sub">Foldic for Mac の各バージョンの内容。新しい順。</p>
+    <div class="release-list">
+      <a class="release" href="/releases/v0.5.0/">
+        <div class="row"><span class="version">0.5.0<span class="latest-badge">最新</span></span><span class="when">2026年7月30日</span></div>
+        <p class="blurb">わかりやすいファイル名、より速い起動スキャン、全体的な信頼性の向上。</p>
+        <span class="more">リリースノートを読む →</span>
+      </a>
+      <div class="release">
+        <div class="row"><span class="version">0.4.1</span><span class="when">2026年7月29日</span></div>
+        <p class="blurb">企業やウイルス対策ソフトの TLS 検査環境で Flickr にサインインできない問題、Dock からの再表示、初回クローズ時のヒントを修正。</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.4.0</span><span class="when">2026年7月</span></div>
+        <p class="blurb">Flickr タブを追加：写真アプリと並んで Flickr のアルバムもフォルダにミラーリング。無料で搭載。</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.3.0</span><span class="when">2026年7月24日</span></div>
+        <p class="blurb">Mac App Store での最初のリリース。</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================== KO ============================== -->
+  <main data-lang-page="ko" hidden>
+    <h1>릴리스</h1>
+    <p class="sub">Foldic for Mac 각 버전의 변경 사항, 최신순.</p>
+    <div class="release-list">
+      <a class="release" href="/releases/v0.5.0/">
+        <div class="row"><span class="version">0.5.0<span class="latest-badge">최신</span></span><span class="when">2026년 7월 30일</span></div>
+        <p class="blurb">알아보기 쉬운 파일 이름, 더 빠른 시작 스캔, 전반적인 안정성 개선.</p>
+        <span class="more">릴리스 노트 보기 →</span>
+      </a>
+      <div class="release">
+        <div class="row"><span class="version">0.4.1</span><span class="when">2026년 7월 29일</span></div>
+        <p class="blurb">기업용 또는 백신의 TLS 검사 환경에서 Flickr 로그인이 안 되던 문제, Dock에서 창 다시 열기, 첫 창 닫기 안내를 수정.</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.4.0</span><span class="when">2026년 7월</span></div>
+        <p class="blurb">Flickr 탭 추가: 사진 앱과 나란히 Flickr 앨범도 폴더로 미러링. 무료 포함.</p>
+      </div>
+      <div class="release">
+        <div class="row"><span class="version">0.3.0</span><span class="when">2026년 7월 24일</span></div>
+        <p class="blurb">Mac App Store 첫 출시.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Foldic · <a href="/">foldic.app</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">Support</a>
+  </footer>
+
+  <script>
+    (function () {
+      var LANGS = ["en", "zh", "ja", "ko"];
+      var HTML_LANG = { en: "en", zh: "zh-Hant", ja: "ja", ko: "ko" };
+      var TITLES = {
+        en: "Foldic — Releases",
+        zh: "Foldic — 版本紀錄",
+        ja: "Foldic — リリース",
+        ko: "Foldic — 릴리스",
+      };
+
+      function setLang(lang, remember) {
+        if (LANGS.indexOf(lang) === -1) lang = "en";
+        document.documentElement.lang = HTML_LANG[lang];
+        document.title = TITLES[lang];
+        document.querySelectorAll("[data-lang-page]").forEach(function (page) {
+          page.hidden = page.getAttribute("data-lang-page") !== lang;
+        });
+        document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.getAttribute("data-lang-tab") === lang));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-release-lang", lang); } catch (e) {}
+        }
+      }
+
+      document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          setLang(tab.getAttribute("data-lang-tab"), true);
+        });
+      });
+
+      // Initial language: ?lang= wins, then a remembered choice (this section's
+      // own, then the site-wide one), then the browser locale.
+      var initial = null;
+      var param = new URLSearchParams(location.search).get("lang");
+      if (param && LANGS.indexOf(param) !== -1) initial = param;
+      if (!initial) {
+        try { initial = localStorage.getItem("foldic-release-lang"); } catch (e) {}
+      }
+      if (!initial) {
+        var sitePath = null;
+        try { sitePath = localStorage.getItem("foldic-lang"); } catch (e) {}
+        if (sitePath === "/zh/") initial = "zh";
+        else if (sitePath === "/ja/") initial = "ja";
+        else if (sitePath === "/ko/") initial = "ko";
+        else if (sitePath === "/") initial = "en";
+      }
+      if (!initial) {
+        var langs = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ""];
+        for (var i = 0; i < langs.length && !initial; i++) {
+          if (/^zh/i.test(langs[i])) initial = "zh";
+          else if (/^ja/i.test(langs[i])) initial = "ja";
+          else if (/^ko/i.test(langs[i])) initial = "ko";
+          else if (/^en/i.test(langs[i])) initial = "en";
+        }
+      }
+      setLang(initial || "en", false);
+    })();
+  </script>
+</body>
+</html>

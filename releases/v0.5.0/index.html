@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foldic 0.5.0 — Release Notes</title>
+  <meta name="description" content="Foldic 0.5.0 for Mac: readable file names, a faster startup scan, and reliability fixes. Now on the Mac App Store.">
+  <meta property="og:title" content="Foldic 0.5.0 — Release Notes">
+  <meta property="og:description" content="Readable file names, a faster startup scan, and reliability fixes. Now on the Mac App Store.">
+  <meta property="og:image" content="https://foldic.app/app-window.png">
+  <meta property="og:url" content="https://foldic.app/releases/v0.5.0/">
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <style>
+    :root {
+      --green: #A9B64B;
+      --green-deep: #3A4A26;
+      --green-tint: #E4E6D0;
+      --ink: #2E3B20;
+      --muted: #6E7A5B;
+      --bg: #F5F3EA;
+      --card: #EFEDDE;
+      --border: rgba(58, 74, 38, 0.16);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #A9B64B;
+        --green-deep: #C3CE72;
+        --green-tint: #2A3319;
+        --ink: #EDEFDC;
+        --muted: #A3AC88;
+        --bg: #171C0F;
+        --card: #202716;
+        --border: rgba(169, 182, 75, 0.2);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 860px; margin: 0 auto; padding: 0.9rem 1.5rem;
+      backdrop-filter: saturate(180%) blur(16px);
+    }
+    nav .brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--ink); }
+    nav .brand img { width: 28px; height: 28px; border-radius: 7px; }
+    .lang-switch {
+      display: inline-flex; gap: 0.25rem;
+      padding: 0.22rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .lang-switch button {
+      font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.3rem 0.75rem; border-radius: 999px;
+    }
+    .lang-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+    .date {
+      display: inline-block; font-size: 0.82rem; font-weight: 600;
+      color: var(--green-deep); background: var(--green-tint);
+      padding: 0.2rem 0.7rem; border-radius: 999px; margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      line-height: 1.1; letter-spacing: -0.015em; font-weight: 700;
+    }
+    p.sub { color: var(--muted); font-size: 1.12rem; margin-top: 0.8rem; }
+    h2 {
+      font-size: 1.45rem; margin: 2.6rem 0 0.9rem; letter-spacing: -0.01em; font-weight: 700;
+    }
+    h3 { font-size: 1.02rem; margin: 1.4rem 0 0.3rem; }
+    p, li { color: var(--ink); font-size: 0.98rem; }
+    ul { padding-left: 1.3rem; margin-top: 0.5rem; }
+    li { margin-bottom: 0.55rem; }
+    li::marker { color: var(--green); }
+    code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.86em; background: var(--card);
+      border: 1px solid var(--border); border-radius: 5px; padding: 0.08em 0.35em;
+    }
+    .callout {
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 4px solid var(--green);
+      border-radius: 10px; padding: 1rem 1.2rem; margin: 1.2rem 0;
+      font-size: 0.95rem;
+    }
+    .callout strong { color: var(--green-deep); }
+    .cta-row { margin-top: 2.6rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--ink); color: var(--bg);
+      padding: 0.85rem 1.5rem; border-radius: 12px;
+      text-decoration: none; font-weight: 600; font-size: 0.98rem;
+      transition: transform 0.15s ease;
+    }
+    .cta:hover { transform: translateY(-1px); }
+    .cta.secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.2rem 1.5rem; text-align: center;
+      color: var(--muted); font-size: 0.88rem;
+    }
+    footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.5rem; }
+    main[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
+    <div class="lang-switch" role="tablist" aria-label="Language">
+      <button type="button" role="tab" data-lang-tab="en" aria-selected="true">EN</button>
+      <button type="button" role="tab" data-lang-tab="zh" aria-selected="false">中文</button>
+      <button type="button" role="tab" data-lang-tab="ja" aria-selected="false">日本語</button>
+      <button type="button" role="tab" data-lang-tab="ko" aria-selected="false">한국어</button>
+    </div>
+  </nav>
+
+  <!-- ============================== EN ============================== -->
+  <main data-lang-page="en">
+    <span class="date">July 30, 2026 · Mac App Store</span>
+    <h1>Foldic 0.5.0</h1>
+    <p class="sub">Readable file names, a faster startup, and a rounder, more dependable backup.</p>
+
+    <h2>✨ New</h2>
+    <h3>Your file names, kept</h3>
+    <p>Exports are now named after the original file plus a short identifier — for example <code>IMG_1234-A1B2C3D45E6F.jpg</code> — instead of a long opaque ID. The suffix is what keeps de-duplication safe. On by default; switch it off in settings if you prefer the old scheme.</p>
+    <div class="callout">
+      <strong>Your existing backup converts once.</strong> On the next sync, files already in your backup folder are renamed in place to match the setting — in either direction. Nothing is re-exported and nothing is deleted; you will simply see every file change its name one time.
+    </div>
+    <h3>Faster startup</h3>
+    <p>The album list now appears in about a second, and albums fill in as they are scanned in small batches — no more waiting for a full library scan before you can see anything.</p>
+
+    <h2>🛠 Reliability</h2>
+    <ul>
+      <li>An album with an over-long title (a spam iCloud shared-album invitation, say) no longer stops the whole backup. Album names are trimmed to the filesystem limit, and an album that fails to read is flagged on its own row while the rest of the backup proceeds.</li>
+      <li>The Photos and Flickr tabs can no longer point at the same folder, which could previously let each side clean up the other's files.</li>
+      <li>Migration from older backup folder layouts runs reliably again.</li>
+      <li>The Photos permission request no longer waits forever on a prompt the system never shows.</li>
+      <li>Plenty of interface polish: pausing or resuming a single album no longer rescans the whole library, translations fill previously English-only corners, and counts read naturally in every language.</li>
+    </ul>
+
+    <h2>📄 Easier support</h2>
+    <p>Foldic now keeps a diagnostic log. If something goes wrong, support can ask you for one file instead of a guessing game.</p>
+
+    <div class="cta-row">
+      <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Download on the Mac App Store</a>
+      <a class="cta secondary" href="/">About Foldic</a>
+    </div>
+  </main>
+
+  <!-- ============================== ZH ============================== -->
+  <main data-lang-page="zh" hidden>
+    <span class="date">2026 年 7 月 30 日 · Mac App Store</span>
+    <h1>Foldic 0.5.0</h1>
+    <p class="sub">更好懂的檔名、更快的啟動，以及更可靠的備份。</p>
+
+    <h2>✨ 新功能</h2>
+    <h3>保留你的檔名</h3>
+    <p>匯出檔案現在以「原始檔名 + 短識別碼」命名——例如 <code>IMG_1234-A1B2C3D45E6F.jpg</code>——不再是一長串看不懂的 ID。這段後綴正是讓去重機制安全運作的關鍵。預設開啟；偏好舊格式可在設定中關閉。</p>
+    <div class="callout">
+      <strong>既有備份只會轉換一次。</strong>下次同步時，備份資料夾中的檔案會就地改名以符合設定（雙向皆然）。不會重新匯出、也不會刪除任何檔案——你只會看到每個檔案的名稱變動一次。
+    </div>
+    <h3>啟動更快</h3>
+    <p>相簿清單現在約一秒內出現，掃描分批在背景進行、逐列填入結果——不必再等整個圖庫掃完才能看到畫面。</p>
+
+    <h2>🛠 穩定性</h2>
+    <ul>
+      <li>名稱過長的相簿（例如垃圾 iCloud 共享相簿邀請）不再讓整個備份停擺。相簿名稱會裁切至檔案系統上限，讀取失敗的相簿會在自己的列上標示，其餘備份照常進行。</li>
+      <li>「照片」與 Flickr 分頁不能再指向同一個資料夾——先前這會讓兩邊互相清掉對方的檔案。</li>
+      <li>舊版備份資料夾格式的遷移恢復可靠運作。</li>
+      <li>照片權限請求不再無限等待一個系統可能永遠不顯示的對話框。</li>
+      <li>大量介面細節修正：暫停或恢復單一相簿不再重新掃描整個圖庫、補齊先前只有英文的介面文字、各語言的數量顯示更自然。</li>
+    </ul>
+
+    <h2>📄 更容易取得協助</h2>
+    <p>Foldic 現在會保留診斷記錄檔。遇到問題時，客服只需要請你提供一個檔案，不必來回猜測。</p>
+
+    <div class="cta-row">
+      <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> 前往 Mac App Store 下載</a>
+      <a class="cta secondary" href="/zh/">認識 Foldic</a>
+    </div>
+  </main>
+
+  <!-- ============================== JA ============================== -->
+  <main data-lang-page="ja" hidden>
+    <span class="date">2026年7月30日 · Mac App Store</span>
+    <h1>Foldic 0.5.0</h1>
+    <p class="sub">わかりやすいファイル名、より速い起動、そしてより頼れるバックアップへ。</p>
+
+    <h2>✨ 新機能</h2>
+    <h3>ファイル名をそのままに</h3>
+    <p>書き出されるファイルは「元のファイル名 + 短い識別子」——例えば <code>IMG_1234-A1B2C3D45E6F.jpg</code>——という名前になりました。長く不透明な ID とはお別れです。この識別子が重複排除を安全に保ちます。デフォルトでオン。従来の形式がよければ設定でオフにできます。</p>
+    <div class="callout">
+      <strong>既存のバックアップは一度だけ変換されます。</strong>次回の同期時に、バックアップフォルダ内のファイルは設定に合わせてその場でリネームされます（どちらの方向にも対応）。再書き出しや削除は一切ありません——すべてのファイル名が一度だけ変わるのが見えるだけです。
+    </div>
+    <h3>起動が速く</h3>
+    <p>アルバム一覧は約 1 秒で表示され、スキャンは小さなバッチでバックグラウンド処理され、結果が順次埋まっていきます。ライブラリ全体のスキャンを待つ必要はもうありません。</p>
+
+    <h2>🛠 信頼性</h2>
+    <ul>
+      <li>タイトルが長すぎるアルバム（迷惑な iCloud 共有アルバムの招待など)がバックアップ全体を止めることはなくなりました。アルバム名はファイルシステムの上限に切り詰められ、読み取れないアルバムはその行に表示され、残りのバックアップは続行します。</li>
+      <li>「写真」タブと Flickr タブが同じフォルダを指せないようになりました。以前は互いのファイルを削除し合う可能性がありました。</li>
+      <li>旧形式のバックアップフォルダからの移行が再び確実に動作します。</li>
+      <li>写真へのアクセス許可のリクエストが、表示されないダイアログを永遠に待ち続けることはなくなりました。</li>
+      <li>細かな改善多数：アルバム単体の一時停止／再開でライブラリ全体を再スキャンしない、英語のままだった表示の翻訳、各言語で自然な件数表示など。</li>
+    </ul>
+
+    <h2>📄 サポートをもっと簡単に</h2>
+    <p>Foldic は診断ログを保存するようになりました。問題が起きたときは、ファイルを 1 つお送りいただくだけで調査できます。</p>
+
+    <div class="cta-row">
+      <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store でダウンロード</a>
+      <a class="cta secondary" href="/ja/">Foldic について</a>
+    </div>
+  </main>
+
+  <!-- ============================== KO ============================== -->
+  <main data-lang-page="ko" hidden>
+    <span class="date">2026년 7월 30일 · Mac App Store</span>
+    <h1>Foldic 0.5.0</h1>
+    <p class="sub">알아보기 쉬운 파일 이름, 더 빠른 시작, 더 믿을 수 있는 백업.</p>
+
+    <h2>✨ 새로운 기능</h2>
+    <h3>파일 이름 유지</h3>
+    <p>내보낸 파일이 이제 「원본 파일 이름 + 짧은 식별자」로 저장됩니다 — 예: <code>IMG_1234-A1B2C3D45E6F.jpg</code>. 길고 알 수 없는 ID는 이제 그만. 이 식별자가 중복 제거를 안전하게 지켜 줍니다. 기본으로 켜져 있으며, 이전 방식을 원하면 설정에서 끌 수 있습니다.</p>
+    <div class="callout">
+      <strong>기존 백업은 한 번만 변환됩니다.</strong> 다음 동기화 때 백업 폴더의 파일이 설정에 맞게 제자리에서 이름이 바뀝니다(양방향 모두). 다시 내보내거나 삭제되는 파일은 없습니다 — 모든 파일의 이름이 한 번 바뀌는 것만 보일 뿐입니다.
+    </div>
+    <h3>더 빠른 시작</h3>
+    <p>앨범 목록이 약 1초 만에 나타나고, 스캔은 작은 배치로 백그라운드에서 진행되며 결과가 차례로 채워집니다. 전체 보관함 스캔을 기다릴 필요가 없습니다.</p>
+
+    <h2>🛠 안정성</h2>
+    <ul>
+      <li>제목이 너무 긴 앨범(스팸성 iCloud 공유 앨범 초대 등)이 더 이상 전체 백업을 멈추지 않습니다. 앨범 이름은 파일 시스템 한도에 맞게 잘리고, 읽기에 실패한 앨범은 해당 행에 표시되며 나머지 백업은 계속됩니다.</li>
+      <li>사진 탭과 Flickr 탭이 같은 폴더를 가리킬 수 없게 되었습니다. 이전에는 서로의 파일을 정리해 버릴 수 있었습니다.</li>
+      <li>이전 형식의 백업 폴더 마이그레이션이 다시 안정적으로 동작합니다.</li>
+      <li>사진 접근 권한 요청이 시스템이 표시하지 않는 대화 상자를 무한정 기다리지 않습니다.</li>
+      <li>다양한 인터페이스 개선: 앨범 하나의 일시 정지/재개가 전체 보관함을 다시 스캔하지 않으며, 영어로만 남아 있던 문구가 번역되고, 개수 표시가 각 언어에서 자연스러워졌습니다.</li>
+    </ul>
+
+    <h2>📄 더 쉬운 지원</h2>
+    <p>Foldic이 이제 진단 로그를 기록합니다. 문제가 생기면 파일 하나만 보내 주시면 됩니다.</p>
+
+    <div class="cta-row">
+      <a class="cta" href="https://apps.apple.com/us/app/foldic/id6791302558?mt=12"> Mac App Store에서 다운로드</a>
+      <a class="cta secondary" href="/ko/">Foldic 소개</a>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Foldic · <a href="/">foldic.app</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">Support</a>
+  </footer>
+
+  <script>
+    (function () {
+      var LANGS = ["en", "zh", "ja", "ko"];
+      var HTML_LANG = { en: "en", zh: "zh-Hant", ja: "ja", ko: "ko" };
+      var TITLES = {
+        en: "Foldic 0.5.0 — Release Notes",
+        zh: "Foldic 0.5.0 — 版本說明",
+        ja: "Foldic 0.5.0 — リリースノート",
+        ko: "Foldic 0.5.0 — 릴리스 노트",
+      };
+
+      function setLang(lang, remember) {
+        if (LANGS.indexOf(lang) === -1) lang = "en";
+        document.documentElement.lang = HTML_LANG[lang];
+        document.title = TITLES[lang];
+        document.querySelectorAll("[data-lang-page]").forEach(function (page) {
+          page.hidden = page.getAttribute("data-lang-page") !== lang;
+        });
+        document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.getAttribute("data-lang-tab") === lang));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-release-lang", lang); } catch (e) {}
+        }
+      }
+
+      document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          setLang(tab.getAttribute("data-lang-tab"), true);
+        });
+      });
+
+      // Initial language: ?lang= wins, then a remembered choice (this page's
+      // own, then the site-wide one), then the browser locale.
+      var initial = null;
+      var param = new URLSearchParams(location.search).get("lang");
+      if (param && LANGS.indexOf(param) !== -1) initial = param;
+      if (!initial) {
+        try { initial = localStorage.getItem("foldic-release-lang"); } catch (e) {}
+      }
+      if (!initial) {
+        var sitePath = null;
+        try { sitePath = localStorage.getItem("foldic-lang"); } catch (e) {}
+        if (sitePath === "/zh/") initial = "zh";
+        else if (sitePath === "/ja/") initial = "ja";
+        else if (sitePath === "/ko/") initial = "ko";
+        else if (sitePath === "/") initial = "en";
+      }
+      if (!initial) {
+        var langs = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ""];
+        for (var i = 0; i < langs.length && !initial; i++) {
+          if (/^zh/i.test(langs[i])) initial = "zh";
+          else if (/^ja/i.test(langs[i])) initial = "ja";
+          else if (/^ko/i.test(langs[i])) initial = "ko";
+          else if (/^en/i.test(langs[i])) initial = "en";
+        }
+      }
+      setLang(initial || "en", false);
+    })();
+  </script>
+</body>
+</html>
