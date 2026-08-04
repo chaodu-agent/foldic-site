@@ -444,7 +444,25 @@
     </details>
     <details>
       <summary>Does Foldic modify my Photos library?</summary>
-      <p>No. Foldic is strictly one-way: it reads your albums through Apple's PhotoKit and writes files to a folder you choose. It never edits, deletes, or reorganizes anything in Photos.</p>
+      <p>No. Foldic is strictly one-way: it reads your albums through Apple's PhotoKit (the Photos app and iCloud) and writes files to a folder you choose. It never edits, deletes, or reorganizes anything in your Photos library — and it never deletes photos from iCloud. Sync only ever flows in one direction: from your library to your folder.</p>
+    </details>
+    <details>
+      <summary>Can I keep my photos on my iPhone and just have an extra backup on a drive?</summary>
+      <p>Yes — that is exactly what Foldic is designed for. Foldic's access to your library is read-only: it mirrors albums to the folder you choose (like a USB drive plugged into your iPhone) and leaves your photos untouched. New photos are picked up on the next sync; files already backed up are never copied twice. The drive holds plain folders and files you can open on any computer.</p>
+    </details>
+    <details>
+      <summary>I want to move photos off my iPhone — back them up to a drive, then delete them. How do I do that safely?</summary>
+      <p>You can, but do it in this order:</p>
+      <ol>
+        <li><strong>Sync first.</strong> Let Foldic sync the album to your drive (say, to <code>Foldic/Album01/</code>) and open the folder to check the files are all there.</li>
+        <li><strong>Copy it outside the mirror.</strong> Copy the whole folder to a separate place on the drive, for example <code>Forever-Backup/Album01/</code>. That folder must be outside Foldic's backup folder — Foldic will never touch it.</li>
+        <li><strong>Now delete.</strong> Remove the album in the Photos app. The files under <code>Foldic/Album01/</code> become orphans — depending on your "Auto-delete orphans (to Trash)" setting they are kept or moved to the Trash. Either way, your permanent copy sits safely in <code>Forever-Backup/Album01/</code>.</li>
+      </ol>
+      <p>Guard that permanent copy well — from this moment it is your only one (Photos keeps deleted items in Recently Deleted for 30 days). Important memories deserve a second copy on another drive. And Foldic itself never deletes photos from your phone: its access is read-only by design — a backup tool should not hold the power to delete your originals.</p>
+    </details>
+    <details>
+      <summary>Can I keep browsing photos in the Photos app and iCloud, and always have an identical folder copy on my Mac?</summary>
+      <p>That is Foldic's everyday mode on the Mac — set it up once and forget it: choose a destination folder, then enable "Auto-sync when albums change" in settings (⚙︎). Keep Foldic open and use Photos and iCloud as usual; every change is mirrored to the folder automatically. You end up with two copies: your library in Photos + iCloud (browsable anywhere), and an identical folder of plain files on your Mac. This works even with "Optimize Mac Storage" turned on — "Download originals from iCloud when needed" is on by default, so syncs fetch the real originals.</p>
     </details>
     <details>
       <summary>Where do my photos go?</summary>
