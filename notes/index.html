@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foldic — Development Notes</title>
+  <meta name="description" content="Notes from building Foldic: what broke, what we measured, and what we changed.">
+  <meta property="og:title" content="Foldic — Development Notes">
+  <meta property="og:description" content="Notes from building Foldic: what broke, what we measured, and what we changed.">
+  <meta property="og:image" content="https://foldic.app/app-window.png">
+  <meta property="og:url" content="https://foldic.app/notes/">
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <style>
+    :root {
+      --green: #A9B64B; --green-deep: #3A4A26; --green-tint: #E4E6D0;
+      --ink: #2E3B20; --muted: #6E7A5B; --bg: #F5F3EA; --card: #EFEDDE;
+      --border: rgba(58, 74, 38, 0.16);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #A9B64B; --green-deep: #C3CE72; --green-tint: #2A3319;
+        --ink: #EDEFDC; --muted: #A3AC88; --bg: #171C0F; --card: #202716;
+        --border: rgba(169, 182, 75, 0.2);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--ink); background: var(--bg); line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 860px; margin: 0 auto; padding: 0.9rem 1.5rem;
+      backdrop-filter: saturate(180%) blur(16px); gap: 0.75rem; flex-wrap: wrap;
+    }
+    nav .brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--ink); }
+    nav .brand img { width: 28px; height: 28px; border-radius: 7px; }
+    .lang-switch {
+      display: inline-flex; gap: 0.25rem; padding: 0.22rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .lang-switch button {
+      font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer; padding: 0.3rem 0.75rem; border-radius: 999px;
+    }
+    .lang-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink); box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+    main[hidden] { display: none; }
+    h1 { font-size: clamp(1.9rem, 4.6vw, 2.4rem); line-height: 1.15; letter-spacing: -0.015em; }
+    p.sub { color: var(--muted); margin-top: 0.6rem; }
+    .note-list { margin-top: 2.2rem; display: flex; flex-direction: column; gap: 1rem; }
+    a.note {
+      display: block; text-decoration: none; color: var(--ink);
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.15rem 1.4rem; transition: transform 0.15s ease;
+    }
+    a.note:hover { transform: translateY(-1px); border-color: var(--green); }
+    .note .when { color: var(--muted); font-size: 0.85rem; }
+    .note .title { font-weight: 700; font-size: 1.12rem; letter-spacing: -0.01em; margin-top: 0.15rem; }
+    .note .blurb { color: var(--muted); font-size: 0.93rem; margin-top: 0.35rem; }
+    footer {
+      border-top: 1px solid var(--border); padding: 2.2rem 1.5rem; text-align: center;
+      color: var(--muted); font-size: 0.88rem;
+    }
+    footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.4rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
+    <div class="lang-switch" role="tablist" aria-label="Language">
+      <button type="button" role="tab" data-lang-tab="en" aria-selected="true">EN</button>
+      <button type="button" role="tab" data-lang-tab="zh" aria-selected="false">中文</button>
+      <button type="button" role="tab" data-lang-tab="ja" aria-selected="false">日本語</button>
+      <button type="button" role="tab" data-lang-tab="ko" aria-selected="false">한국어</button>
+    </div>
+  </nav>
+
+  <main data-lang-page="en">
+    <h1>Development notes</h1>
+    <p class="sub">What broke, what we measured, and what we changed.</p>
+    <div class="note-list">
+      <a class="note" href="/notes/ten-days-behind/">
+        <div class="when">August 5, 2026</div>
+        <div class="title">The day it shipped, it was already ten days old</div>
+        <p class="blurb">Foldic for iPhone spent eleven days in review. Auto-scanning, a cancel button that didn't stop, a screen left on for three hours — and the bug our power-saving feature accidentally caught.</p>
+      </a>
+    </div>
+  </main>
+
+  <main data-lang-page="zh" hidden>
+    <h1>開發筆記</h1>
+    <p class="sub">壞了什麼、量了什麼、改了什麼。</p>
+    <div class="note-list">
+      <a class="note" href="/notes/ten-days-behind/">
+        <div class="when">2026 年 8 月 5 日</div>
+        <div class="title">上架那天，它已經是十天前的版本</div>
+        <p class="blurb">Foldic iPhone 版在審核裡排了十一天。自動掃描、按了不會停的取消鍵、亮了三個小時的螢幕——以及我們的省電功能意外抓到的那個 bug。</p>
+      </a>
+    </div>
+  </main>
+
+  <main data-lang-page="ja" hidden>
+    <h1>開発ノート</h1>
+    <p class="sub">何が壊れ、何を計測し、何を変えたか。</p>
+    <div class="note-list">
+      <a class="note" href="/notes/ten-days-behind/">
+        <div class="when">2026年8月5日</div>
+        <div class="title">公開された日、それはすでに10日前のバージョンだった</div>
+        <p class="blurb">Foldic の iPhone 版は審査に11日間かかりました。自動スキャン、押しても止まらないキャンセル、3時間ついたままの画面——そして省電力機能が偶然捕まえたバグ。</p>
+      </a>
+    </div>
+  </main>
+
+  <main data-lang-page="ko" hidden>
+    <h1>개발 노트</h1>
+    <p class="sub">무엇이 고장났고, 무엇을 측정했고, 무엇을 바꿨는지.</p>
+    <div class="note-list">
+      <a class="note" href="/notes/ten-days-behind/">
+        <div class="when">2026년 8월 5일</div>
+        <div class="title">출시된 날, 그것은 이미 열흘 전의 버전이었다</div>
+        <p class="blurb">Foldic iPhone 버전은 심사에 11일이 걸렸습니다. 자동 스캔, 눌러도 멈추지 않는 취소, 세 시간 켜져 있던 화면 — 그리고 절전 기능이 우연히 잡아낸 버그.</p>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Foldic · <a href="/">foldic.app</a> · <a href="/releases/">Releases</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">Support</a>
+  </footer>
+
+  <script>
+    (function () {
+      var LANGS = ["en", "zh", "ja", "ko"];
+      var HTML_LANG = { en: "en", zh: "zh-Hant", ja: "ja", ko: "ko" };
+      var TITLES = {
+        en: "Foldic — Development Notes",
+        zh: "Foldic — 開發筆記",
+        ja: "Foldic — 開発ノート",
+        ko: "Foldic — 개발 노트",
+      };
+      function setLang(lang, remember) {
+        if (LANGS.indexOf(lang) === -1) lang = "en";
+        document.documentElement.lang = HTML_LANG[lang];
+        document.title = TITLES[lang];
+        document.querySelectorAll("[data-lang-page]").forEach(function (page) {
+          page.hidden = page.getAttribute("data-lang-page") !== lang;
+        });
+        document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.getAttribute("data-lang-tab") === lang));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-release-lang", lang); } catch (e) {}
+        }
+      }
+      document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+        tab.addEventListener("click", function () { setLang(tab.getAttribute("data-lang-tab"), true); });
+      });
+      var initial = null;
+      var param = new URLSearchParams(location.search).get("lang");
+      if (param && LANGS.indexOf(param) !== -1) initial = param;
+      if (!initial) { try { initial = localStorage.getItem("foldic-release-lang"); } catch (e) {} }
+      if (!initial) {
+        var sitePath = null;
+        try { sitePath = localStorage.getItem("foldic-lang"); } catch (e) {}
+        if (sitePath === "/zh/") initial = "zh";
+        else if (sitePath === "/ja/") initial = "ja";
+        else if (sitePath === "/ko/") initial = "ko";
+        else if (sitePath === "/") initial = "en";
+      }
+      if (!initial) {
+        var langs = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ""];
+        for (var i = 0; i < langs.length && !initial; i++) {
+          if (/^zh/i.test(langs[i])) initial = "zh";
+          else if (/^ja/i.test(langs[i])) initial = "ja";
+          else if (/^ko/i.test(langs[i])) initial = "ko";
+          else if (/^en/i.test(langs[i])) initial = "en";
+        }
+      }
+      setLang(initial || "en", false);
+    })();
+  </script>
+</body>
+</html>

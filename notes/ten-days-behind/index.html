@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The day it shipped, it was already ten days old — Foldic Notes</title>
+  <meta name="description" content="Foldic for iPhone spent eleven days in review. Here is everything we learned about it in the meantime — auto-scanning, cancellation, a power-saving screen, and the bug that feature caught.">
+  <meta property="og:title" content="The day it shipped, it was already ten days old">
+  <meta property="og:description" content="Foldic for iPhone spent eleven days in review. Here is everything those eleven days taught us — and the bug our power-saving feature accidentally caught.">
+  <meta property="og:image" content="https://foldic.app/app-window.png">
+  <meta property="og:url" content="https://foldic.app/notes/ten-days-behind/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <style>
+    :root {
+      --green: #A9B64B;
+      --green-deep: #3A4A26;
+      --green-tint: #E4E6D0;
+      --ink: #2E3B20;
+      --muted: #6E7A5B;
+      --bg: #F5F3EA;
+      --card: #EFEDDE;
+      --border: rgba(58, 74, 38, 0.16);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #A9B64B;
+        --green-deep: #C3CE72;
+        --green-tint: #2A3319;
+        --ink: #EDEFDC;
+        --muted: #A3AC88;
+        --bg: #171C0F;
+        --card: #202716;
+        --border: rgba(169, 182, 75, 0.2);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 860px; margin: 0 auto; padding: 0.9rem 1.5rem;
+      backdrop-filter: saturate(180%) blur(16px);
+      gap: 0.75rem; flex-wrap: wrap;
+    }
+    nav .brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--ink); }
+    nav .brand img { width: 28px; height: 28px; border-radius: 7px; }
+    .lang-switch {
+      display: inline-flex; gap: 0.25rem;
+      padding: 0.22rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .lang-switch button {
+      font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.3rem 0.75rem; border-radius: 999px;
+    }
+    .lang-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    main[hidden] { display: none; }
+    .back { display: inline-block; color: var(--muted); text-decoration: none; font-size: 0.88rem; margin-bottom: 1.6rem; }
+    .back:hover { color: var(--green-deep); }
+    h1 {
+      font-size: clamp(1.9rem, 4.6vw, 2.5rem);
+      line-height: 1.15; letter-spacing: -0.015em; font-weight: 700;
+    }
+    .byline { color: var(--muted); font-size: 0.9rem; margin-top: 0.7rem; }
+    h2 {
+      font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em;
+      margin: 2.6rem 0 0.8rem;
+    }
+    p { margin-top: 1rem; font-size: 1.02rem; }
+    .lede { font-size: 1.1rem; }
+    ul { margin-top: 0.8rem; padding-left: 1.3rem; }
+    li { margin-bottom: 0.6rem; }
+    li::marker { color: var(--green); }
+    strong { color: var(--green-deep); }
+    code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.86em; background: var(--card);
+      border: 1px solid var(--border); border-radius: 5px; padding: 0.08em 0.35em;
+    }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2.6rem 0 0; }
+    .outro { color: var(--muted); font-size: 0.95rem; }
+    .outro a { color: var(--green-deep); }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.2rem 1.5rem; text-align: center;
+      color: var(--muted); font-size: 0.88rem;
+    }
+    footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.4rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
+    <div class="lang-switch" role="tablist" aria-label="Language">
+      <button type="button" role="tab" data-lang-tab="en" aria-selected="true">EN</button>
+      <button type="button" role="tab" data-lang-tab="zh" aria-selected="false">中文</button>
+      <button type="button" role="tab" data-lang-tab="ja" aria-selected="false">日本語</button>
+      <button type="button" role="tab" data-lang-tab="ko" aria-selected="false">한국어</button>
+    </div>
+  </nav>
+
+  <!-- ============================== EN ============================== -->
+  <main data-lang-page="en">
+    <a class="back" href="/notes/">← Notes</a>
+    <h1>The day it shipped, it was already ten days old</h1>
+    <p class="byline">August 5, 2026 · Foldic development notes</p>
+
+    <p class="lede">Foldic for iPhone was approved today. We submitted it on July 25 — eleven days in the queue.</p>
+    <p>On the day it went in, that app had only ever run on a simulator and through a few short sessions on a real device. During the eleven days of waiting, I put it on an actual iPhone, plugged in an actual USB drive, and pointed it at a real library: 46 albums, 17,351 photos. That is when I found out how much of the version I had already shipped was wrong.</p>
+    <p>Here is what those eleven days changed. None of it is in the 0.4.0 that went live today — that build is who we were ten days ago.</p>
+
+    <h2>Don't decide to scan on the user's behalf</h2>
+    <p>The first version scanned the whole library the moment you opened it.</p>
+    <p>On a Mac that decision is harmless: local disk, a few seconds. On an iPhone with a USB drive attached it is a different thing entirely — every already-backed-up file on the drive has to be enumerated, which takes minutes across 46 albums, and the user may have opened the app just to look at it. Worse, there was no way to stop: you waited it out or you force-quit.</p>
+    <p>Now opening the app does one cheap thing: it lists your albums (using PhotoKit's estimated counts, no membership reads) in about a second. To scan, you tap <strong>Scan All</strong> at the bottom. Every album row also has its own <strong>Scan</strong> — to check one album you no longer scan the library.</p>
+    <p>The 30-minute timer and full-library change events are quiet on iPhone too. On this device, scanning happens when you ask for it.</p>
+
+    <h2>When you press cancel, it has to actually stop</h2>
+    <p>So I added cancellation. The first implementation checked two places: between albums, and inside the loop that walks the destination drive — the slowest part of a scan on USB storage. It tested well.</p>
+    <p>Then someone who actually uses it reported: <strong>I pressed cancel and that album kept scanning.</strong></p>
+    <p>The place I had missed was the third one, and it was the longest: asking PhotoKit for an album's membership. That enumeration looks up the resources of every single photo, which runs for minutes on a large album — and it sat <em>between</em> my two checkpoints. The flag was being set, and the scan did respect it; it just had to wait for that entire enumeration to finish before anything looked at it.</p>
+    <p>The native enumeration now checks the flag every 100 photos and between albums. Cancel lands in a second or two.</p>
+    <p>The incidental lesson mattered more than the cancellation: <strong>data from an abandoned pass must never be written down.</strong> A truncated file listing, if you use it for counts, produces the confident conclusion "this album is missing 8,000 files" — and the next sync acts on that conclusion. So an interrupted album is discarded whole, as if this pass never reached it. Its previous record stays intact.</p>
+
+    <h2>The screen was on for three hours</h2>
+    <p>Syncing on iPhone is foreground-only — there is no reliable access to external storage in the background. So while a sync runs we have to keep the screen from sleeping, or iOS locks the device, freezes the process, and the backup stops halfway.</p>
+    <p>That is correct, and it has a cost: a sync of ten thousand photos runs for hours, and the screen burns at whatever brightness you set for those hours.</p>
+    <p>There is now a power-saving screen (on by default). Thirty seconds without a touch while work runs, and the backlight fades to minimum over half a second while the display switches to a black screen with progress in near-black text. Black pixels on OLED emit nothing; with the backlight at minimum that is about as little power as this device can draw while still working. Any touch restores your exact brightness.</p>
+    <p><code>UIScreen.brightness</code> is system state — change it and it does not come back on its own, not even if the app is killed. So restoration is wired to four paths: the user's touch, work finishing, the app resigning active (a native notification observer), and page visibility. When a feature reaches for something that isn't ours, the recovery path deserves more care than the happy path.</p>
+
+    <h2>The bug the power-saving screen caught</h2>
+    <p>The day after that feature shipped I hit something contradictory: <strong>the numbers on the power-saving screen were advancing while the normal interface looked frozen.</strong></p>
+    <p>Both read the same data. The power-saving screen only puts it somewhere else.</p>
+    <p>The cause was layout. The progress row is a horizontal flex row, and its title — "[45 queued] Syncing 'All Photos'" — is set not to wrap. In CSS, text that cannot wrap also cannot shrink below its own width, so on a narrow phone the title claimed the whole row and pushed the counts, the one thing the user actually watches, outside the viewport. The numbers had been advancing the whole time, just past the right edge of the screen.</p>
+    <p>On a phone, <strong>invisible is indistinguishable from broken</strong>. The user's conclusion — "it's stuck" — was entirely correct given the information available to them.</p>
+    <p>The fix is small: let the title ellipsize, pin the counts where they can be seen. The interesting part is that a feature built to save battery became the diagnostic for a different bug, purely because it put the same data in a different place.</p>
+
+    <h2>Silence is not the same as dead</h2>
+    <p>The same investigation exposed something else: our diagnostic log wrote nothing at all between "queued" and "done".</p>
+    <p>"All Photos" holds 12,372 photos, 239 of them already backed up. The remaining twelve thousand each have to be pulled from iCloud as originals and written to the USB drive — that is hours of work. And for those hours the log was silent, which is indistinguishable from a hang.</p>
+    <p>It now writes one progress line a minute. One line — but it turns "working" and "wedged" into two different things.</p>
+
+    <h2>And the files you cannot see</h2>
+    <p>A user (me) got a wall of red text after a sync: 619 files moved to the Trash, 2 failed.</p>
+    <p>Those were AppleDouble files — the <code>._</code> twins macOS writes on exFAT/FAT drives when the filesystem cannot hold extended attributes. They carry no photo data, but our file-identity logic was treating them as photos: the tail of a <code>._</code> name happens to satisfy the same identifier pattern, so a lone sidecar could convince Foldic that a photo was still present.</p>
+    <p>Sidecars are now bound to their data file: alive while the file is, orphaned once it is gone (the file-name migration leaves these behind), and removed together when the file itself leaves as an orphan. A failed move to the Trash is retried once — those 2 failures were iOS's external-storage helper dropping requests under load, and a retry clears them. Whatever still fails is summarised in one quiet line instead of dumping two full container paths into the user's face.</p>
+
+    <h2>Writing the lessons down</h2>
+    <ul>
+      <li><strong>On a phone, invisible is broken.</strong> A desktop layout can hide its sins in wide margins. A phone cannot.</li>
+      <li><strong>Cancellation belongs in the longest loop, not the most obvious one.</strong> Both of my checkpoints were in sensible places. Between them sat work longer than either.</li>
+      <li><strong>One feature can be another feature's diagnostic</strong> — because it presents the same data differently.</li>
+      <li><strong>Long work has to keep making noise.</strong> Hours of silence reads as death, to users and to the developer reading the log.</li>
+    </ul>
+
+    <hr>
+    <p class="outro">These fixes are in TestFlight now and go out with the next submission. The iPhone version on the App Store today, 0.4.0, is that ten-day-old snapshot — it works, but none of the above is in it yet.</p>
+    <p class="outro">Foldic is $9.99 once, for <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac and iPhone together</a>.</p>
+  </main>
+
+  <!-- ============================== ZH ============================== -->
+  <main data-lang-page="zh" hidden>
+    <a class="back" href="/notes/">← 開發筆記</a>
+    <h1>上架那天，它已經是十天前的版本</h1>
+    <p class="byline">2026 年 8 月 5 日 · Foldic 開發筆記</p>
+
+    <p class="lede">Foldic 的 iPhone 版今天通過審核。我們在 7 月 25 日送審——中間隔了十一天。</p>
+    <p>送出去的那天，這個 App 只在模擬器上跑過，加上幾次短暫的實機測試。等待審核的這十一天裡，我把它裝上一支真的 iPhone、接上一顆真的 USB 隨身碟、對著一個真實的圖庫跑：46 本相簿、17,351 張照片。然後我才發現，已經送出去的那一版有多少地方是錯的。</p>
+    <p>以下是這十一天改掉的東西。它們全都不在今天上架的 0.4.0 裡——那一版是十天前的我們。</p>
+
+    <h2>不要替使用者決定要掃描</h2>
+    <p>第一版一打開就自動掃描整個圖庫。</p>
+    <p>在 Mac 上這個決定無傷大雅：本機磁碟，幾秒鐘的事。在 iPhone 上接一顆 USB 碟就完全是另一回事——磁碟上每一個已備份的檔案都要被列舉一次，46 本相簿要跑好幾分鐘，而使用者可能只是想打開來看一眼。更糟的是沒得停：你只能等它跑完，或者強制關掉 App。</p>
+    <p>現在打開只做一件便宜的事：把相簿列出來（用 PhotoKit 的估計張數，不讀成員清單），大約一秒鐘。要掃描，按底部那顆<strong>「掃描全部」</strong>。每一列相簿也各有自己的<strong>「掃描」</strong>——只想確認一本，不必掃整個圖庫。</p>
+    <p>30 分鐘的定時掃描、圖庫變動觸發的全庫重掃，在 iPhone 上也一律安靜。在這台裝置上，掃描只在你要求時發生。</p>
+
+    <h2>取消鍵按下去，要真的停</h2>
+    <p>於是我加了取消。第一版檢查兩個地方：每掃完一本相簿之間，以及走訪目的地磁碟的檔案迴圈裡——那是 USB 碟上掃描最慢的部分。測起來很好。</p>
+    <p>然後真的在用它的人回報：<strong>我按了取消，那本相簿還在掃。</strong></p>
+    <p>漏掉的是第三個地方，而它才是最長的：向 PhotoKit 索取一本相簿的成員清單。那段列舉會逐張查詢每張照片的資源，大相簿要跑上好幾分鐘——而它正好夾在我那兩個檢查點<em>中間</em>。取消旗標確實被設定了，掃描也確實尊重它，只是得等那段列舉整個跑完，才輪得到有人去看那個旗標。</p>
+    <p>現在原生層的列舉每 100 張、以及每換一本相簿都會檢查旗標。取消在一兩秒內生效。</p>
+    <p>而順帶學到的一件事比取消本身更重要：<strong>中途放棄的資料絕對不能被寫下來。</strong>一份被截斷的檔案清單，如果拿去算數量，會產生一個非常有自信的結論——「這本相簿少了 8,000 個檔案」——然後下一次同步就照著這個結論行動。所以被打斷的相簿是整本丟掉的，當作這一輪從沒碰到它，它上一次的記錄完好無損。</p>
+
+    <h2>螢幕亮了三個小時</h2>
+    <p>iPhone 上的同步只能在前景進行——背景沒有可靠的外接儲存存取。所以同步期間我們必須阻止螢幕休眠，否則 iOS 會鎖屏、程序被凍結、備份停在半路。</p>
+    <p>這是對的，但它有代價：一個上萬張照片的同步要跑好幾個小時，而螢幕就用你設定的亮度亮著好幾個小時。</p>
+    <p>現在有省電畫面（預設開啟）：工作進行中、30 秒沒有觸碰，背光會在半秒內漸暗到最低，畫面同時切換成純黑底、近黑色文字的進度顯示。OLED 上的黑色像素完全不發光，加上最低背光，這大概就是這台裝置一邊工作一邊能達到的最省電狀態。碰螢幕任何位置，立刻恢復你原本的亮度。</p>
+    <p><code>UIScreen.brightness</code> 是系統層級的狀態——改了它不會自己還原，就算 App 被殺掉也不會。所以還原鋪了四條路：使用者觸碰、工作完成、App 退到背景（原生層的通知觀察者）、以及頁面可見性變化。當一個功能去動了不屬於自己的東西，它的恢復路徑要比正常路徑更講究。</p>
+
+    <h2>省電模式抓到的 bug</h2>
+    <p>省電畫面上線的隔天，我遇到一件矛盾的事：<strong>省電畫面上的數字在推進，正常介面卻看起來凍住了。</strong></p>
+    <p>兩邊讀的是同一份資料。省電畫面只是把它放在別的地方。</p>
+    <p>原因在版面。進度列是一個橫向 flex 排版，而它的標題——「[45 個排隊中] 正在同步『All Photos』」——設定了不換行。CSS 裡不能換行的文字，也沒辦法縮到比自己的文字更窄，所以在 iPhone 的窄螢幕上，標題佔滿了整行，把使用者真正盯著看的計數推到了畫面外。數字一直在跳，只是跳在螢幕右邊看不到的地方。</p>
+    <p>在手機上，<strong>看不見等於壞掉</strong>。使用者的結論是「它卡住了」——而在他能拿到的資訊範圍內，這個結論完全正確。</p>
+    <p>修法很小：讓標題可以被省略號截斷，把計數釘在看得見的位置。但有意思的是，一個為了省電做的功能，變成了另一個 bug 的診斷工具——純粹因為它把同一份資料放在了不同的地方。</p>
+
+    <h2>沉默不等於當機</h2>
+    <p>同一次追查還暴露了另一件事：我們的診斷記錄在任務「排入」和「完成」之間，什麼都不寫。</p>
+    <p>「All Photos」有 12,372 張照片，其中 239 張已經備份。剩下的一萬兩千多張，每一張都要先從 iCloud 取回原始檔、再寫進 USB 碟——這是好幾個小時的工作。而在這幾個小時裡，記錄檔一片死寂，跟真的當機無法區分。</p>
+    <p>現在它每分鐘寫一行進度。就一行，但它讓「正在工作」和「已經死了」變成兩件分辨得出來的事。</p>
+
+    <h2>還有那些你看不見的檔案</h2>
+    <p>有個使用者（就是我）在同步後看到一整片紅字：619 個檔案成功移到垃圾桶，2 個失敗。</p>
+    <p>那些是 AppleDouble 檔案——macOS 在 exFAT／FAT 磁碟上放不下延伸屬性時，會另外寫一個 <code>._</code> 開頭的隱藏孿生檔。它們本身沒有照片資料，但我們的檔名識別邏輯把它們當成了照片：<code>._</code> 檔名的尾段恰好符合我們的識別碼格式，所以一個孤零零的側檔就可能讓 Foldic 相信「這張照片還在」。</p>
+    <p>現在側檔和它的本體綁在一起：本體在，它就是活的；本體不在了（檔名轉換留下的殘骸就是這種），它才是孤兒；本體自己是孤兒時，兩個一起走。移到垃圾桶失敗會自動重試一次——那 2 個失敗是 iOS 外接儲存的系統輔助程序在高負載下偶爾掉了請求，重試就過了。真正還是失敗的，現在收斂成一行安靜的摘要，而不是把兩條完整的容器路徑倒在使用者臉上。</p>
+
+    <h2>把教訓寫下來</h2>
+    <ul>
+      <li><strong>在手機上，看不見就是壞掉。</strong>桌面版的版面問題可以躲在寬螢幕的餘裕裡，手機沒有那個餘裕。</li>
+      <li><strong>取消要檢查最長的那個迴圈，不是最明顯的那個。</strong>我那兩個檢查點都放在合理的位置，但它們之間夾著一段比兩者都長的工作。</li>
+      <li><strong>一個功能可以是另一個功能的診斷工具</strong>——因為它用不同的方式呈現同一份資料。</li>
+      <li><strong>長時間的工作必須持續發出聲音。</strong>幾個小時的沉默，對使用者、對翻記錄檔的開發者來說，都等於死亡。</li>
+    </ul>
+
+    <hr>
+    <p class="outro">這些修正現在都在 TestFlight，會隨下一次送審一起出去。今天在 App Store 上架的 iPhone 版 0.4.0 就是那個十天前的快照——它可以用，但上面這些它都還沒有。</p>
+    <p class="outro">Foldic 一次購買 $9.99，<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac 與 iPhone 通用</a>。</p>
+  </main>
+
+  <!-- ============================== JA ============================== -->
+  <main data-lang-page="ja" hidden>
+    <a class="back" href="/notes/">← 開発ノート</a>
+    <h1>公開された日、それはすでに10日前のバージョンだった</h1>
+    <p class="byline">2026年8月5日 · Foldic 開発ノート</p>
+
+    <p class="lede">Foldic の iPhone 版が今日承認されました。提出したのは7月25日——審査に11日間かかりました。</p>
+    <p>提出した時点で、そのアプリはシミュレータと数回の短い実機テストしか経験していませんでした。待っている11日間で、私は実機の iPhone に入れ、実際の USB ドライブを挿し、本物のライブラリ——46アルバム、17,351枚——に向けて動かしました。そこで、すでに提出済みのバージョンがどれだけ間違っていたかを知ることになります。</p>
+    <p>以下がこの11日間で変わったことです。どれも今日公開された 0.4.0 には入っていません。あのビルドは10日前の私たちです。</p>
+
+    <h2>スキャンするかどうかを、ユーザーの代わりに決めない</h2>
+    <p>最初のバージョンは、開いた瞬間にライブラリ全体をスキャンしていました。</p>
+    <p>Mac ではこの判断は無害です。ローカルディスク、数秒の話。しかし USB ドライブを挿した iPhone では話がまったく違います。ドライブ上のバックアップ済みファイルをすべて列挙する必要があり、46アルバムでは数分かかります。ユーザーはただ様子を見たかっただけかもしれません。さらに悪いのは、止める手段がなかったこと。待ちきるか、強制終了するかの二択でした。</p>
+    <p>今は、開いたときに行うのは安価な処理ひとつだけです。アルバム一覧の表示（PhotoKit の推定枚数を使い、メンバーシップは読みません）に約1秒。スキャンしたいときは下の<strong>「すべてスキャン」</strong>をタップします。各アルバム行にも<strong>「スキャン」</strong>があり、1つのアルバムを確認するためにライブラリ全体をスキャンする必要はもうありません。</p>
+    <p>30分間隔のタイマーも、ライブラリ全体の変更イベントも、iPhone では静かにしています。この端末では、スキャンはあなたが求めたときに起こります。</p>
+
+    <h2>キャンセルを押したら、本当に止まらなければならない</h2>
+    <p>そこでキャンセルを追加しました。最初の実装は2箇所を確認していました。アルバムの合間と、保存先ドライブを走査するループの中——USB ストレージでのスキャンで最も遅い部分です。テストはうまくいきました。</p>
+    <p>ところが、実際に使っている人から報告が来ます。<strong>キャンセルを押したのに、そのアルバムはスキャンを続けている。</strong></p>
+    <p>見落としていた3番目の場所が、いちばん長い処理でした。PhotoKit にアルバムのメンバーシップを要求する部分です。この列挙は写真1枚ごとにリソースを問い合わせるため、大きなアルバムでは数分かかります。そしてそれは、私の2つのチェックポイントの<em>間</em>にありました。フラグは立っていたし、スキャンもそれを尊重していた。ただ、誰かがそれを見るまでに、その列挙が終わるのを待つ必要があったのです。</p>
+    <p>ネイティブ側の列挙は、写真100枚ごとと、アルバムの切り替えごとにフラグを確認するようになりました。キャンセルは1〜2秒で効きます。</p>
+    <p>そして副産物の教訓が、キャンセルそのものより重要でした。<strong>中断された処理のデータは、絶対に書き込んではならない。</strong>切り詰められたファイル一覧を件数の計算に使えば、「このアルバムは8,000ファイル足りない」という自信満々の結論が生まれ、次の同期はその結論に従って動きます。だから中断されたアルバムは丸ごと破棄され、この回は触れなかったものとして扱われます。前回の記録はそのまま残ります。</p>
+
+    <h2>画面が3時間ついていた</h2>
+    <p>iPhone での同期はフォアグラウンド専用です。バックグラウンドでは外部ストレージへの確実なアクセスがありません。ですから同期中は画面がスリープしないようにしなければならず、さもなければ iOS がロックし、プロセスが凍結し、バックアップは途中で止まります。</p>
+    <p>これは正しい。ただし代償があります。1万枚規模の同期は数時間走り、その間ずっと画面はあなたの設定した明るさで点灯し続けます。</p>
+    <p>そこで省電力画面を追加しました（デフォルトでオン）。作業中に30秒間タッチがなければ、バックライトは0.5秒かけて最低輝度まで落ち、画面は黒地にほぼ黒い文字で進捗を表示するものに切り替わります。OLED の黒いピクセルは発光しません。最低バックライトと合わせれば、動作しながら消費できる電力としてはほぼ最小です。どこかに触れれば、あなたの元の輝度に即座に戻ります。</p>
+    <p><code>UIScreen.brightness</code> はシステムの状態です。変更したら自動では戻りません。アプリが強制終了されても戻りません。だから復元は4つの経路に配線しました。ユーザーのタッチ、作業の完了、アプリの非アクティブ化（ネイティブの通知オブザーバ）、そしてページの可視性変化。自分のものでない状態に手を伸ばす機能では、復帰経路のほうが正常系より丁寧に作る価値があります。</p>
+
+    <h2>省電力画面が捕まえたバグ</h2>
+    <p>その機能を入れた翌日、矛盾に出会いました。<strong>省電力画面の数字は進んでいるのに、通常の画面は止まって見える。</strong></p>
+    <p>両方が読んでいるのは同じデータです。省電力画面はそれを別の場所に置いているだけ。</p>
+    <p>原因はレイアウトでした。進捗行は横方向の flex レイアウトで、そのタイトル——「[45件待機中] 『All Photos』を同期中」——は折り返さない設定です。CSS では、折り返せないテキストは自身の幅より狭く縮むこともできません。だから狭いスマートフォンの画面では、タイトルが行を占領し、ユーザーが実際に見ている件数を画面の外へ押し出していました。数字はずっと進んでいたのです。画面の右端の外側で。</p>
+    <p>スマートフォンでは、<strong>見えないことは壊れていることと区別できません</strong>。「止まっている」というユーザーの結論は、彼が得られる情報の範囲では完全に正しかった。</p>
+    <p>修正は小さいものです。タイトルを省略記号で切り、件数を見える位置に固定する。興味深いのは、バッテリーを節約するために作った機能が、別のバグの診断ツールになったこと——同じデータを違う場所に置いた、それだけの理由で。</p>
+
+    <h2>沈黙は死んでいることと同じではない</h2>
+    <p>同じ調査で、もうひとつ明らかになりました。診断ログは「キュー投入」と「完了」の間に、何も書いていなかったのです。</p>
+    <p>「All Photos」には12,372枚の写真があり、そのうち239枚はバックアップ済み。残る1万2千枚あまりは、1枚ずつ iCloud からオリジナルを取得し、USB ドライブに書き込む必要があります。これは数時間の作業です。そしてその数時間、ログは沈黙していました。ハングと区別がつきません。</p>
+    <p>今は1分ごとに進捗を1行書きます。たった1行ですが、「動いている」と「死んでいる」を別のものにしてくれます。</p>
+
+    <h2>そして、見えないファイルたち</h2>
+    <p>あるユーザー（私です）が同期後に赤い文字の壁を見ました。619ファイルをゴミ箱に移動、2件失敗。</p>
+    <p>それは AppleDouble ファイル——exFAT／FAT ドライブで拡張属性を保持できないときに macOS が書く <code>._</code> の双子です。写真データは持っていませんが、私たちのファイル識別ロジックはそれを写真として扱っていました。<code>._</code> 名の末尾がたまたま同じ識別子パターンを満たすため、孤立したサイドカー1つで「その写真はまだある」と Foldic を納得させられてしまうのです。</p>
+    <p>サイドカーは今、そのデータファイルと結び付けられています。ファイルがある間は生きていて、なくなれば孤立（ファイル名の移行がこれを残します）、ファイル自身が孤立ファイルとして去るときは一緒に去る。ゴミ箱への移動失敗は1回リトライします——あの2件は iOS の外部ストレージヘルパーが高負荷でリクエストを落としたもので、リトライで解決しました。それでも失敗したものは、コンテナのフルパスをユーザーの顔に叩きつける代わりに、静かな1行に要約されます。</p>
+
+    <h2>教訓を書き留める</h2>
+    <ul>
+      <li><strong>スマートフォンでは、見えないことは壊れていること。</strong>デスクトップのレイアウトは広い余白に罪を隠せます。スマートフォンにその余白はありません。</li>
+      <li><strong>キャンセルは、最も目立つループではなく、最も長いループに置く。</strong>私の2つのチェックポイントはどちらも妥当な場所にありました。その間に、どちらより長い処理が挟まっていたのです。</li>
+      <li><strong>ある機能は別の機能の診断ツールになりうる</strong>——同じデータを違う形で提示するからです。</li>
+      <li><strong>長い作業は音を出し続けなければならない。</strong>数時間の沈黙は、ユーザーにも、ログを読む開発者にも、死と同じに見えます。</li>
+    </ul>
+
+    <hr>
+    <p class="outro">これらの修正はすでに TestFlight にあり、次の提出で出ていきます。今日 App Store で公開された iPhone 版 0.4.0 は、あの10日前のスナップショットです。動きますが、上記のどれもまだ入っていません。</p>
+    <p class="outro">Foldic は一度の購入で $9.99、<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac と iPhone の両方</a>に。</p>
+  </main>
+
+  <!-- ============================== KO ============================== -->
+  <main data-lang-page="ko" hidden>
+    <a class="back" href="/notes/">← 개발 노트</a>
+    <h1>출시된 날, 그것은 이미 열흘 전의 버전이었다</h1>
+    <p class="byline">2026년 8월 5일 · Foldic 개발 노트</p>
+
+    <p class="lede">Foldic iPhone 버전이 오늘 승인되었습니다. 제출은 7월 25일 — 심사에 11일이 걸렸습니다.</p>
+    <p>제출한 날, 그 앱은 시뮬레이터와 몇 번의 짧은 실기기 테스트만 경험한 상태였습니다. 기다리는 11일 동안 저는 실제 iPhone에 넣고, 실제 USB 드라이브를 꽂고, 진짜 보관함 — 46개 앨범, 17,351장 — 을 향해 돌렸습니다. 그리고 이미 제출한 버전이 얼마나 잘못되어 있었는지 알게 되었습니다.</p>
+    <p>다음은 그 11일이 바꾼 것들입니다. 오늘 공개된 0.4.0에는 하나도 들어 있지 않습니다. 그 빌드는 열흘 전의 우리입니다.</p>
+
+    <h2>스캔할지를 사용자 대신 결정하지 말 것</h2>
+    <p>첫 버전은 열자마자 보관함 전체를 스캔했습니다.</p>
+    <p>Mac에서는 무해한 결정입니다. 로컬 디스크, 몇 초. 하지만 USB 드라이브를 연결한 iPhone에서는 완전히 다른 이야기입니다. 드라이브의 이미 백업된 파일을 모두 열거해야 하고, 46개 앨범이면 몇 분이 걸립니다. 사용자는 그냥 한번 열어보려던 것일 수도 있습니다. 더 나쁜 건 멈출 방법이 없었다는 점입니다. 끝날 때까지 기다리거나 강제 종료하는 것뿐이었습니다.</p>
+    <p>이제 앱을 열면 값싼 일 하나만 합니다. 앨범 목록 표시(PhotoKit의 추정 개수 사용, 멤버십은 읽지 않음)에 약 1초. 스캔하려면 아래의 <strong>'전체 스캔'</strong>을 누릅니다. 각 앨범 행에도 <strong>'스캔'</strong>이 있어서, 앨범 하나를 확인하려고 보관함 전체를 스캔할 필요가 없습니다.</p>
+    <p>30분 타이머와 보관함 전체 변경 이벤트도 iPhone에서는 조용합니다. 이 기기에서 스캔은 당신이 요청할 때 일어납니다.</p>
+
+    <h2>취소를 누르면 정말로 멈춰야 한다</h2>
+    <p>그래서 취소를 추가했습니다. 첫 구현은 두 곳을 확인했습니다. 앨범 사이, 그리고 대상 드라이브를 순회하는 루프 안 — USB 저장장치 스캔에서 가장 느린 부분입니다. 테스트는 잘 되었습니다.</p>
+    <p>그런데 실제로 쓰는 사람이 보고했습니다. <strong>취소를 눌렀는데 그 앨범은 계속 스캔한다.</strong></p>
+    <p>놓친 세 번째 장소가 가장 긴 작업이었습니다. PhotoKit에 앨범 멤버십을 요청하는 부분입니다. 이 열거는 사진 한 장마다 리소스를 조회하므로 큰 앨범에서는 몇 분이 걸립니다. 그리고 그것은 제 두 검사 지점 <em>사이</em>에 있었습니다. 플래그는 설정되었고 스캔도 그것을 존중했습니다. 다만 누군가 그것을 보기까지, 그 열거가 끝나기를 기다려야 했습니다.</p>
+    <p>이제 네이티브 열거는 사진 100장마다, 그리고 앨범이 바뀔 때마다 플래그를 확인합니다. 취소는 1~2초 안에 적용됩니다.</p>
+    <p>그리고 부수적으로 얻은 교훈이 취소 자체보다 중요했습니다. <strong>중단된 작업의 데이터는 절대 기록해서는 안 된다.</strong> 잘린 파일 목록을 개수 계산에 쓰면 '이 앨범은 8,000개 파일이 없다'는 확신에 찬 결론이 나오고, 다음 동기화는 그 결론에 따라 움직입니다. 그래서 중단된 앨범은 통째로 버려지고, 이번 패스는 그것에 닿지 않은 것으로 취급됩니다. 이전 기록은 그대로 남습니다.</p>
+
+    <h2>화면이 세 시간 동안 켜져 있었다</h2>
+    <p>iPhone에서 동기화는 포그라운드 전용입니다. 백그라운드에서는 외부 저장장치에 안정적으로 접근할 수 없습니다. 그래서 동기화 중에는 화면이 잠들지 않게 해야 합니다. 그러지 않으면 iOS가 잠기고, 프로세스가 얼고, 백업은 중간에 멈춥니다.</p>
+    <p>이는 옳습니다. 다만 대가가 있습니다. 만 장 규모의 동기화는 몇 시간을 돌고, 그 시간 내내 화면은 당신이 설정한 밝기로 켜져 있습니다.</p>
+    <p>이제 절전 화면이 있습니다(기본 켜짐). 작업 중 30초간 터치가 없으면 백라이트가 0.5초에 걸쳐 최저 밝기로 떨어지고, 화면은 검은 배경에 거의 검은 글자로 진행 상황을 보여주는 것으로 바뀝니다. OLED의 검은 픽셀은 빛을 내지 않습니다. 최저 백라이트와 합치면, 작동하면서 쓸 수 있는 가장 적은 전력에 가깝습니다. 어디든 터치하면 원래 밝기로 즉시 돌아옵니다.</p>
+    <p><code>UIScreen.brightness</code>는 시스템 상태입니다. 바꾸면 스스로 돌아오지 않습니다. 앱이 강제 종료되어도 돌아오지 않습니다. 그래서 복원을 네 경로에 연결했습니다. 사용자의 터치, 작업 완료, 앱의 비활성화(네이티브 알림 옵서버), 그리고 페이지 가시성 변화. 우리 것이 아닌 상태에 손을 뻗는 기능이라면, 복귀 경로가 정상 경로보다 더 정성을 들일 만합니다.</p>
+
+    <h2>절전 화면이 잡아낸 버그</h2>
+    <p>그 기능을 넣은 다음 날, 모순을 만났습니다. <strong>절전 화면의 숫자는 올라가는데, 일반 화면은 멈춰 보였습니다.</strong></p>
+    <p>둘은 같은 데이터를 읽습니다. 절전 화면은 그것을 다른 자리에 놓을 뿐입니다.</p>
+    <p>원인은 레이아웃이었습니다. 진행 줄은 가로 flex 레이아웃이고, 제목 — '[45개 대기 중] 'All Photos' 동기화 중' — 은 줄바꿈하지 않도록 설정되어 있습니다. CSS에서 줄바꿈할 수 없는 텍스트는 자기 너비보다 좁게 줄어들 수도 없습니다. 그래서 좁은 휴대폰 화면에서 제목이 줄 전체를 차지하고, 사용자가 실제로 보고 있는 개수를 화면 밖으로 밀어냈습니다. 숫자는 계속 올라가고 있었습니다. 화면 오른쪽 바깥에서.</p>
+    <p>휴대폰에서 <strong>보이지 않는 것은 고장난 것과 구별되지 않습니다</strong>. '멈췄다'는 사용자의 결론은, 그가 가진 정보 안에서는 완전히 옳았습니다.</p>
+    <p>수정은 작습니다. 제목을 줄임표로 자르고, 개수를 보이는 자리에 고정합니다. 흥미로운 점은 배터리를 아끼려고 만든 기능이 다른 버그의 진단 도구가 되었다는 것입니다 — 같은 데이터를 다른 곳에 두었다는 이유만으로.</p>
+
+    <h2>침묵은 죽음과 같지 않다</h2>
+    <p>같은 조사에서 또 하나가 드러났습니다. 진단 로그는 '대기열 추가'와 '완료' 사이에 아무것도 쓰지 않았습니다.</p>
+    <p>'All Photos'에는 12,372장이 있고 그중 239장은 이미 백업되어 있습니다. 남은 1만 2천여 장은 각각 iCloud에서 원본을 받아 USB 드라이브에 써야 합니다. 몇 시간의 작업입니다. 그리고 그 몇 시간 동안 로그는 침묵했습니다. 멈춤과 구별할 수 없습니다.</p>
+    <p>이제 1분마다 진행 상황을 한 줄씩 씁니다. 한 줄이지만, '작동 중'과 '죽음'을 서로 다른 것으로 만들어 줍니다.</p>
+
+    <h2>그리고 보이지 않는 파일들</h2>
+    <p>어떤 사용자(저입니다)가 동기화 후 붉은 글자의 벽을 봤습니다. 619개 파일을 휴지통으로, 2개 실패.</p>
+    <p>그것은 AppleDouble 파일 — exFAT/FAT 드라이브에서 확장 속성을 담을 수 없을 때 macOS가 쓰는 <code>._</code> 쌍둥이입니다. 사진 데이터는 없지만, 우리 파일 식별 로직은 그것을 사진으로 취급했습니다. <code>._</code> 이름의 끝부분이 우연히 같은 식별자 패턴을 만족하기 때문에, 홀로 남은 사이드카 하나로 '그 사진은 아직 있다'고 Foldic을 납득시킬 수 있었습니다.</p>
+    <p>이제 사이드카는 데이터 파일과 묶여 있습니다. 파일이 있는 동안은 살아 있고, 사라지면 고아가 되며(파일 이름 마이그레이션이 이런 것들을 남깁니다), 파일 자신이 고아로 떠날 때 함께 떠납니다. 휴지통 이동 실패는 한 번 재시도합니다 — 그 2개는 iOS의 외부 저장장치 헬퍼가 고부하에서 요청을 놓친 것이고, 재시도로 해결되었습니다. 그래도 실패한 것은 컨테이너 전체 경로를 사용자 얼굴에 들이붓는 대신 조용한 한 줄로 요약됩니다.</p>
+
+    <h2>교훈을 적어 두기</h2>
+    <ul>
+      <li><strong>휴대폰에서 보이지 않는 것은 고장난 것이다.</strong> 데스크톱 레이아웃은 넓은 여백에 죄를 숨길 수 있습니다. 휴대폰에는 그 여백이 없습니다.</li>
+      <li><strong>취소는 가장 눈에 띄는 루프가 아니라 가장 긴 루프에 넣는다.</strong> 제 두 검사 지점은 모두 합리적인 곳에 있었습니다. 그 사이에 둘보다 긴 작업이 끼어 있었습니다.</li>
+      <li><strong>한 기능은 다른 기능의 진단 도구가 될 수 있다</strong> — 같은 데이터를 다르게 보여주기 때문입니다.</li>
+      <li><strong>긴 작업은 계속 소리를 내야 한다.</strong> 몇 시간의 침묵은 사용자에게도, 로그를 읽는 개발자에게도 죽음처럼 보입니다.</li>
+    </ul>
+
+    <hr>
+    <p class="outro">이 수정들은 이미 TestFlight에 있고 다음 제출과 함께 나갑니다. 오늘 App Store에 공개된 iPhone 버전 0.4.0은 그 열흘 전의 스냅샷입니다. 작동하지만, 위의 어느 것도 아직 들어 있지 않습니다.</p>
+    <p class="outro">Foldic은 한 번 구매로 $9.99, <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac과 iPhone 모두</a>.</p>
+  </main>
+
+  <footer>
+    © 2026 Foldic · <a href="/">foldic.app</a> · <a href="/notes/">Notes</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">Support</a>
+  </footer>
+
+  <script>
+    (function () {
+      var LANGS = ["en", "zh", "ja", "ko"];
+      var HTML_LANG = { en: "en", zh: "zh-Hant", ja: "ja", ko: "ko" };
+      var TITLES = {
+        en: "The day it shipped, it was already ten days old — Foldic Notes",
+        zh: "上架那天，它已經是十天前的版本 — Foldic 開發筆記",
+        ja: "公開された日、それはすでに10日前のバージョンだった — Foldic 開発ノート",
+        ko: "출시된 날, 그것은 이미 열흘 전의 버전이었다 — Foldic 개발 노트",
+      };
+
+      function setLang(lang, remember) {
+        if (LANGS.indexOf(lang) === -1) lang = "en";
+        document.documentElement.lang = HTML_LANG[lang];
+        document.title = TITLES[lang];
+        document.querySelectorAll("[data-lang-page]").forEach(function (page) {
+          page.hidden = page.getAttribute("data-lang-page") !== lang;
+        });
+        document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.getAttribute("data-lang-tab") === lang));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-release-lang", lang); } catch (e) {}
+        }
+      }
+
+      document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          setLang(tab.getAttribute("data-lang-tab"), true);
+        });
+      });
+
+      var initial = null;
+      var param = new URLSearchParams(location.search).get("lang");
+      if (param && LANGS.indexOf(param) !== -1) initial = param;
+      if (!initial) {
+        try { initial = localStorage.getItem("foldic-release-lang"); } catch (e) {}
+      }
+      if (!initial) {
+        var sitePath = null;
+        try { sitePath = localStorage.getItem("foldic-lang"); } catch (e) {}
+        if (sitePath === "/zh/") initial = "zh";
+        else if (sitePath === "/ja/") initial = "ja";
+        else if (sitePath === "/ko/") initial = "ko";
+        else if (sitePath === "/") initial = "en";
+      }
+      if (!initial) {
+        var langs = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ""];
+        for (var i = 0; i < langs.length && !initial; i++) {
+          if (/^zh/i.test(langs[i])) initial = "zh";
+          else if (/^ja/i.test(langs[i])) initial = "ja";
+          else if (/^ko/i.test(langs[i])) initial = "ko";
+          else if (/^en/i.test(langs[i])) initial = "en";
+        }
+      }
+      setLang(initial || "en", false);
+    })();
+  </script>
+</body>
+</html>
