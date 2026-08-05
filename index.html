@@ -122,7 +122,7 @@
     .product img.phone { max-width: 300px; border-radius: 34px; }
     /* The iPhone app ships after the Mac one; flip data-ios-live on <body> to
        "true" the day it is approved and the real button takes over. */
-    body[data-ios-live="false"] .ios-live { display: none; }
+    body[data-ios-live="true"] .ios-live { display: none; }
     body[data-ios-live="true"] .ios-soon { display: none; }
     .cta.pending {
       background: transparent; color: var(--muted);
@@ -262,7 +262,7 @@
     })();
   </script>
 </head>
-<body data-platform="mac" data-ios-live="false">
+<body data-platform="mac" data-ios-live="true">
   <nav>
     <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
     <div class="links">
