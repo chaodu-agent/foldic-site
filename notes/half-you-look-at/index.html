@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>We rewrote the half you look at — Foldic Notes</title>
-  <meta name="description" content="Foldic for Mac and iPhone were both submitted today, rebuilt as native Swift. What stayed in Rust, the sandbox bug that resolves a bookmark and then refuses every write, and five defects no test ever found.">
+  <meta name="description" content="Foldic for Mac and iPhone are both native SwiftUI now, rebuilt for the experience — and the part that decides what happens to your photos is the same Rust engine it was yesterday, on purpose.">
   <meta property="og:title" content="We rewrote the half you look at">
   <meta property="og:description" content="Foldic for Mac and iPhone are both native Swift now. The part that decides what happens to your photos is the same code it was yesterday.">
   <meta property="og:type" content="article">
@@ -164,43 +164,21 @@
    lists that scroll like the system's own, a
    backup that keeps running with the window
    closed, and one less layer to be wrong in</pre>
-    <p>Until today Foldic was a Rust program with an HTML interface in a webview. That worked; it shipped six versions. It also meant every album row was a document being re-rendered, and that the parts of macOS an app like this actually needs — the menu bar, a window that remembers itself, the file access a sandbox demands — were reached through a bridge I had written myself.</p>
-    <p>The interface is SwiftUI now. What is <em>not</em> rewritten is the part that decides things.</p>
 
-    <h2>Rust kept the decisions; Swift got the loop</h2>
-    <p>There is a crate with no dependencies at all whose only job is to answer questions. What is this file's identity. What should this export be named. Do these two folders overlap. Which photos still need copying. Which folder belongs to this album, given that someone renamed it.</p>
-    <p>Those answers have to be identical on a Mac and on an iPhone, because both write to the same drive. Keeping them in one place is not about reuse — it is so that two apps cannot quietly disagree about which files on your disk are yours.</p>
-    <p>The Flickr engine stayed in Rust too: OAuth 1.0a signing, adaptive pacing, the backoff schedule. It is dull, error-prone, and had just been tuned against a live rate limit; rewriting it would have bought nothing. But the download <em>loop</em> moved to Swift. Rust now returns a delay instead of sleeping, and Swift sleeps a task it can cancel. No cancellation flag crosses the boundary at all — which is precisely the regression that once broke every sync.</p>
+      <h2>Six versions on a webview</h2>
+      <p>Until today, Foldic's interface was a web page inside a window. That is not a confession — it shipped six versions that way, scanned real libraries, and did its job. But every album row was a document being re-rendered, and the parts of the system an app like this lives on — the menu bar, a window that remembers itself, the photo library — could only be reached through a bridge we wrote and maintained ourselves, one call at a time.</p>
+      <p>It worked. "Works" is not the bar we want to clear.</p>
 
-    <h2>A sandbox will resolve a bookmark and then refuse every write</h2>
-    <p>The Mac app is sandboxed, so it remembers your backup folder as a bookmark rather than a path — an external drive comes back at a different path and a path would silently stop working.</p>
-    <p>Those bookmarks were being created and resolved with no options. Outside a sandbox that is fine. Inside a container it hands back a URL that looks completely correct and then refuses every single write.</p>
-    <p>The fix is one option at both ends. The interesting part is that this bug cannot appear until the app is in a container, and when it does appear it looks like a bug in the exporter. So the sandbox got tested before submission rather than after: a real container, a real Photos grant, twenty-eight files written, the app relaunched to prove the folder survived.</p>
+      <h2>What native feels like</h2>
+      <p>The interface is SwiftUI now, drawn by macOS and by iOS themselves. Most of the difference is not a feature you can list — it is a hundred small things that stop being <em>almost</em> right. Lists scroll the way the system's own lists scroll. The window remembers where you left it. Switching languages applies on the spot. The app opens in a blink, because there is no page to load.</p>
+      <p>And some of it is a feature. On the Mac, Foldic now lives in the menu bar: close the window and a running backup keeps going, the icon turning until it is done. A web page in a window cannot do that. This rewrite happened so that things like that stop being impossible.</p>
 
-    <h2>Five bugs, and not one of them came from a test</h2>
-    <p>Seventy-eight tests were green through all of this. Every one of the following came from opening the app and using it on a real library.</p>
-    <p><strong>Two folders that deleted each other.</strong> Both tabs were pointed at one folder, and each mirror classifies the other's files as extra. Nothing had been lost, which was luck rather than design. Overlap is now a rule in the Rust core, refused when you pick the folder, and automatic cleanup suspends itself while an existing overlap holds.</p>
-    <p><strong>Auto-sync started a backup nobody asked for.</strong> One added photo began a first-time export of 12,388 photos, because an album that was never synced has everything pending. Which albums to maintain is now recorded when you press Sync, not inferred. My first attempt inferred it from whether the folder existed — and was satisfied by the debris left by the very bug it was meant to prevent.</p>
-    <p><strong>One photo produced twenty-three change events.</strong> PhotoKit compares a change against the fetch result you hand it, so the result has to be replaced with the one the change carries. Hand it a stale one and it reports the same difference forever.</p>
-    <p><strong>Renaming an album downloaded it again.</strong> The folder was derived from the album's current title, so a rename pointed the app at a folder that did not exist yet. The mapping is persisted now, and it adopts the folder an older version left behind instead of starting a second mirror beside it.</p>
-    <p><strong>Comparing a large album froze the window.</strong> It was running on the main actor.</p>
+      <h2>The half we refused to rewrite</h2>
+      <p>The engine — the part that decides which photos still need copying, what every file is named, which folder belongs to which album — is written in Rust, and it did not change today. That is deliberate. Rust is built for exactly this job: fast, and memory-safe by construction, in the one place where a wrong pointer would be aimed at your photos. The code that touches your files should be the most boring, most heavily tested code in the app.</p>
+      <p>It is also the <em>same</em> engine on the Mac and on the iPhone. Both write to the same drive, so both must agree, always, about which files there are yours — and code that exists once cannot disagree with itself.</p>
+      <p>We rewrote the half you look at precisely so we would never have to rewrite the half you trust.</p>
 
-    <h2>Two things only a store build can answer</h2>
-    <p>Because the new app takes the old one's bundle identifier, an update lands on top of it and inherits its container — its settings and the folder bookmark it minted. Reading that is the difference between an upgrade and a fresh start.</p>
-    <p>Whether the inherited bookmark resolves under a store signature cannot be tested here, and not for lack of trying. Without the entitlement that carries the app identity, the bookmark cannot resolve; with it, macOS refuses to launch a Developer ID build at all. Both roads are closed, so the question goes to review with the app.</p>
-    <p>What makes that acceptable is that the downside is bounded and stated: if Foldic asks for your backup folder again, choose the same one and nothing is copied twice. Knowing which of your unknowns are cheap is most of the work of shipping.</p>
-
-    <h2>The rules that cost a resubmission each</h2>
-    <p>A build number has to equal the one inside the bundle, and macOS accepts at most three components — the four-component form is iOS's, and the tooling hands it to you by default.</p>
-    <p>Screenshots must have no alpha channel, and every macOS window capture has one because of its shadow. Nothing that writes a PNG for you will remove it; some tools put it back. And a capture that already fits should be padded, never scaled, or the text arrives softer than the app really looks.</p>
-    <p>Today's iPhone screenshots needed three attempts at one rule — which rows at the top of a hand-cropped capture are leftover banner and which are the app's own toolbar. The first version deleted the toolbar. The second shaved nine pixels off the buttons. The third left behind eight pixels of one letter. Each wrong version was one command away from the store.</p>
-
-    <h2>iOS 17, deliberately</h2>
-    <p>Native SwiftUI on the iPhone means iOS 17. Lowering that is cheap — measured rather than guessed, iOS 16 is three compiler errors and iOS 15 is eleven — and it is still not worth doing.</p>
-    <p>The phones iOS 16 would add are the 2017 models, and this app exists to write to a drive you plug in; those are Lightning devices that need a powered adapter. And a minimum we have no way to actually run is a liability in an app that moves and deletes files.</p>
-    <p>Direction matters too: lowering a floor later is a gift to whoever asks, and raising one is a broken promise. So the higher floor ships, and if anyone asks for iOS 16 it is half an hour's work.</p>
-
-    <div class="callout">Both versions are in review now. The Mac's 0.7.0 replaces the webview build directly. The iPhone's 0.7.0 jumps over two versions that never made it to the store, so it arrives with user-triggered scanning, cancellable scans, readable file names, a power-saving screen and an in-app log all at once.</div>
+      <div class="callout">Both versions are in review now. The Mac's 0.7.0 replaces the webview build directly. The iPhone's 0.7.0 jumps over two versions that never made it to the store, so it arrives with user-triggered scanning, cancellable scans, readable file names, a power-saving screen and an in-app log all at once.</div>
     <p class="outro">Foldic is $9.99 once, for <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac and iPhone together</a>.</p>
   </main>
 
@@ -235,43 +213,21 @@
    捲動起來跟系統自己的清單一樣、
    關掉視窗備份還會繼續跑,
    以及少一層會出錯的東西</pre>
-    <p>在今天之前,Foldic 是一個 Rust 程式,介面是放在 webview 裡的 HTML。那能用,而且出了六個版本。但那也意味著每一列相簿都是一份被重新算繪的文件,而這種 App 真正需要的那些 macOS 部件——選單列、記得自己位置的視窗、沙盒要求的檔案存取——全都得透過我自己寫的橋接去拿。</p>
-    <p>介面現在是 SwiftUI。<em>沒有</em>被改寫的,是負責做決定的那一部分。</p>
 
-    <h2>決定留在 Rust,迴圈交給 Swift</h2>
-    <p>有一個完全沒有任何依賴的 crate,它唯一的工作就是回答問題:這個檔案的身份是什麼。這個匯出該叫什麼名字。這兩個資料夾有沒有重疊。哪些照片還沒複製。這個相簿對應哪個資料夾——如果有人改過它的名字。</p>
-    <p>這些答案在 Mac 和 iPhone 上必須完全一致,因為兩者寫的是同一顆硬碟。把它們放在一個地方不是為了重用,而是為了讓兩個 App 不可能悄悄地對「你磁碟上哪些檔案是你的」產生不同意見。</p>
-    <p>Flickr 引擎也留在 Rust:OAuth 1.0a 簽章、自適應節流、退避排程。那些東西枯燥、容易寫錯,而且剛剛才對著真實的速率限制調校過;重寫它什麼也換不到。但下載的<em>迴圈</em>搬到了 Swift。Rust 現在回傳一個延遲而不是自己睡,由 Swift 去睡一個它可以取消的 task。取消旗標完全不跨越邊界——那正是曾經把每一次同步都弄壞的那個回歸。</p>
+      <h2>在 webview 上出了六個版本</h2>
+      <p>今天之前,Foldic 的介面是一個放在視窗裡的網頁。這不是自首——它就這樣出了六個版本,掃過真實的圖庫,把工作做完了。但每一列相簿都是一份被重新算繪的文件,而這種 App 真正依賴的那些系統部件——選單列、記得自己位置的視窗、照片圖庫——都只能透過我們自己寫、自己維護的橋接去碰,一次一個呼叫。</p>
+      <p>它能用。但「能用」不是我們想守住的標準。</p>
 
-    <h2>沙盒會把 bookmark 解開,然後拒絕每一次寫入</h2>
-    <p>Mac 版在沙盒裡,所以它用 bookmark 而不是路徑記住你的備份資料夾——外接硬碟重新掛載時路徑會變,用路徑會無聲地失效。</p>
-    <p>那些 bookmark 當時建立和解析都沒有帶任何選項。在沙盒外那沒問題。在容器裡,它會交還一個看起來完全正確的 URL,然後拒絕每一次寫入。</p>
-    <p>修法是兩端各加一個選項。有意思的是這個 bug 在 App 進到容器之前不可能出現,而它出現時看起來像是匯出程式壞了。所以沙盒是在送審前測的,不是之後:真實的容器、真實的「照片」授權、寫入二十八個檔案、重新啟動確認資料夾還在。</p>
+      <h2>原生的手感</h2>
+      <p>介面現在是 SwiftUI,由 macOS 和 iOS 自己繪製。大部分的差別不是一條條列得出來的功能——是上百件「差一點點」的小事,從此不再差那一點。清單捲動起來和系統自己的清單一樣。視窗記得你上次把它放在哪。切換語言當場生效。App 一眨眼就開好,因為沒有網頁要載入。</p>
+      <p>也有真正的功能。Mac 版現在常駐選單列:關掉視窗,進行中的備份會繼續跑,圖示會一直轉到做完為止。放在視窗裡的網頁做不到這件事。這次重寫,就是為了讓這一類的事不再是不可能。</p>
 
-    <h2>五個 bug,沒有一個是測試找到的</h2>
-    <p>整個過程中七十八個測試全綠。下面每一個都是靠打開 App、對著真實圖庫去用才發現的。</p>
-    <p><strong>兩個互相刪檔的資料夾。</strong>兩個分頁被指向同一個資料夾,而每一份鏡像都會把對方的檔案判定為多餘。沒有東西真的被刪掉,那是運氣而不是設計。重疊現在是 Rust 核心裡的一條規則,選資料夾時就會被拒絕;而在既有的重疊還存在時,自動清理會自己暫停。</p>
-    <p><strong>自動同步啟動了沒人要求的備份。</strong>加入一張照片就開始了 12,388 張的首次匯出,因為一個從未同步過的相簿,所有東西都是待處理。要維護哪些相簿,現在是在你按下同步時記錄下來的,不是推論出來的。我第一次的做法是看資料夾存不存在——而它被它本該預防的那個 bug 留下的殘骸給滿足了。</p>
-    <p><strong>一張照片產生了二十三個變更事件。</strong>PhotoKit 是拿變更去比對你交給它的擷取結果,所以那個結果必須換成變更自己帶著的那一份。交給它一份過期的,它就會永遠回報同樣的差異。</p>
-    <p><strong>改相簿名字就整個重新下載。</strong>資料夾是從相簿當前的標題推導出來的,所以改名之後 App 指向的是一個還不存在的資料夾。對應關係現在被持久化了,而且它會認領舊版本留下的那個資料夾,而不是在旁邊另起一份鏡像。</p>
-    <p><strong>比對大相簿會凍住視窗。</strong>它跑在主執行緒上。</p>
+      <h2>我們拒絕重寫的那一半</h2>
+      <p>引擎——決定哪些照片還沒複製、每個檔案叫什麼名字、哪個相簿對應哪個資料夾的那部分——是用 Rust 寫的,而它今天沒有變。這是刻意的。Rust 正是為這種工作而生:快,而且從語言層面就記憶體安全——而唯一一個指標指錯就會指到你照片上的地方,就是這裡。碰你檔案的程式碼,應該是整個 App 裡最無聊、被測得最徹底的程式碼。</p>
+      <p>而且 Mac 和 iPhone 用的是<em>同一個</em>引擎。兩邊寫的是同一顆硬碟,所以兩邊對「那裡哪些檔案是你的」必須永遠意見一致——只存在一份的程式碼,不可能跟自己意見不合。</p>
+      <p>我們重寫你看得見的那一半,正是為了永遠不必重寫你信任的那一半。</p>
 
-    <h2>兩件只有商店建置能回答的事</h2>
-    <p>因為新 App 沿用舊 App 的 bundle id,更新會蓋在它上面並繼承它的容器——它的設定,以及它產生的那個資料夾 bookmark。讀不讀那些東西,決定了這是一次升級還是一次從零開始。</p>
-    <p>繼承來的 bookmark 在商店簽章下解不解得開,在這裡測不出來,而且不是因為沒試。缺少帶有 App 身份的那個 entitlement,bookmark 就解不開;帶上它,macOS 就根本不肯啟動一個 Developer ID 簽的版本。兩條路都封死,所以這個問題跟著 App 一起進審核。</p>
-    <p>讓這件事可以接受的原因是:壞掉的代價是有界的,而且說清楚了——如果 Foldic 再請你選一次備份資料夾,選原本那個,不會有任何東西被複製兩次。知道自己哪些未知是便宜的,佔了出貨這件事的大半。</p>
-
-    <h2>各花掉一次重新送審的規則</h2>
-    <p>建置號必須跟 bundle 裡面那個一致,而 macOS 最多只接受三段——四段的形式是 iOS 的,而工具預設就會給你四段。</p>
-    <p>截圖不能有 alpha 通道,而每一張 macOS 視窗截圖都因為陰影而有一個。沒有任何幫你寫出 PNG 的工具會移掉它,有些還會加回去。而一張本來就塞得進去的截圖應該用填邊而不是縮放,否則文字看起來會比 App 實際的樣子更軟。</p>
-    <p>今天的 iPhone 截圖光是一條規則就試了三次——手動裁切後的截圖,頂端哪幾列是殘餘橫幅、哪幾列是 App 自己的工具列。第一版把工具列刪掉了。第二版從按鈕上刮掉九個像素。第三版留下了某個字母的八個像素。每一個錯的版本都只差一個指令就上商店了。</p>
-
-    <h2>iOS 17,是刻意的</h2>
-    <p>iPhone 上的原生 SwiftUI 意味著 iOS 17。把它降下來很便宜——這是量過而不是猜的,iOS 16 是三個編譯錯誤,iOS 15 是十一個——但仍然不值得做。</p>
-    <p>iOS 16 換到的手機是 2017 年那批,而這個 App 存在的理由是往你插上去的硬碟寫檔;那些是 Lightning 機,需要外部供電的轉接器。而一個我們根本無法實際執行的最低版本,對一個會搬動和刪除檔案的 App 來說是負債。</p>
-    <p>方向也很重要:之後把下限降低,是給提出要求的人的禮物;把下限升高,是打破承諾。所以先出高的那個,如果真有人要 iOS 16,那是半小時的工作。</p>
-
-    <div class="callout">兩個版本現在都在審核中。Mac 的 0.7.0 直接取代 webview 版。iPhone 的 0.7.0 跨過了兩個從未上架的版本,所以手動觸發掃描、可取消的掃描、可讀的檔名、省電畫面和 App 內日誌會一次全部到位。</div>
+      <div class="callout">兩個版本現在都在審核中。Mac 的 0.7.0 直接取代 webview 版。iPhone 的 0.7.0 跨過了兩個從未上架的版本,所以手動觸發掃描、可取消的掃描、可讀的檔名、省電畫面和 App 內日誌會一次全部到位。</div>
     <p class="outro">Foldic 一次購買 $9.99,<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac 與 iPhone 通用</a>。</p>
   </main>
 
@@ -307,43 +263,21 @@
    システム標準と同じ滑らかなスクロール、
    ウインドウを閉じても続くバックアップ、
    そして間違えうる層が 1 つ減ったこと</pre>
-    <p>今日までの Foldic は、WebView の中に HTML のインターフェースを持つ Rust のプログラムでした。それは動きましたし、6 つのバージョンを出しました。同時に、アルバムの 1 行ごとが再描画されるドキュメントであり、この種のアプリが本当に必要とする macOS の部品——メニューバー、自分の位置を覚えるウインドウ、サンドボックスが要求するファイルアクセス——はすべて自分で書いたブリッジ越しに触るしかないという意味でもありました。</p>
-    <p>インターフェースは SwiftUI になりました。書き直して<em>いない</em>のは、判断する部分です。</p>
 
-    <h2>判断は Rust に残し、ループは Swift へ</h2>
-    <p>依存関係をまったく持たないクレートがあり、その唯一の仕事は問いに答えることです。このファイルの同一性は何か。この書き出しは何という名前にすべきか。この 2 つのフォルダは重なっていないか。どの写真がまだコピーされていないか。名前が変更されたとして、このアルバムはどのフォルダに対応するのか。</p>
-    <p>これらの答えは Mac でも iPhone でも同一でなければなりません。どちらも同じドライブに書くからです。1 か所にまとめてあるのは再利用のためではなく、2 つのアプリが「あなたのディスク上のどのファイルがあなたのものか」について静かに食い違うことを不可能にするためです。</p>
-    <p>Flickr のエンジンも Rust に残しました。OAuth 1.0a の署名、適応的なペース調整、バックオフの間隔。退屈で間違えやすく、しかも実際のレート制限に対して調整し終えた直後でした。書き直しても得るものはありません。しかしダウンロードの<em>ループ</em>は Swift に移しました。Rust は自分で待つのではなく遅延を返し、Swift がキャンセルできるタスクとして待ちます。キャンセルのフラグは境界をまったく越えません——それがかつて、すべての同期を壊した退行そのものだからです。</p>
+      <h2>WebView のまま 6 バージョン</h2>
+      <p>今日まで、Foldic のインターフェースはウインドウの中の Web ページでした。これは告白ではありません——その形で 6 つのバージョンを出し、実際のライブラリをスキャンし、仕事を果たしてきました。ただ、アルバムの 1 行 1 行は再描画されるドキュメントであり、この種のアプリが寄って立つシステムの部品——メニューバー、自分の位置を覚えるウインドウ、写真ライブラリ——には、自分たちで書き、自分たちで維持するブリッジを通してしか、1 呼び出しずつしか触れませんでした。</p>
+      <p>動いてはいました。でも「動く」は、私たちが守りたい水準ではありません。</p>
 
-    <h2>サンドボックスはブックマークを解決し、そのうえで書き込みをすべて拒む</h2>
-    <p>Mac 版はサンドボックス内で動くので、バックアップ先をパスではなくブックマークとして覚えます。外付けドライブは別のパスで再マウントされ、パスでは黙って機能しなくなるからです。</p>
-    <p>そのブックマークは、作成も解決もオプションなしで行われていました。サンドボックスの外では問題ありません。コンテナの中では、完全に正しく見える URL を返し、そのうえで一度の書き込みも通しません。</p>
-    <p>修正は両端にオプションを 1 つ足すだけです。興味深いのは、このバグはアプリがコンテナに入るまで現れず、現れたときには書き出し処理の不具合のように見えるという点です。だからサンドボックスは申請の後ではなく前に検証しました。本物のコンテナ、本物の写真アクセス許可、28 ファイルの書き込み、そして再起動してフォルダが残っていることの確認。</p>
+      <h2>ネイティブの手ざわり</h2>
+      <p>インターフェースはいま SwiftUI で、macOS と iOS 自身が描画しています。違いの大半は、機能として列挙できるものではありません——「あと少しで正しい」だった百の小さなことが、その「あと少し」でなくなることです。リストはシステム自身のリストと同じようにスクロールします。ウインドウは前回の位置を覚えています。言語の切り替えはその場で反映されます。読み込むページがないので、アプリは一瞬で開きます。</p>
+      <p>そして、機能そのものもあります。Mac 版はメニューバーに常駐するようになりました。ウインドウを閉じても実行中のバックアップは続き、終わるまでアイコンが回り続けます。ウインドウの中の Web ページには、これはできません。この書き直しは、こういうことが「不可能」でなくなるために行いました。</p>
 
-    <h2>5 つのバグ、そのどれもテストが見つけたものではない</h2>
-    <p>この間、78 のテストはずっと緑でした。以下はすべて、アプリを開いて実際のライブラリで使ったから分かったことです。</p>
-    <p><strong>互いのファイルを消し合う 2 つのフォルダ。</strong>2 つのタブが同じフォルダを指しており、それぞれのミラーが相手のファイルを余分なものと判定します。実際に失われたものはありませんでしたが、それは設計ではなく運です。重なりは Rust のコアのルールになり、フォルダを選ぶ時点で拒否されます。既存の重なりが残っている間は、自動整理が自分から停止します。</p>
-    <p><strong>自動同期が、誰も頼んでいないバックアップを始めた。</strong>写真 1 枚の追加が 12,388 枚の初回書き出しを開始しました。一度も同期していないアルバムは、すべてが未処理だからです。どのアルバムを維持するかは、いま同期を押した時点で記録されます。推測ではありません。最初の実装はフォルダの有無から推測していて——それが防ぐはずだったバグの残骸によって、満たされてしまいました。</p>
-    <p><strong>写真 1 枚が 23 件の変更イベントになった。</strong>PhotoKit は渡した取得結果に対して変更を比較するので、その結果は変更自身が持つものに置き換えなければなりません。古いものを渡し続けると、同じ差分を永遠に報告します。</p>
-    <p><strong>アルバム名を変えると、もう一度ダウンロードした。</strong>フォルダはアルバムの現在のタイトルから導かれていたため、改名するとまだ存在しないフォルダを指しました。対応は保存されるようになり、古いバージョンが残したフォルダを、隣に 2 つ目のミラーを作る代わりに引き継ぎます。</p>
-    <p><strong>大きなアルバムの比較でウインドウが固まった。</strong>メインアクター上で動いていました。</p>
+      <h2>書き直すことを拒んだ半分</h2>
+      <p>エンジン——どの写真がまだコピーされていないか、各ファイルを何と名付けるか、どのアルバムがどのフォルダに対応するかを決める部分——は Rust で書かれていて、今日も変わっていません。これは意図的です。Rust はまさにこの仕事のための言語です。速く、そして言語の構造としてメモリ安全——ポインタひとつの間違いがあなたの写真に向かう唯一の場所が、ここだからです。あなたのファイルに触れるコードは、アプリの中でいちばん退屈で、いちばん徹底的にテストされたコードであるべきです。</p>
+      <p>しかも Mac と iPhone で<em>同じ</em>エンジンです。どちらも同じドライブに書き込む以上、「そこにあるどのファイルがあなたのものか」について両者は常に一致していなければなりません——一度しか存在しないコードは、自分自身と食い違いようがありません。</p>
+      <p>見える側の半分を書き直したのは、あなたが信頼する側の半分を書き直さずに済ませるためです。</p>
 
-    <h2>ストア用のビルドだけが答えられる 2 つのこと</h2>
-    <p>新しいアプリは以前のアプリのバンドル ID を引き継ぐので、アップデートはその上に載り、コンテナごと継承します——設定と、以前のアプリが作ったフォルダのブックマークを。それを読むかどうかが、アップグレードとゼロからのやり直しの違いです。</p>
-    <p>継承したブックマークがストア署名の下で解決するかは、ここでは確かめられません。試していないからではありません。アプリの同一性を担うエンタイトルメントがなければブックマークは解決せず、それを付けると macOS は Developer ID 署名のビルドをそもそも起動させません。どちらの道も閉じているので、この問いはアプリと一緒に審査へ行きます。</p>
-    <p>それを許容できるのは、失敗したときの代償が限定的で、しかも明記してあるからです。Foldic がバックアップ先をもう一度選ぶよう求めたら、以前と同じフォルダを選んでください。二重にコピーされることはありません。自分の未知のうちどれが安いかを知っていることが、出荷という作業の大半です。</p>
-
-    <h2>それぞれ再申請 1 回分のコストがついたルール</h2>
-    <p>ビルド番号はバンドルの中の値と一致しなければならず、macOS が受け付けるのは最大 3 つの要素までです。4 つの形式は iOS のものであり、ツールは既定でそれを渡してきます。</p>
-    <p>スクリーンショットにアルファチャンネルがあってはいけません。そして macOS のウインドウキャプチャは影のせいで必ず持っています。PNG を書き出すツールはどれも取り除いてくれず、付け直すものもあります。そして最初から収まるキャプチャは、拡大縮小ではなく余白で埋めるべきです。そうしないと文字が実際のアプリより甘く見えます。</p>
-    <p>今日の iPhone のスクリーンショットは、たった 1 つのルールに 3 回かかりました。手で切ったキャプチャの上端の何行がバナーの残りで、何行がアプリ自身のツールバーなのか。最初はツールバーを消しました。次はボタンから 9 ピクセル削りました。3 度目は文字 1 つの 8 ピクセルを残しました。どの誤りも、あと 1 コマンドでストアに行くところでした。</p>
-
-    <h2>iOS 17 は意図的な選択</h2>
-    <p>iPhone でネイティブ SwiftUI にするなら iOS 17 です。下げるのは安く——推測ではなく実測で、iOS 16 はコンパイルエラー 3 件、iOS 15 は 11 件——それでもやる価値はありません。</p>
-    <p>iOS 16 で増える端末は 2017 年の機種で、このアプリは差したドライブに書き込むために存在します。それらは Lightning 端子で、電源付きのアダプタが必要です。そして実際に動かす手段がない下限は、ファイルを移動し削除するアプリにとって負債です。</p>
-    <p>方向も重要です。後から下限を下げるのは、求めてくれた人への贈り物。上げるのは、約束を破ることです。だから高い下限で出し、もし誰かが iOS 16 を求めたら、それは 30 分の作業です。</p>
-
-    <div class="callout">両バージョンは現在審査中です。Mac の 0.7.0 は WebView 版をそのまま置き換えます。iPhone の 0.7.0 はストアに出なかった 2 つのバージョンを飛び越えるので、手動でのスキャン開始、中止できるスキャン、読める書き出しファイル名、省電力画面、アプリ内ログが一度に届きます。</div>
+      <div class="callout">両バージョンは現在審査中です。Mac の 0.7.0 は WebView 版をそのまま置き換えます。iPhone の 0.7.0 はストアに出なかった 2 つのバージョンを飛び越えるので、手動でのスキャン開始、中止できるスキャン、読める書き出しファイル名、省電力画面、アプリ内ログが一度に届きます。</div>
     <p class="outro">Foldic は一度の購入で $9.99、<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac と iPhone の両方</a>に対応します。</p>
   </main>
 
@@ -379,43 +313,21 @@
    시스템 기본과 같은 스크롤,
    창을 닫아도 계속되는 백업,
    그리고 틀릴 수 있는 층이 하나 줄었다</pre>
-    <p>오늘까지 Foldic은 웹뷰 안에 HTML 인터페이스를 둔 Rust 프로그램이었습니다. 그것도 동작했고 여섯 개의 버전을 출시했습니다. 동시에 앨범의 각 행이 다시 렌더링되는 문서였고, 이런 앱이 실제로 필요한 macOS의 구성 요소들 — 메뉴 바, 자기 위치를 기억하는 창, 샌드박스가 요구하는 파일 접근 — 은 모두 제가 직접 쓴 브리지를 통해서만 닿을 수 있었습니다.</p>
-    <p>인터페이스는 이제 SwiftUI입니다. 다시 쓰지 <em>않은</em> 것은 판단하는 부분입니다.</p>
 
-    <h2>판단은 Rust에 남기고, 루프는 Swift로</h2>
-    <p>의존성이 전혀 없는 크레이트가 하나 있고, 그것의 유일한 일은 질문에 답하는 것입니다. 이 파일의 정체는 무엇인가. 이 내보내기의 이름은 무엇이어야 하는가. 이 두 폴더가 겹치는가. 어떤 사진이 아직 복사되지 않았는가. 누군가 이름을 바꿨다면, 이 앨범은 어느 폴더에 해당하는가.</p>
-    <p>이 답들은 Mac과 iPhone에서 동일해야 합니다. 둘 다 같은 드라이브에 쓰기 때문입니다. 한곳에 모아 둔 것은 재사용을 위해서가 아니라, 두 앱이 "디스크의 어떤 파일이 당신 것인가"에 대해 조용히 어긋나는 일이 불가능하도록 만들기 위해서입니다.</p>
-    <p>Flickr 엔진도 Rust에 남았습니다. OAuth 1.0a 서명, 적응형 속도 조절, 백오프 일정. 지루하고 틀리기 쉬우며, 실제 속도 제한에 맞춰 막 조정을 끝낸 것이었습니다. 다시 써도 얻을 것이 없습니다. 하지만 다운로드 <em>루프</em>는 Swift로 옮겼습니다. Rust는 직접 기다리지 않고 지연 시간을 돌려주고, Swift가 취소할 수 있는 작업으로 기다립니다. 취소 플래그는 경계를 전혀 넘지 않습니다 — 그것이 한때 모든 동기화를 망가뜨린 회귀였기 때문입니다.</p>
+      <h2>웹뷰인 채로 여섯 버전</h2>
+      <p>오늘까지 Foldic의 인터페이스는 창 안의 웹 페이지였습니다. 이것은 고백이 아닙니다 — 그 형태로 여섯 개의 버전을 냈고, 실제 라이브러리를 스캔했고, 제 몫을 해냈습니다. 다만 앨범의 한 행 한 행이 다시 렌더링되는 문서였고, 이런 앱이 기대어 사는 시스템의 부품들 — 메뉴 바, 자기 위치를 기억하는 창, 사진 라이브러리 — 에는 우리가 직접 쓰고 직접 유지하는 브리지를 통해서만, 호출 하나씩만 닿을 수 있었습니다.</p>
+      <p>동작은 했습니다. 하지만 "동작한다"는 우리가 지키고 싶은 기준이 아닙니다.</p>
 
-    <h2>샌드박스는 북마크를 풀어 주고, 그다음 모든 쓰기를 거부한다</h2>
-    <p>Mac 앱은 샌드박스 안에서 동작하므로 백업 폴더를 경로가 아니라 북마크로 기억합니다. 외장 드라이브는 다른 경로로 다시 마운트되고, 경로는 조용히 작동을 멈추기 때문입니다.</p>
-    <p>그 북마크는 생성과 해석 모두 옵션 없이 이루어지고 있었습니다. 샌드박스 밖에서는 문제가 없습니다. 컨테이너 안에서는 완전히 올바르게 보이는 URL을 돌려주고, 그다음 단 한 번의 쓰기도 허용하지 않습니다.</p>
-    <p>수정은 양쪽에 옵션 하나를 더하는 것입니다. 흥미로운 점은 이 버그가 앱이 컨테이너에 들어가기 전에는 나타날 수 없고, 나타났을 때는 내보내기 코드의 결함처럼 보인다는 것입니다. 그래서 샌드박스는 제출 후가 아니라 전에 검증했습니다. 실제 컨테이너, 실제 사진 접근 권한, 28개 파일 쓰기, 그리고 재실행해 폴더가 남아 있는지 확인.</p>
+      <h2>네이티브의 감촉</h2>
+      <p>인터페이스는 이제 SwiftUI이고, macOS와 iOS가 직접 그립니다. 차이의 대부분은 나열할 수 있는 기능이 아닙니다 — "거의 맞는" 상태였던 백 가지 작은 것들이 더는 그 "거의"가 아니게 되는 것입니다. 목록은 시스템 자신의 목록처럼 스크롤됩니다. 창은 지난번 위치를 기억합니다. 언어 전환은 그 자리에서 적용됩니다. 불러올 페이지가 없으니 앱은 눈 깜짝할 사이에 열립니다.</p>
+      <p>그리고 기능 그 자체도 있습니다. Mac 버전은 이제 메뉴 바에 상주합니다. 창을 닫아도 진행 중인 백업은 계속되고, 끝날 때까지 아이콘이 돌아갑니다. 창 안의 웹 페이지는 이것을 할 수 없습니다. 이번 재작성은 이런 일들이 더는 불가능이 아니게 하려고 한 것입니다.</p>
 
-    <h2>다섯 개의 버그, 그중 테스트가 찾은 것은 하나도 없다</h2>
-    <p>그동안 78개의 테스트는 계속 초록이었습니다. 아래의 모든 것은 앱을 열어 실제 라이브러리에서 써 봤기 때문에 알게 된 것입니다.</p>
-    <p><strong>서로의 파일을 지우는 두 폴더.</strong> 두 탭이 같은 폴더를 가리키고 있었고, 각 미러는 상대의 파일을 여분으로 분류합니다. 실제로 잃은 것은 없었지만 그것은 설계가 아니라 운이었습니다. 겹침은 이제 Rust 코어의 규칙이며, 폴더를 고르는 시점에 거부됩니다. 기존의 겹침이 남아 있는 동안 자동 정리는 스스로 멈춥니다.</p>
-    <p><strong>자동 동기화가 아무도 요청하지 않은 백업을 시작했다.</strong> 사진 한 장이 추가되자 12,388장의 첫 내보내기가 시작됐습니다. 한 번도 동기화하지 않은 앨범은 모든 것이 대기 상태이기 때문입니다. 어떤 앨범을 유지할지는 이제 동기화를 누를 때 기록됩니다. 추측이 아닙니다. 첫 시도는 폴더의 존재로 추측했는데 — 그것이 막으려던 바로 그 버그가 남긴 잔해에 의해 충족되어 버렸습니다.</p>
-    <p><strong>사진 한 장이 스물세 개의 변경 이벤트를 만들었다.</strong> PhotoKit은 건네받은 조회 결과에 대해 변경을 비교하므로, 그 결과는 변경이 들고 있는 것으로 교체해야 합니다. 오래된 것을 계속 건네면 같은 차이를 영원히 보고합니다.</p>
-    <p><strong>앨범 이름을 바꾸면 다시 내려받았다.</strong> 폴더가 앨범의 현재 제목에서 파생되었기 때문에, 이름을 바꾸면 아직 없는 폴더를 가리켰습니다. 매핑은 이제 저장되며, 옆에 두 번째 미러를 만드는 대신 이전 버전이 남긴 폴더를 물려받습니다.</p>
-    <p><strong>큰 앨범을 비교하면 창이 멈췄다.</strong> 메인 액터에서 실행되고 있었습니다.</p>
+      <h2>다시 쓰기를 거부한 절반</h2>
+      <p>엔진 — 어떤 사진이 아직 복사되지 않았는지, 각 파일의 이름을 무엇으로 할지, 어떤 앨범이 어떤 폴더에 해당하는지 정하는 부분 — 은 Rust로 쓰여 있고, 오늘도 변하지 않았습니다. 이것은 의도적입니다. Rust는 바로 이 일을 위해 만들어진 언어입니다. 빠르고, 언어 구조상 메모리가 안전합니다 — 포인터 하나의 실수가 당신의 사진을 향하게 되는 유일한 곳이 바로 여기이기 때문입니다. 당신의 파일에 닿는 코드는 앱에서 가장 지루하고 가장 철저히 테스트된 코드여야 합니다.</p>
+      <p>게다가 Mac과 iPhone이 <em>같은</em> 엔진을 씁니다. 둘 다 같은 드라이브에 쓰는 이상, "거기 있는 어떤 파일이 당신 것인가"에 대해 둘은 언제나 일치해야 합니다 — 한 번만 존재하는 코드는 자기 자신과 어긋날 수 없습니다.</p>
+      <p>보이는 쪽 절반을 다시 쓴 것은, 당신이 신뢰하는 쪽 절반을 영원히 다시 쓰지 않기 위해서입니다.</p>
 
-    <h2>스토어 빌드만 답할 수 있는 두 가지</h2>
-    <p>새 앱이 이전 앱의 번들 ID를 물려받기 때문에, 업데이트는 그 위에 올라가며 컨테이너를 그대로 상속합니다 — 설정과, 이전 앱이 만든 폴더 북마크를. 그것을 읽는지 여부가 업그레이드와 처음부터 다시 시작하는 것의 차이입니다.</p>
-    <p>상속한 북마크가 스토어 서명 아래에서 풀리는지는 여기서 확인할 수 없습니다. 시도하지 않아서가 아닙니다. 앱의 정체를 담은 엔타이틀먼트가 없으면 북마크는 풀리지 않고, 그것을 붙이면 macOS는 Developer ID로 서명한 빌드를 아예 실행시키지 않습니다. 두 길이 모두 막혀 있으니, 이 질문은 앱과 함께 심사로 갑니다.</p>
-    <p>그것을 받아들일 수 있는 이유는 실패의 대가가 한정되어 있고 명시되어 있기 때문입니다. Foldic이 백업 폴더를 다시 고르라고 하면 이전과 같은 폴더를 고르세요. 두 번 복사되는 일은 없습니다. 자신의 미지 중 어느 것이 값싼지 아는 것이 출시라는 일의 대부분입니다.</p>
-
-    <h2>각각 재제출 한 번씩의 값이 붙은 규칙들</h2>
-    <p>빌드 번호는 번들 안의 값과 같아야 하고, macOS가 받아들이는 것은 최대 세 자리입니다. 네 자리 형식은 iOS의 것이며, 도구는 기본값으로 그것을 건네줍니다.</p>
-    <p>스크린샷에는 알파 채널이 있으면 안 되고, macOS의 창 캡처는 그림자 때문에 항상 그것을 가지고 있습니다. PNG를 써 주는 도구 중 그것을 없애 주는 것은 없고, 다시 붙이는 것도 있습니다. 그리고 이미 들어맞는 캡처는 확대·축소가 아니라 여백으로 채워야 합니다. 그러지 않으면 글자가 실제 앱보다 흐려 보입니다.</p>
-    <p>오늘 iPhone 스크린샷은 규칙 하나에 세 번이 걸렸습니다. 손으로 자른 캡처의 위쪽 몇 줄이 남은 배너이고 몇 줄이 앱 자신의 툴바인지. 첫 번째 버전은 툴바를 지웠습니다. 두 번째는 버튼에서 9픽셀을 깎았습니다. 세 번째는 글자 하나의 8픽셀을 남겼습니다. 잘못된 버전마다 스토어까지 명령 하나 거리였습니다.</p>
-
-    <h2>iOS 17, 의도적으로</h2>
-    <p>iPhone에서 네이티브 SwiftUI는 iOS 17을 뜻합니다. 그것을 낮추는 일은 값싸고 — 추측이 아니라 측정한 결과로 iOS 16은 컴파일 오류 3개, iOS 15는 11개입니다 — 그래도 할 만한 가치는 없습니다.</p>
-    <p>iOS 16이 더해 주는 기기는 2017년 모델이고, 이 앱은 꽂아 넣은 드라이브에 쓰기 위해 존재합니다. 그것들은 Lightning 기기여서 전원이 있는 어댑터가 필요합니다. 그리고 실제로 실행해 볼 방법이 없는 최소 버전은, 파일을 옮기고 지우는 앱에게 부채입니다.</p>
-    <p>방향도 중요합니다. 나중에 하한을 낮추는 것은 요청한 사람에게 주는 선물이고, 올리는 것은 약속을 깨는 일입니다. 그래서 높은 하한으로 출시하고, 누군가 iOS 16을 요청하면 그것은 30분의 작업입니다.</p>
-
-    <div class="callout">두 버전 모두 현재 심사 중입니다. Mac의 0.7.0은 웹뷰 빌드를 그대로 대체합니다. iPhone의 0.7.0은 스토어에 나오지 못한 두 버전을 뛰어넘기 때문에, 직접 시작하는 스캔, 취소할 수 있는 스캔, 읽을 수 있는 파일 이름, 절전 화면, 앱 내 로그가 한꺼번에 도착합니다.</div>
+      <div class="callout">두 버전 모두 현재 심사 중입니다. Mac의 0.7.0은 웹뷰 빌드를 그대로 대체합니다. iPhone의 0.7.0은 스토어에 나오지 못한 두 버전을 뛰어넘기 때문에, 직접 시작하는 스캔, 취소할 수 있는 스캔, 읽을 수 있는 파일 이름, 절전 화면, 앱 내 로그가 한꺼번에 도착합니다.</div>
     <p class="outro">Foldic은 한 번 구매로 $9.99이며, <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac과 iPhone 모두</a>에서 사용할 수 있습니다.</p>
   </main>
 
