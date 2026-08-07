@@ -94,15 +94,6 @@
       font-size: 0.86em; background: var(--card);
       border: 1px solid var(--border); border-radius: 5px; padding: 0.08em 0.35em;
     }
-    pre.diagram {
-      font-family: ui-monospace, "SF Mono", Menlo, monospace;
-      font-size: clamp(9.5px, 2.5vw, 13px);
-      line-height: 1.45;
-      background: var(--card); color: var(--muted);
-      border: 1px solid var(--border); border-radius: 10px;
-      padding: 1.15rem 0.95rem; margin: 1.9rem 0;
-      overflow-x: auto; white-space: pre;
-    }
     hr { border: none; border-top: 1px solid var(--border); margin: 2.6rem 0 0; }
     .callout {
       background: var(--green-tint); border-radius: 14px;
@@ -139,32 +130,6 @@
 
     <p class="lede">Foldic for Mac and Foldic for iPhone were both submitted today, rebuilt as native Swift. The part that decides what happens to your photos is the same code it was yesterday.</p>
 
-      <pre class="diagram">┌─ BEFORE ────────────────────────────────────
-│  one interface for both platforms
-│
-│  what you saw    HTML, CSS and JavaScript
-│                  inside a WebView
-│  in between      a bridge written by hand,
-│                  one call at a time
-│  the engine      Rust
-└─ why change it:
-   a web page cannot reach the menu bar, the
-   sandbox's file access or the photo library
-   without that bridge
-
-┌─ AFTER ─────────────────────────────────────
-│  a native interface on each platform
-│
-│  what you see    SwiftUI, drawn by macOS
-│                  and by iOS themselves
-│  in between      nothing to write: Swift
-│                  talks to Photos directly
-│  the engine      the same Rust, unchanged
-└─ what it buys:
-   lists that scroll like the system's own, a
-   backup that keeps running with the window
-   closed, and one less layer to be wrong in</pre>
-
       <h2>Six versions on a webview</h2>
       <p>Until today, Foldic's interface was a web page inside a window. That is not a confession — it shipped six versions that way, scanned real libraries, and did its job. But every album row was a document being re-rendered, and the parts of the system an app like this lives on — the menu bar, a window that remembers itself, the photo library — could only be reached through a bridge we wrote and maintained ourselves, one call at a time.</p>
       <p>It worked. "Works" is not the bar we want to clear.</p>
@@ -189,30 +154,6 @@
     <p class="byline">2026 年 8 月 6 日 · Foldic 開發筆記</p>
 
     <p class="lede">Foldic 的 Mac 版和 iPhone 版今天都送審了,兩邊都改寫成原生 Swift。而決定你的照片會發生什麼事的那一部分,和昨天是同一份程式碼。</p>
-
-      <pre class="diagram">┌─ 之前 ──────────────────────────────────────
-│  兩個平台共用一套介面
-│
-│  你看到的    WebView 裡的
-│              HTML、CSS 和 JavaScript
-│  中間那層    一行一行手寫的橋接程式
-│  引擎        Rust
-└─ 為什麼要換:
-   網頁碰不到選單列、沙盒的檔案存取,
-   也碰不到照片圖庫 —— 除非透過那層橋接
-
-┌─ 現在 ──────────────────────────────────────
-│  每個平台各有一套原生介面
-│
-│  你看到的    SwiftUI,由 macOS
-│              和 iOS 自己繪製
-│  中間那層    不需要了:Swift 直接
-│              跟照片圖庫對話
-│  引擎        同一份 Rust,沒有動過
-└─ 換來什麼:
-   捲動起來跟系統自己的清單一樣、
-   關掉視窗備份還會繼續跑,
-   以及少一層會出錯的東西</pre>
 
       <h2>在 webview 上出了六個版本</h2>
       <p>今天之前,Foldic 的介面是一個放在視窗裡的網頁。這不是自首——它就這樣出了六個版本,掃過真實的圖庫,把工作做完了。但每一列相簿都是一份被重新算繪的文件,而這種 App 真正依賴的那些系統部件——選單列、記得自己位置的視窗、照片圖庫——都只能透過我們自己寫、自己維護的橋接去碰,一次一個呼叫。</p>
@@ -239,31 +180,6 @@
 
     <p class="lede">Foldic の Mac 版と iPhone 版を、今日どちらもネイティブ Swift として申請しました。写真に何が起きるかを決める部分は、昨日と同じコードです。</p>
 
-      <pre class="diagram">┌─ 以前 ──────────────────────────────────────
-│  両プラットフォームで 1 つの UI
-│
-│  見えていたもの  WebView の中の
-│                  HTML・CSS・JavaScript
-│  その間          手で 1 つずつ書いたブリッジ
-│  エンジン        Rust
-└─ なぜ変えたか:
-   Web ページはメニューバーにも、サンドボックスの
-   ファイルアクセスにも、写真ライブラリにも、
-   そのブリッジなしでは届かない
-
-┌─ 現在 ──────────────────────────────────────
-│  プラットフォームごとにネイティブな UI
-│
-│  見えるもの      SwiftUI。macOS と iOS
-│                  自身が描画する
-│  その間          書く必要なし。Swift が
-│                  写真ライブラリと直接話す
-│  エンジン        同じ Rust、変更なし
-└─ 何が得られたか:
-   システム標準と同じ滑らかなスクロール、
-   ウインドウを閉じても続くバックアップ、
-   そして間違えうる層が 1 つ減ったこと</pre>
-
       <h2>WebView のまま 6 バージョン</h2>
       <p>今日まで、Foldic のインターフェースはウインドウの中の Web ページでした。これは告白ではありません——その形で 6 つのバージョンを出し、実際のライブラリをスキャンし、仕事を果たしてきました。ただ、アルバムの 1 行 1 行は再描画されるドキュメントであり、この種のアプリが寄って立つシステムの部品——メニューバー、自分の位置を覚えるウインドウ、写真ライブラリ——には、自分たちで書き、自分たちで維持するブリッジを通してしか、1 呼び出しずつしか触れませんでした。</p>
       <p>動いてはいました。でも「動く」は、私たちが守りたい水準ではありません。</p>
@@ -288,31 +204,6 @@
     <p class="byline">2026년 8월 6일 · Foldic 개발 노트</p>
 
     <p class="lede">Foldic의 Mac 버전과 iPhone 버전을 오늘 모두 네이티브 Swift로 다시 만들어 제출했습니다. 사진에 무슨 일이 일어날지 정하는 부분은 어제와 같은 코드입니다.</p>
-
-      <pre class="diagram">┌─ 이전 ──────────────────────────────────────
-│  두 플랫폼이 하나의 인터페이스를 공유
-│
-│  보였던 것     WebView 안의
-│                HTML, CSS, JavaScript
-│  그 사이       한 줄씩 손으로 쓴 브리지
-│  엔진          Rust
-└─ 왜 바꿨나:
-   웹 페이지는 메뉴 바에도, 샌드박스의 파일
-   접근에도, 사진 라이브러리에도 그 브리지
-   없이는 닿을 수 없다
-
-┌─ 현재 ──────────────────────────────────────
-│  플랫폼마다 각자의 네이티브 인터페이스
-│
-│  보이는 것     SwiftUI. macOS와 iOS가
-│                직접 그린다
-│  그 사이       쓸 것이 없다. Swift가 사진
-│                라이브러리와 직접 대화한다
-│  엔진          같은 Rust, 손대지 않음
-└─ 무엇을 얻었나:
-   시스템 기본과 같은 스크롤,
-   창을 닫아도 계속되는 백업,
-   그리고 틀릴 수 있는 층이 하나 줄었다</pre>
 
       <h2>웹뷰인 채로 여섯 버전</h2>
       <p>오늘까지 Foldic의 인터페이스는 창 안의 웹 페이지였습니다. 이것은 고백이 아닙니다 — 그 형태로 여섯 개의 버전을 냈고, 실제 라이브러리를 스캔했고, 제 몫을 해냈습니다. 다만 앨범의 한 행 한 행이 다시 렌더링되는 문서였고, 이런 앱이 기대어 사는 시스템의 부품들 — 메뉴 바, 자기 위치를 기억하는 창, 사진 라이브러리 — 에는 우리가 직접 쓰고 직접 유지하는 브리지를 통해서만, 호출 하나씩만 닿을 수 있었습니다.</p>
