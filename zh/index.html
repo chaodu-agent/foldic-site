@@ -193,6 +193,8 @@
     .faq summary { cursor: pointer; font-weight: 700; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center; }
     .faq summary::after { content: "+"; color: var(--green-deep); font-size: 1.3rem; font-weight: 400; }
     .faq details[open] summary::after { content: "–"; }
+    .faq summary .faq-anchor { margin-left: .55rem; margin-right: auto; color: var(--green-deep); opacity: .35; text-decoration: none; font-weight: 400; transition: opacity .15s; }
+    .faq summary .faq-anchor:hover, .faq summary .faq-anchor:focus { opacity: 1; }
     .faq details p { color: var(--muted); font-size: 0.95rem; padding-top: 0.6rem; }
 
     .bottom-cta { text-align: center; padding: 4.5rem 1.5rem; background: linear-gradient(180deg, transparent, var(--green-tint)); }
@@ -371,32 +373,32 @@
 
   <section class="faq" id="faq">
     <h2 class="section-title" style="text-align:center">常見問題</h2>
-    <details>
+    <details id="faq-buy-once">
       <summary>Mac 版和 iPhone 版要分別購買嗎？</summary>
       <p>不用。Foldic 是「通用購買」：買一次，兩個平台都能用，只要裝置登入同一個 Apple 帳號即可。沒有訂閱，App 內也沒有需要解鎖的東西。</p>
     </details>
-    <details>
+    <details id="faq-iphone-requirements">
       <summary>iPhone 版需要什麼條件？</summary>
       <p>一支有 USB-C 埠的 iPhone，以及它讀得到的硬碟 —— exFAT、FAT32、APFS 都可以。匯流排供電的 NVMe SSD 是最自然的搭配：快到瓶頸會落在照片本身而不是硬碟。傳統機械硬碟可能需要獨立供電。你也可以複製到「檔案」App 能存取的任何位置，但外接硬碟才是這個版本的重點。</p>
     </details>
-    <details>
+    <details id="faq-iphone-offline">
       <summary>iPhone 版需要網路或 iCloud 嗎？</summary>
       <p>兩者都不需要，而這正是 iPhone 版的重點。不需要 iCloud 訂閱、不需要帳號、不需要連線：照片從裝置直接寫入外接硬碟，不會上傳到任何服務 —— 不論是 Foldic 或 Apple 的。在飛機上也能做。如果你本來就刻意不用 iCloud，這就是把「照片」App 裡所有相簿完整搬到自己硬碟上的方法。</p>
       <p>唯一的例外是「最佳化儲存空間」。如果你的圖庫把原始檔放在 iCloud 而不是手機上，那些檔案必須先下載才能寫出，這需要連線。已經在裝置上的照片則完全離線複製。</p>
     </details>
-    <details>
+    <details id="faq-iphone-background">
       <summary>在 iPhone 上離開 App，複製就停了？</summary>
       <p>iOS 不允許 App 在離開畫面後繼續開著外接硬碟，因此 Foldic 會在複製期間讓螢幕保持喚醒，並請你把它留在前景。就算你切走也不會有任何損失：複製是增量的，再次開始會從中斷處繼續。大型圖庫可以分幾次完成。</p>
     </details>
-    <details>
+    <details id="faq-read-only">
       <summary>Foldic 會改動我的 Photos 圖庫嗎？</summary>
       <p>不會。Foldic 是嚴格單向的：透過 Apple PhotoKit 讀取相簿（照片 App 與 iCloud），把檔案寫入你選擇的資料夾。絕不編輯、刪除或重新整理照片圖庫裡的任何內容，也絕不會刪除 iCloud 上的照片。同步永遠只有一個方向：從圖庫到資料夾。</p>
     </details>
-    <details>
+    <details id="faq-extra-backup">
       <summary>我想把照片留在手機上，只是想多一份備份在硬碟，可以嗎？</summary>
       <p>可以——這正是 Foldic 的設計初衷。Foldic 對你的照片圖庫是唯讀的：它把相簿鏡像到你選的資料夾（例如接在 iPhone 上的 USB 隨身碟），手機上的照片原封不動。之後拍的新照片，下次同步會自動補上；已備份過的不會重複拷貝。隨身碟裡是普通的資料夾和照片檔案，任何電腦都打得開。</p>
     </details>
-    <details>
+    <details id="faq-move-off-iphone">
       <summary>我想把照片「搬」出手機——備份到硬碟後從手機刪掉，該怎麼做？</summary>
       <p>可以，但請照這個順序做：</p>
       <ol>
@@ -406,49 +408,49 @@
       </ol>
       <p>請好好保管那份永久備份——從這一刻起它就是你唯一的一份（照片 App 的「最近刪除」還會保留 30 天）。重要的資料，值得再多放一份在另一顆硬碟。Foldic 永遠不會替你刪手機上的照片——它只有唯讀權限，刪除只能由你在照片 App 完成。這是刻意的設計：備份工具不該拿得到刪除你原始照片的權限。</p>
     </details>
-    <details>
+    <details id="faq-mac-mirror">
       <summary>我想照片留在照片 App／iCloud 照常瀏覽，同時 Mac 上隨時有一份資料夾副本——怎麼做？</summary>
       <p>這就是 Foldic 在 Mac 上的日常模式，設定一次就不用再管：選好目的地資料夾，再到設定（⚙︎）打開「相簿變動時自動同步」。之後保持 Foldic 開著，照常在照片 App 和 iCloud 裡瀏覽、整理；每當相簿變動，Foldic 會自動把變化鏡像到資料夾。結果就是兩份：照片 App + iCloud 一份（隨時可瀏覽），Mac 資料夾一份一模一樣的普通檔案副本。就算開了「最佳化 Mac 儲存空間」也沒問題——「需要時從 iCloud 下載原始檔」預設開啟，同步時會自動抓原始檔。</p>
     </details>
-    <details>
+    <details id="faq-destination">
       <summary>照片會存到哪裡？</summary>
       <p>存到你指定的資料夾 — Mac 本機、外接硬碟或 NAS 掛載點。每本相簿自成一個子資料夾，全部是原始畫質檔案。</p>
     </details>
-    <details>
+    <details id="faq-edits">
       <summary>備份會包含我在照片 App 裡做的編輯嗎？</summary>
       <p>不會——Foldic 備份的是相機拍下的原始檔，不是裁切、濾鏡、調整之後的算圖成品。編輯本身存在照片 App 自己的資料庫裡，而備份刻意保留未經修改的原始檔：這是保真度最高的一份、不會重新壓縮、而且一張照片只對應一個檔案。如果你希望連編輯後的版本也留一份，可在設定中開啟「<em>同時備份編輯後的版本</em>」——每張編輯過的照片會在原始檔旁多一個檔案，代價是更多空間與時間。</p>
     </details>
-    <details>
+    <details id="faq-live-photos">
       <summary>Live Photos 怎麼處理？</summary>
       <p>兩個部分都會匯出：靜態照片和配對的影片檔。</p>
     </details>
-    <details>
+    <details id="faq-icloud-speed">
       <summary>iPhone 拍的照片多快會出現？</summary>
       <p>iCloud 同步到 Mac 後就會出現。讓 Photos.app 保持開啟能加快 iCloud 送達；Foldic 也會每幾分鐘重新檢查圖庫。</p>
     </details>
-    <details>
+    <details id="faq-shared-albums">
       <summary>什麼是共享相簿？如何用 Foldic 備份？</summary>
       <p>共享相簿是可邀請他人瀏覽或共同新增內容的 iCloud 相簿，和「iCloud 共享圖庫」不同。先確認共享相簿已在 Mac 的 Photos.app 出現且同步完成；Foldic 會以 <strong>shared</strong> 標記它。像一般相簿一樣同步後，Foldic 會把你目前可存取的所有內容匯出到專屬資料夾。</p>
       <p>Foldic 是單向備份：不會發佈、編輯或還原共享相簿裡的內容。共享相簿不一定提供原上傳者的完整原始檔，因此 Foldic 會匯出 Apple Photos 提供給你的最高可用版本。</p>
       <p>若擁有者移除你的存取權、刪除共享相簿，或將項目從共享相簿移除，Foldic 下次掃描後會將受影響的本機匯出檔標記為孤兒檔案，但絕不會自動刪除它們。</p>
     </details>
-    <details>
+    <details id="faq-smart-albums">
       <summary>Foldic 可以備份智慧型相簿嗎？</summary>
       <p>智慧型相簿是 Apple Photos 依條件即時產生的動態視圖，例如「喜好項目」、「影片」，或你依規則建立的相簿。Foldic 目前可備份一般相簿、iCloud 共享相簿，以及 All Photos；尚不會把其他智慧型相簿個別鏡射成資料夾。</p>
       <p>若要確保這些照片目前已備份，請同步 All Photos，或將想保留的一組照片加入一般相簿後再同步。</p>
     </details>
-    <details>
+    <details id="faq-deleted-photos">
       <summary>從相簿移除，或從 Apple Photos 圖庫刪除照片，會怎樣？</summary>
       <p>取決於你從哪裡移除。若從某個相簿移除照片，照片仍會留在 Photos 圖庫與其他相簿。Foldic 下次掃描後，只會將該相簿資料夾內的匯出副本標記為孤兒檔案。</p>
       <p>若從 Photos 圖庫刪除照片，Apple 會將它移到「最近刪除」，並從所有包含它的相簿移除。Foldic 下次掃描後，所有受影響的匯出副本都會標記為孤兒檔案：包括各相簿資料夾的副本，以及已啟用時的 All Photos mirror。</p>
       <p>Foldic 絕不會自動刪除已匯出的檔案；是否保留或移除孤兒檔案，由你決定。</p>
     </details>
-    <details>
+    <details id="faq-flickr-throttling">
       <summary>Flickr 下載變慢，或停了一陣子，是出問題了嗎？</summary>
       <p>不是。這是 Flickr 的限制，不是 Foldic 的問題，在大量下載時屬於預期行為。Flickr 的檔案伺服器有嚴格的 IP 限流：同一個 IP 每天只能抓取有限數量的原始檔。短時間大量下載會被 Flickr 視為爬蟲，暫時拒絕後續下載。這個限制只針對原始解析度的檔案，平常瀏覽 Flickr 完全不受影響。</p>
       <p>目前沒有真正的解法。遇到限流時，Foldic 會自動放慢、等待、再重試。只要讓它繼續開著，或隔天再回來：已下載的檔案不會重抓，同步是增量的，整個相簿庫最終都會下載完成。相簿量很大的帳號可能需要幾天，這是 Flickr 的限制使然，不是故障。</p>
     </details>
-    <details>
+    <details id="faq-privacy">
       <summary>Foldic 會收集任何資料嗎？</summary>
       <p>完全不會。沒有分析、沒有遙測、沒有帳號。詳見<a href="/privacy/">隱私權政策</a>。</p>
     </details>
@@ -490,6 +492,44 @@
       if (location.hash === "#iphone") initial = "iphone";
       if (location.hash === "#mac") initial = "mac";
       select(initial, false);
+    })();
+  </script>
+  <script>
+    // Per-question FAQ anchors: "#" copies a shareable deep link; arriving on a
+    // #faq-* hash opens that question.
+    (function () {
+      var items = document.querySelectorAll(".faq details[id]");
+      Array.prototype.forEach.call(items, function (d) {
+        var summary = d.querySelector("summary");
+        var a = document.createElement("a");
+        a.className = "faq-anchor";
+        a.href = "#" + d.id;
+        a.textContent = "#";
+        a.setAttribute("aria-label", "Copy link to this question");
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          d.open = true;
+          try { history.replaceState(null, "", "#" + d.id); } catch (err) {}
+          var url = location.origin + location.pathname + "#" + d.id;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function () {
+              a.textContent = "\u2713";
+              setTimeout(function () { a.textContent = "#"; }, 1200);
+            }, function () {});
+          }
+        });
+        summary.appendChild(a);
+      });
+      function openFromHash() {
+        if (!location.hash) return;
+        var d = document.getElementById(location.hash.slice(1));
+        if (d && d.tagName === "DETAILS") {
+          d.open = true;
+          d.scrollIntoView({ block: "start" });
+        }
+      }
+      window.addEventListener("hashchange", openFromHash);
+      openFromHash();
     })();
   </script>
 </body>

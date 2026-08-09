@@ -214,6 +214,8 @@
     .faq summary { cursor: pointer; font-weight: 600; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center; }
     .faq summary::after { content: "+"; color: var(--green-deep); font-size: 1.3rem; font-weight: 400; }
     .faq details[open] summary::after { content: "–"; }
+    .faq summary .faq-anchor { margin-left: .55rem; margin-right: auto; color: var(--green-deep); opacity: .35; text-decoration: none; font-weight: 400; transition: opacity .15s; }
+    .faq summary .faq-anchor:hover, .faq summary .faq-anchor:focus { opacity: 1; }
     .faq details p { color: var(--muted); font-size: 0.95rem; padding-top: 0.6rem; }
 
     .bottom-cta {
@@ -412,32 +414,32 @@
 
   <section class="faq" id="faq">
     <h2 class="section-title" style="text-align:center">よくある質問</h2>
-    <details>
+    <details id="faq-buy-once">
       <summary>Mac と iPhone で 2 回購入が必要ですか？</summary>
       <p>いいえ。Foldic はユニバーサル購入です。一度購入すれば、同じ Apple アカウントでサインインしたどの端末でも両方使えます。サブスクリプションもアプリ内課金もありません。</p>
     </details>
-    <details>
+    <details id="faq-iphone-requirements">
       <summary>iPhone 版に必要なものは？</summary>
       <p>USB-C ポートのある iPhone と、読み取れるドライブ（exFAT・FAT32・APFS のいずれか）です。バスパワーの NVMe SSD が最適で、速度の上限はディスクではなく写真側になります。回転式ドライブは別途電源が必要な場合があります。「ファイル」アプリが扱える場所へもコピーできますが、外付けドライブが本来の使い方です。</p>
     </details>
-    <details>
+    <details id="faq-iphone-offline">
       <summary>iPhone 版はインターネットや iCloud が必要ですか？</summary>
       <p>どちらも不要で、それが iPhone 版の要点です。iCloud のサブスクリプションもアカウントも接続も必要ありません。写真は端末から接続したドライブへ直接書き込まれ、Foldic も Apple も含めどのサービスにもアップロードされません。機内でも実行できます。あえて iCloud を使っていない方でも、「写真」のアルバムをすべて自分のディスクへ取り出せます。</p>
       <p>例外は「ストレージを最適化」です。オリジナルが iPhone ではなく iCloud にある場合、書き出す前にダウンロードが必要で、これには接続が必要です。端末上にある写真は完全にオフラインでコピーされます。</p>
     </details>
-    <details>
+    <details id="faq-iphone-background">
       <summary>iPhone でアプリを離れるとコピーが止まります</summary>
       <p>iOS では画面から離れたアプリが外付けドライブを保持できないため、Foldic はコピー中に画面を点灯させたまま、前面に置いておくようお願いしています。切り替えても失われるものはありません。コピーは増分方式で、再開すると中断地点から続きます。大きなライブラリは数回に分けて完了できます。</p>
     </details>
-    <details>
+    <details id="faq-read-only">
       <summary>Foldic は写真ライブラリを変更しますか？</summary>
       <p>いいえ。Foldic は厳密に一方向です。Apple の PhotoKit でアルバム（写真アプリと iCloud）を読み取り、選択したフォルダにファイルを書き込むだけ。写真ライブラリ内のコンテンツを編集・削除・並べ替えすることは一切なく、iCloud 上の写真を削除することも決してありません。同期の方向は常にひとつ：ライブラリからフォルダへ、だけです。</p>
     </details>
-    <details>
+    <details id="faq-extra-backup">
       <summary>写真は iPhone に残したまま、ドライブにもう1部バックアップを持てますか？</summary>
       <p>はい——それこそが Foldic の設計目的です。Foldic のライブラリへのアクセスは読み取り専用：アルバムを選択したフォルダ（iPhone に挿した USB ドライブなど）にミラーリングし、端末上の写真には一切手を触れません。新しい写真は次回の同期で追加され、バックアップ済みのファイルを二重にコピーすることはありません。ドライブの中身は普通のフォルダとファイルなので、どのコンピュータでも開けます。</p>
     </details>
-    <details>
+    <details id="faq-move-off-iphone">
       <summary>写真を iPhone から「移動」したい——ドライブにバックアップしてから端末から削除するには？</summary>
       <p>できます。ただし必ずこの順番で：</p>
       <ol>
@@ -447,49 +449,49 @@
       </ol>
       <p>その永久保存版は大切に——この瞬間からそれが唯一の1部です（写真アプリの「最近削除した項目」には30日間残ります）。大切な思い出には別のドライブにもう1部を。なお Foldic が端末の写真を削除することは決してありません。アクセスは設計上読み取り専用です——バックアップツールがオリジナルを削除する権限を持つべきではないからです。</p>
     </details>
-    <details>
+    <details id="faq-mac-mirror">
       <summary>写真アプリと iCloud はいつも通り使いながら、Mac に常に同一のフォルダコピーを持てますか？</summary>
       <p>それが Mac での Foldic の日常モードです。一度設定すればあとは放置：保存先フォルダを選び、設定（⚙︎）で「アルバム変更時に自動同期」をオンにするだけ。Foldic を開いたまま、写真アプリと iCloud をいつも通り使ってください。変更は自動的にフォルダへミラーリングされます。結果は2部構成：写真アプリ + iCloud のライブラリ（どこでも閲覧可）と、Mac 上の同一内容のプレーンなファイルのフォルダ。「Mac ストレージを最適化」がオンでも大丈夫——「必要に応じてiCloudからオリジナルをダウンロード」がデフォルトでオンなので、同期時に本物のオリジナルを取得します。</p>
     </details>
-    <details>
+    <details id="faq-destination">
       <summary>写真はどこに保存されますか？</summary>
       <p>選択したフォルダへ — Mac 本体、外付けドライブ、NAS マウントのいずれでも。アルバムごとにサブフォルダになり、オリジナル画質のファイルが入ります。</p>
     </details>
-    <details>
+    <details id="faq-edits">
       <summary>バックアップには編集内容が含まれますか？</summary>
       <p>いいえ——Foldic がバックアップするのはカメラが撮影したオリジナルファイルで、トリミングやフィルタ、調整を適用した書き出し結果ではありません。編集内容は写真アプリ自身のデータベースにあり、バックアップは意図的に手を加えていないオリジナルを保持します。忠実度が最も高く、再エンコードが起こらず、1枚の写真につき1つのファイルで済むからです。編集後のバージョンも残したい場合は、設定で「<em>編集後のバージョンもバックアップ</em>」をオンにしてください。編集済みの写真ごとにオリジナルと並んでもう1つファイルが作られますが、容量と時間はその分増えます。</p>
     </details>
-    <details>
+    <details id="faq-live-photos">
       <summary>Live Photos はどうなりますか？</summary>
       <p>両方書き出されます：静止画とペアのビデオファイルです。</p>
     </details>
-    <details>
+    <details id="faq-icloud-speed">
       <summary>iPhone の写真はどのくらいで反映されますか？</summary>
       <p>iCloud が Mac に同期した時点で反映されます。写真.app を開いたままにすると iCloud の配信が速くなります。Foldic も数分ごとにライブラリを再チェックします。</p>
     </details>
-    <details>
+    <details id="faq-shared-albums">
       <summary>iCloud 共有アルバムをバックアップするには？</summary>
       <p>共有アルバムは、招待した相手が閲覧・投稿できるアルバムで、「iCloud 共有ライブラリ」とは別のものです。まず共有アルバムが Mac の写真.app に表示され同期が完了していることを確認してください。Foldic は <strong>shared</strong> と表示します。ほかのアルバムと同じように同期すると、現在アクセスできるすべての項目が専用フォルダへ書き出されます。</p>
       <p>Foldic は一方向です。共有アルバムへの投稿・編集・復元は行いません。共有アルバムは投稿者のフル画質ファイルを提供するとは限らないため、Foldic は Apple 写真が提供する最高画質バージョンを書き出します。</p>
       <p>オーナーがアクセス権を取り消したり、共有アルバムや項目を削除した場合、Foldic は次回スキャン後に該当するローカルの書き出しファイルを孤立ファイルとして表示します。自動で削除することはありません。</p>
     </details>
-    <details>
+    <details id="faq-smart-albums">
       <summary>スマートアルバムはバックアップできますか？</summary>
       <p>スマートアルバムは「お気に入り」「ビデオ」など、条件に基づく動的なビューです。Foldic が現在バックアップできるのは通常のアルバム、iCloud 共有アルバム、All Photos です。その他のスマートアルバムを個別のフォルダとしてミラーリングすることはまだできません。</p>
       <p>それらの写真を今すぐ確実にバックアップするには、All Photos を同期するか、残したい写真を通常のアルバムに追加してから同期してください。</p>
     </details>
-    <details>
+    <details id="faq-deleted-photos">
       <summary>Apple 写真で写真を外したり削除したりするとどうなりますか？</summary>
       <p>どこから外すかによります。アルバムから写真を外した場合、写真はライブラリと他のアルバムに残ります。Foldic の次回スキャン後、そのアルバムのフォルダ内の書き出しコピーだけが孤立ファイルとして表示されます。</p>
       <p>ライブラリから写真を削除すると、Apple は「最近削除した項目」へ移動し、その写真を含むすべてのアルバムから取り除きます。Foldic の次回スキャン後、影響を受けたすべての書き出しコピー（各アルバムのフォルダ、有効な場合は All Photos ミラーを含む）が孤立ファイルとして表示されます。</p>
       <p>Foldic が書き出したファイルを自動で削除することはありません。孤立ファイルを残すか消すかはあなたが決めます。</p>
     </details>
-    <details>
+    <details id="faq-flickr-throttling">
       <summary>Flickr のダウンロードが遅くなったり、しばらく止まったりします。故障ですか？</summary>
       <p>いいえ。これは Foldic ではなく Flickr 側の制限で、大量ダウンロード時には想定どおりの動作です。Flickr のファイルサーバーには厳しい IP 単位の制限があり、同じ IP から 1 日に取得できるオリジナル写真の数が限られています。短時間に大量にダウンロードするとクローラーと見なされ、しばらくダウンロードが拒否されます。この制限はフル解像度のオリジナルだけに適用されるので、普段の Flickr の閲覧には影響しません。</p>
       <p>確実な回避策はありません。制限にかかると、Foldic は自動的に速度を落とし、待ってから再試行します。開いたままにしておくか、翌日また開いてください。ダウンロード済みのファイルを取り直すことはなく、同期は差分だけ進むので、最終的にはライブラリ全体がダウンロードされます。非常に大きなアカウントでは数日かかることがありますが、それは Flickr の制限によるもので、不具合ではありません。</p>
     </details>
-    <details>
+    <details id="faq-privacy">
       <summary>Foldic はデータを収集しますか？</summary>
       <p>一切収集しません。解析なし、テレメトリなし、アカウント不要。詳しくは<a href="/privacy/">プライバシーポリシー</a>をご覧ください。</p>
     </details>
@@ -531,6 +533,44 @@
       if (location.hash === "#iphone") initial = "iphone";
       if (location.hash === "#mac") initial = "mac";
       select(initial, false);
+    })();
+  </script>
+  <script>
+    // Per-question FAQ anchors: "#" copies a shareable deep link; arriving on a
+    // #faq-* hash opens that question.
+    (function () {
+      var items = document.querySelectorAll(".faq details[id]");
+      Array.prototype.forEach.call(items, function (d) {
+        var summary = d.querySelector("summary");
+        var a = document.createElement("a");
+        a.className = "faq-anchor";
+        a.href = "#" + d.id;
+        a.textContent = "#";
+        a.setAttribute("aria-label", "Copy link to this question");
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          d.open = true;
+          try { history.replaceState(null, "", "#" + d.id); } catch (err) {}
+          var url = location.origin + location.pathname + "#" + d.id;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function () {
+              a.textContent = "\u2713";
+              setTimeout(function () { a.textContent = "#"; }, 1200);
+            }, function () {});
+          }
+        });
+        summary.appendChild(a);
+      });
+      function openFromHash() {
+        if (!location.hash) return;
+        var d = document.getElementById(location.hash.slice(1));
+        if (d && d.tagName === "DETAILS") {
+          d.open = true;
+          d.scrollIntoView({ block: "start" });
+        }
+      }
+      window.addEventListener("hashchange", openFromHash);
+      openFromHash();
     })();
   </script>
 </body>

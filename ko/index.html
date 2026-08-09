@@ -214,6 +214,8 @@
     .faq summary { cursor: pointer; font-weight: 600; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center; }
     .faq summary::after { content: "+"; color: var(--green-deep); font-size: 1.3rem; font-weight: 400; }
     .faq details[open] summary::after { content: "–"; }
+    .faq summary .faq-anchor { margin-left: .55rem; margin-right: auto; color: var(--green-deep); opacity: .35; text-decoration: none; font-weight: 400; transition: opacity .15s; }
+    .faq summary .faq-anchor:hover, .faq summary .faq-anchor:focus { opacity: 1; }
     .faq details p { color: var(--muted); font-size: 0.95rem; padding-top: 0.6rem; }
 
     .bottom-cta {
@@ -413,32 +415,32 @@
 
   <section class="faq" id="faq">
     <h2 class="section-title" style="text-align:center">자주 묻는 질문</h2>
-    <details>
+    <details id="faq-buy-once">
       <summary>Mac과 iPhone에서 각각 구매해야 하나요?</summary>
       <p>아니요. Foldic은 유니버설 구매입니다. 한 번 구매하면 같은 Apple 계정으로 로그인한 기기에서 두 플랫폼 모두 사용할 수 있습니다. 구독도, 앱 내 구매도 없습니다.</p>
     </details>
-    <details>
+    <details id="faq-iphone-requirements">
       <summary>iPhone 버전에는 무엇이 필요한가요?</summary>
       <p>USB-C 포트가 있는 iPhone과 읽을 수 있는 드라이브(exFAT, FAT32, APFS)가 필요합니다. 버스 전원 NVMe SSD가 가장 잘 맞습니다. 속도의 한계가 디스크가 아니라 사진 쪽에 있을 정도로 빠릅니다. 회전식 드라이브는 별도 전원이 필요할 수 있습니다. 파일 앱이 접근할 수 있는 위치로도 복사할 수 있지만, 외장 드라이브가 이 버전의 핵심입니다.</p>
     </details>
-    <details>
+    <details id="faq-iphone-offline">
       <summary>iPhone 버전에 인터넷이나 iCloud가 필요한가요?</summary>
       <p>둘 다 필요하지 않으며, 그것이 iPhone 버전의 핵심입니다. iCloud 구독도, 계정도, 연결도 필요 없습니다. 사진은 기기에서 연결된 드라이브로 바로 기록되며 Foldic이든 Apple이든 어떤 서비스로도 업로드되지 않습니다. 비행기 안에서도 할 수 있습니다. 의도적으로 iCloud를 쓰지 않는 분에게도, 사진 앱의 모든 앨범을 내 디스크로 꺼내는 방법입니다.</p>
       <p>예외는 저장 공간 최적화입니다. 원본이 기기 대신 iCloud에 있다면 기록하기 전에 내려받아야 하고, 이때는 연결이 필요합니다. 기기에 있는 사진은 완전히 오프라인으로 복사됩니다.</p>
     </details>
-    <details>
+    <details id="faq-iphone-background">
       <summary>iPhone에서 앱을 벗어나면 복사가 멈춥니다</summary>
       <p>iOS는 화면에서 벗어난 앱이 외장 드라이브를 계속 열어 두도록 허용하지 않습니다. 그래서 Foldic은 복사 중 화면을 켜 둔 상태로 유지하고 앱을 앞에 두도록 안내합니다. 전환해도 잃는 것은 없습니다. 복사는 증분 방식이라 다시 시작하면 중단된 지점부터 이어집니다. 큰 라이브러리는 여러 번에 나눠 끝낼 수 있습니다.</p>
     </details>
-    <details>
+    <details id="faq-read-only">
       <summary>Foldic가 사진 라이브러리를 변경하나요?</summary>
       <p>아니요. Foldic는 철저히 단방향입니다. Apple의 PhotoKit으로 앨범(사진 앱과 iCloud)을 읽고 선택한 폴더에 파일을 쓸 뿐입니다. 사진 라이브러리의 어떤 것도 편집·삭제·재정렬하지 않으며, iCloud의 사진을 삭제하는 일도 결코 없습니다. 동기화는 언제나 한 방향으로만 흐릅니다: 라이브러리에서 폴더로.</p>
     </details>
-    <details>
+    <details id="faq-extra-backup">
       <summary>사진은 iPhone에 그대로 두고, 드라이브에 백업 한 부만 더 가질 수 있나요?</summary>
       <p>네 — 바로 그것이 Foldic의 설계 목적입니다. Foldic의 라이브러리 접근은 읽기 전용입니다. 앨범을 선택한 폴더(iPhone에 꽂은 USB 드라이브 등)로 미러링할 뿐, 기기의 사진에는 손대지 않습니다. 새 사진은 다음 동기화 때 추가되고, 이미 백업된 파일을 두 번 복사하지 않습니다. 드라이브에는 평범한 폴더와 파일이 담기므로 어떤 컴퓨터에서도 열 수 있습니다.</p>
     </details>
-    <details>
+    <details id="faq-move-off-iphone">
       <summary>사진을 iPhone에서 '옮기고' 싶어요 — 드라이브에 백업한 뒤 기기에서 삭제하려면?</summary>
       <p>가능합니다. 단, 반드시 이 순서로 하세요:</p>
       <ol>
@@ -448,49 +450,49 @@
       </ol>
       <p>그 영구 사본을 잘 보관하세요 — 이 순간부터 유일한 사본입니다(사진 앱의 '최근 삭제된 항목'에는 30일간 남습니다). 소중한 기억이라면 다른 드라이브에 한 부 더 두세요. Foldic는 기기의 사진을 절대 삭제하지 않습니다. 접근 권한이 설계상 읽기 전용이기 때문입니다 — 백업 도구가 원본을 삭제할 권한을 가져서는 안 됩니다.</p>
     </details>
-    <details>
+    <details id="faq-mac-mirror">
       <summary>사진 앱과 iCloud는 평소처럼 쓰면서, Mac에 항상 동일한 폴더 사본을 둘 수 있나요?</summary>
       <p>그것이 Mac에서 Foldic의 일상 모드입니다. 한 번 설정하면 끝: 대상 폴더를 선택하고 설정(⚙︎)에서 '앨범 변경 시 자동 동기화'를 켜세요. Foldic를 열어 둔 채 사진 앱과 iCloud를 평소처럼 쓰면, 모든 변경이 자동으로 폴더에 미러링됩니다. 결과는 두 부: 사진 앱 + iCloud의 라이브러리(어디서나 열람 가능), 그리고 Mac의 동일한 일반 파일 폴더. 'Mac 저장 공간 최적화'가 켜져 있어도 괜찮습니다 — '필요할 때 iCloud에서 원본 다운로드'가 기본으로 켜져 있어 동기화 시 실제 원본을 가져옵니다.</p>
     </details>
-    <details>
+    <details id="faq-destination">
       <summary>사진은 어디에 저장되나요?</summary>
       <p>선택한 폴더에 저장됩니다. Mac 내부, 외장 드라이브, NAS 마운트 모두 가능합니다. 앨범마다 원본 화질 파일이 담긴 하위 폴더가 생깁니다.</p>
     </details>
-    <details>
+    <details id="faq-edits">
       <summary>백업에 내 편집 내용이 포함되나요?</summary>
       <p>아니요 — Foldic은 카메라가 촬영한 원본 파일을 백업하며, 자르기·필터·조정을 적용한 결과물은 백업하지 않습니다. 편집 내용은 사진 앱 자체 데이터베이스에 있고, 백업은 의도적으로 손대지 않은 원본을 보관합니다. 충실도가 가장 높고, 재인코딩이 없으며, 사진 한 장당 파일 하나로 유지되기 때문입니다. 편집된 버전도 함께 보관하려면 설정에서 '<em>편집된 버전도 백업</em>'을 켜세요. 편집된 사진마다 원본과 나란히 파일이 하나 더 생기며, 그만큼 용량과 시간이 더 듭니다.</p>
     </details>
-    <details>
+    <details id="faq-live-photos">
       <summary>Live Photos는 어떻게 되나요?</summary>
       <p>둘 다 내보냅니다. 정지 이미지와 짝지어진 동영상 파일 모두입니다.</p>
     </details>
-    <details>
+    <details id="faq-icloud-speed">
       <summary>iPhone 사진은 얼마나 빨리 반영되나요?</summary>
       <p>iCloud가 Mac으로 동기화하는 즉시 반영됩니다. 사진 앱을 실행해 두면 iCloud 전달이 빨라지며, Foldic도 몇 분마다 라이브러리를 다시 확인합니다.</p>
     </details>
-    <details>
+    <details id="faq-shared-albums">
       <summary>iCloud 공유 앨범은 어떻게 백업하나요?</summary>
       <p>공유 앨범은 초대받은 사람이 보거나 사진을 추가할 수 있는 앨범으로, 'iCloud 공유 라이브러리'와는 다릅니다. 먼저 Mac의 사진 앱에서 공유 앨범이 표시되고 동기화가 끝났는지 확인하세요. Foldic는 이를 <strong>shared</strong>로 표시합니다. 다른 앨범처럼 동기화하면 현재 접근 가능한 모든 항목을 전용 폴더로 내보냅니다.</p>
       <p>Foldic는 단방향입니다. 공유 앨범에 게시·편집·복원하지 않습니다. 공유 앨범은 원본 업로더의 최고 화질 파일을 항상 제공하지는 않으므로, Foldic는 Apple 사진이 제공하는 최고 화질 버전을 내보냅니다.</p>
       <p>소유자가 접근 권한을 취소하거나 공유 앨범 또는 항목을 삭제하면, Foldic는 다음 스캔 후 해당 로컬 파일을 남겨진 파일로 표시합니다. 자동으로 삭제하지는 않습니다.</p>
     </details>
-    <details>
+    <details id="faq-smart-albums">
       <summary>스마트 앨범도 백업하나요?</summary>
       <p>스마트 앨범은 '즐겨찾는 항목', '비디오'처럼 조건에 따라 실시간으로 구성되는 보기입니다. Foldic는 현재 일반 앨범, iCloud 공유 앨범, All Photos를 백업합니다. 그 외 스마트 앨범을 별도 폴더로 미러링하지는 않습니다.</p>
       <p>해당 사진을 지금 확실히 백업하려면 All Photos를 동기화하거나, 보관하려는 사진을 일반 앨범에 추가한 뒤 동기화하세요.</p>
     </details>
-    <details>
+    <details id="faq-deleted-photos">
       <summary>사진 앱에서 사진을 앨범에서 빼거나 삭제하면 어떻게 되나요?</summary>
       <p>어디에서 빼는지에 따라 다릅니다. 앨범에서 사진을 빼면 사진은 라이브러리와 다른 앨범에 남습니다. Foldic가 다시 스캔한 뒤에는 해당 앨범 폴더의 사본만 남겨진 파일로 표시됩니다.</p>
       <p>라이브러리에서 사진을 삭제하면 Apple은 이를 '최근 삭제된 항목'으로 옮기고 해당 사진이 포함된 모든 앨범에서 제거합니다. Foldic가 다시 스캔한 뒤에는 영향을 받은 모든 사본(앨범 폴더의 사본과, 사용 중이라면 All Photos 미러 포함)이 남겨진 파일로 표시됩니다.</p>
       <p>Foldic는 내보낸 파일을 자동으로 삭제하지 않습니다. 남겨진 파일을 보관할지 지울지는 사용자가 결정합니다.</p>
     </details>
-    <details>
+    <details id="faq-flickr-throttling">
       <summary>Flickr 다운로드가 느려지거나 한동안 멈춥니다. 문제가 있는 건가요?</summary>
       <p>아니요. 이는 Foldic이 아니라 Flickr 쪽의 제한이며, 대량 다운로드 시 예상된 동작입니다. Flickr의 파일 서버는 엄격한 IP 단위 제한을 적용해, 같은 IP에서 하루에 받을 수 있는 원본 사진 수가 제한되어 있습니다. 짧은 시간에 대량으로 내려받으면 Flickr가 크롤러로 간주해 한동안 다운로드를 거부합니다. 이 제한은 원본 해상도 파일에만 적용되므로 평소 Flickr 탐색에는 영향이 없습니다.</p>
       <p>확실한 우회 방법은 없습니다. 제한에 걸리면 Foldic은 자동으로 속도를 늦추고 기다렸다가 다시 시도합니다. 앱을 열어 두거나 다음 날 다시 열어 두세요. 이미 받은 파일은 다시 받지 않고 동기화는 증분으로 진행되어, 결국 라이브러리 전체가 모두 다운로드됩니다. 아주 큰 계정은 며칠이 걸릴 수 있지만, 이는 Flickr의 제한 때문이지 오류가 아닙니다.</p>
     </details>
-    <details>
+    <details id="faq-privacy">
       <summary>Foldic가 데이터를 수집하나요?</summary>
       <p>전혀 수집하지 않습니다. 분석도, 텔레메트리도, 계정도 없습니다. 자세한 내용은 <a href="/privacy/">개인정보 처리방침</a>을 참고하세요.</p>
     </details>
@@ -532,6 +534,44 @@
       if (location.hash === "#iphone") initial = "iphone";
       if (location.hash === "#mac") initial = "mac";
       select(initial, false);
+    })();
+  </script>
+  <script>
+    // Per-question FAQ anchors: "#" copies a shareable deep link; arriving on a
+    // #faq-* hash opens that question.
+    (function () {
+      var items = document.querySelectorAll(".faq details[id]");
+      Array.prototype.forEach.call(items, function (d) {
+        var summary = d.querySelector("summary");
+        var a = document.createElement("a");
+        a.className = "faq-anchor";
+        a.href = "#" + d.id;
+        a.textContent = "#";
+        a.setAttribute("aria-label", "Copy link to this question");
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          d.open = true;
+          try { history.replaceState(null, "", "#" + d.id); } catch (err) {}
+          var url = location.origin + location.pathname + "#" + d.id;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function () {
+              a.textContent = "\u2713";
+              setTimeout(function () { a.textContent = "#"; }, 1200);
+            }, function () {});
+          }
+        });
+        summary.appendChild(a);
+      });
+      function openFromHash() {
+        if (!location.hash) return;
+        var d = document.getElementById(location.hash.slice(1));
+        if (d && d.tagName === "DETAILS") {
+          d.open = true;
+          d.scrollIntoView({ block: "start" });
+        }
+      }
+      window.addEventListener("hashchange", openFromHash);
+      openFromHash();
     })();
   </script>
 </body>
