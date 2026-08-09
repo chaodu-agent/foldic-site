@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>I flipped one byte in my own backup — Foldic Notes</title>
+  <meta name="description" content="A sync tool compares file names. A file whose name is right and whose bytes are wrong counts as backed up forever — so we taught Foldic to prove the bytes, then broke one on purpose to see if it would notice.">
+  <meta property="og:title" content="I flipped one byte in my own backup">
+  <meta property="og:description" content="A file whose name is right and whose bytes are wrong counts as backed up forever. So we taught Foldic to prove the bytes — then broke one on purpose.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://foldic.app/notes/one-flipped-byte/og-en.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://foldic.app/notes/one-flipped-byte/og-en.png">
+  <meta property="og:url" content="https://foldic.app/notes/one-flipped-byte/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <style>
+    :root {
+      --green: #A9B64B;
+      --green-deep: #3A4A26;
+      --green-tint: #E4E6D0;
+      --ink: #2E3B20;
+      --muted: #6E7A5B;
+      --bg: #F5F3EA;
+      --card: #EFEDDE;
+      --border: rgba(58, 74, 38, 0.16);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #A9B64B;
+        --green-deep: #C3CE72;
+        --green-tint: #2A3319;
+        --ink: #EDEFDC;
+        --muted: #A3AC88;
+        --bg: #171C0F;
+        --card: #202716;
+        --border: rgba(169, 182, 75, 0.2);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 860px; margin: 0 auto; padding: 0.9rem 1.5rem;
+      backdrop-filter: saturate(180%) blur(16px);
+      gap: 0.75rem; flex-wrap: wrap;
+    }
+    nav .brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--ink); }
+    nav .brand img { width: 28px; height: 28px; border-radius: 7px; }
+    .lang-switch {
+      display: inline-flex; gap: 0.25rem;
+      padding: 0.22rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .lang-switch button {
+      font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.3rem 0.75rem; border-radius: 999px;
+    }
+    .lang-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    main[hidden] { display: none; }
+    .back { display: inline-block; color: var(--muted); text-decoration: none; font-size: 0.88rem; margin-bottom: 1.6rem; }
+    .back:hover { color: var(--green-deep); }
+    h1 {
+      font-size: clamp(1.9rem, 4.6vw, 2.5rem);
+      line-height: 1.15; letter-spacing: -0.015em; font-weight: 700;
+    }
+    .byline { color: var(--muted); font-size: 0.9rem; margin-top: 0.7rem; }
+    h2 {
+      font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em;
+      margin: 2.6rem 0 0.8rem;
+    }
+    p { margin-top: 1rem; font-size: 1.02rem; }
+    .lede { font-size: 1.1rem; }
+    ul { margin-top: 0.8rem; padding-left: 1.3rem; }
+    li { margin-bottom: 0.6rem; }
+    li::marker { color: var(--green); }
+    strong { color: var(--green-deep); }
+    code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.86em; background: var(--card);
+      border: 1px solid var(--border); border-radius: 5px; padding: 0.08em 0.35em;
+    }
+    figure.shot { margin: 2rem 0; }
+    figure.shot img {
+      width: 100%; height: auto; display: block;
+    }
+    figure.shot figcaption {
+      color: var(--muted); font-size: 0.85rem; text-align: center;
+      margin-top: 0.4rem;
+    }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2.6rem 0 0; }
+    .callout {
+      background: var(--green-tint); border-radius: 14px;
+      padding: 1.1rem 1.4rem; margin-top: 2.4rem;
+      font-size: 1.02rem;
+    }
+    .callout strong { color: var(--green-deep); }
+    .outro { color: var(--muted); font-size: 0.95rem; }
+    .outro a { color: var(--green-deep); }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.2rem 1.5rem; text-align: center;
+      color: var(--muted); font-size: 0.88rem;
+    }
+    footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.4rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
+    <div class="lang-switch" role="tablist" aria-label="Language">
+      <button type="button" role="tab" data-lang-tab="en" aria-selected="true">EN</button>
+      <button type="button" role="tab" data-lang-tab="zh" aria-selected="false">中文</button>
+      <button type="button" role="tab" data-lang-tab="ja" aria-selected="false">日本語</button>
+      <button type="button" role="tab" data-lang-tab="ko" aria-selected="false">한국어</button>
+    </div>
+  </nav>
+
+  <!-- ============================== EN ============================== -->
+  <main data-lang-page="en">
+    <a class="back" href="/notes/">← Notes</a>
+    <h1>I flipped one byte in my own backup</h1>
+    <p class="byline">August 9, 2026 · Foldic development notes</p>
+
+    <p class="lede">This started with a question that kept me up at night. A user's Mac backs up to a Synology over SMB, and the network drops sometimes. While teaching Foldic to survive that gracefully, I asked myself: when a scan decides a photo is already backed up, what does it actually compare? The answer: file names. Only file names.</p>
+
+      <h2>Names only, on purpose</h2>
+      <p>Foldic's scan computes the file names every photo in an album should have, and compares them against what is in the folder. The names carry each photo's identity, so renames and naming-scheme changes are recognised — but size is never checked, content is never checked, dates are never checked. That is a deliberate trade: checking content means reading the entire drive on every scan, and a photo whose original lives only in iCloud would have to be downloaded before there is anything to compare. Scans would go from seconds to hours.</p>
+      <p>Foldic's own end is covered. Every file is written into a staging folder first and moved to its real name only when complete — and on a local file system like APFS that move is atomic: the file either appears whole or does not exist at all, with no state in between. So a cancel, a crash, a yanked cable never leaves half a photo pretending to be a whole one.</p>
+      <p>The trouble is the end we do not control. The guarantee has a premise: the file system does what it says. A NAS can tell you "written" and then lose data that never durably landed when the connection drops — on a network drive, even "the move is atomic" does not fully hold (see the appendix). A drive unplugged without ejecting can keep a file whose name is right and whose tail is zeros. And in every scan after that, those files count as backed up.</p>
+
+      <h2>The failure that looks like success</h2>
+      <p>The worst failure for a backup tool is not an error message. Errors you can see; errors you deal with. The worst failure <strong>looks like success</strong>: a green check, "12,430 photos backed up" — and on the day you actually need to restore, one of them opens as half a photo and a grey rectangle.</p>
+      <p>That day might be years away. Whether the source still exists by then, nobody can promise.</p>
+      <p>This is what I was afraid of. We believe the sync finished; what we actually have is broken files.</p>
+
+      <h2>Originals never change, so the expensive step happens once</h2>
+      <p>To prove a backup is good, sooner or later you have to read the bytes and compare them. How expensive that is depends on what you compare them against.</p>
+      <p>Here we have one built-in advantage: originals in the Photos library are immutable. You can edit, crop, filter — the original stays the file your camera made. So once a file's bytes on disk have been checked against the bytes the library serves, and the hash written down, every later verification only needs to read the disk side. The expensive comparison happens once per file, ever.</p>
+      <p>The whole feature is designed around that one fact.</p>
+
+      <h2>Three lines of defense</h2>
+      <p><strong>Record at write time.</strong> From the next version on, whenever a sync writes a file, Foldic computes its SHA-256 and size and records them in an index at the root of the backup drive. The index travels with the drive — plug it into another Mac and the evidence comes along. New files are born fully accounted for; you do nothing.</p>
+      <p><strong>Read it back.</strong> A new setting, on by default: after each sync, every file just written is read back from the backup disk and compared against what was sent. This is the check aimed squarely at "the NAS said it was written, and it was not" — it catches the mistake at the only moment it is still free to fix, instead of years later. A mismatched file goes to the Trash and the next scan rewrites it.</p>
+      <p><strong>Deep Compare.</strong> Right-click an album, or run it for all albums from Settings. Files with a recorded hash are verified by reading the disk alone — the library is never touched. Files without one (backups that predate this version) are checked against the bytes the library serves, and the result is recorded — so the expensive pass happens once per file, ever. A photo whose original lives only in iCloud while downloads are off is honestly marked <em>unverifiable</em>. A backup tool has no business being optimistic on your behalf.</p>
+      <p>Damaged files are named right on the album's row, next to a button: re-back up the damaged files. The bad copy goes to the Trash, a fresh export replaces it, the evidence is renewed. Because the source is immutable, the repair is always lossless.</p>
+
+      <h2>The afternoon I broke my own backup</h2>
+      <p>With the feature built, I ran an experiment.</p>
+      <p>I let Foldic sync 331 files to a test drive and ran the first Deep Compare. Those 331 files were "old backups" — no records in the index — so all of them were verified against the library: 331 passed, and the index was written.</p>
+      <p>Then I picked one 3.3 MB photo and flipped its 1,000,000th byte. The file size did not change by a single byte. The date did not change. The name did not change. To the old Foldic, this photo would have counted as backed up forever.</p>
+      <p>I ran Deep Compare again. This time the index held 331 records, so the whole pass read only the disk and finished in six seconds — and it named the file:</p>
+      <p><code>DAMAGED 15846A2E-…jpg: recorded 3315306B 06723ae2…, disk has 3315306B c87e7a45…</code></p>
+      <p>The recorded hash and the on-disk hash matched exactly what I computed in a terminal, out of band. One click on repair, the photo was re-exported, and a third pass reported: 396 files, all verified, zero damaged.</p>
+      <p>(The experiment also caught one of my own bugs along the way — the index could fail to save under a sandbox path. That is what tests like this are for: they verify the feature, and they verify the person who wrote it.)</p>
+
+      <h2>A backup's worth is decided on the day you restore</h2>
+      <p>"Sync complete" is a promise. This feature is the audit — and the audit's rules are: verify new files on the spot, re-verify old files on a schedule you choose, and say <em>unverifiable</em> out loud when that is the truth.</p>
+      <p>A backup's worth was never decided on the day it was written. It is decided on the day you restore. We want every photo you open that day to be whole.</p>
+
+      <h2>Appendix: where "atomic" ends</h2>
+      <p>To be precise about the boundary. On local file systems (APFS, HFS+), rename is an atomic system call — that is the basis for "never half a photo". SMB has atomic-rename semantics at the protocol level too, but that describes the server's file system. On the actual write path there are write-back caches on both the client and the server: when your Mac hears "written", the data may still be in memory on either end. If the connection dies in that window, the protocol promises nothing about what is on the disk. That is why "read it back" runs at the end of a sync instead of trusting anyone's acknowledgement — the bytes read back are the only evidence that no cache and no protocol vouched for.</p>
+      <p>(Strictly, even a read-back can be served from the client's cache. Which is why Deep Compare is the final line: it can run at any time, after a reboot, even from a different Mac.)</p>
+
+      <div class="callout"><strong>When can you use this?</strong> Write-time recording, read-back verification and Deep Compare ship with the next version (0.8). The index is evidence, not authority: deleting it breaks nothing — the next Deep Compare simply has to verify against the library again.</div>
+    <p class="outro">Foldic is $29.99 once, for <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac and iPhone together</a>.</p>
+  </main>
+
+  <!-- ============================== ZH ============================== -->
+  <main data-lang-page="zh" hidden>
+    <a class="back" href="/notes/">← 開發筆記</a>
+    <h1>我故意改壞備份裡的一個 byte</h1>
+    <p class="byline">2026 年 8 月 9 日 · Foldic 開發筆記</p>
+
+    <p class="lede">這次的起點是一個讓我睡不好的問題。有位用戶的 Mac 透過 SMB 備份到 Synology,網路偶爾會斷。我在教 Foldic 優雅地撐過斷線的時候,順手問了自己一句:掃描判定一張照片「已備份」的時候,它到底比對了什麼?答案是:檔名。只有檔名。</p>
+
+      <h2>只比檔名,是刻意的</h2>
+      <p>Foldic 的掃描把相簿裡每張照片該有的檔名算出來,跟資料夾裡實際的檔名比對。檔名裡藏著照片的身分識別碼,所以改名、換命名方式都認得出來 —— 但大小不看、內容不看、日期不看。這是刻意的取捨:比內容就得每次掃描把整顆碟讀一遍,原始檔只在 iCloud 上的照片還得先下載下來才有東西可比。掃描會從幾秒變成幾小時。</p>
+      <p>Foldic 自己這端是有保障的。每個檔案先寫進暫存目錄、寫完才搬到正式檔名 —— 在 APFS 這類本機檔案系統上,這個搬移是原子操作:檔案要嘛完整出現,要嘛根本不存在,沒有中間狀態。所以取消、當機、拔線,都不會留下半張照片假裝是一整張。</p>
+      <p>問題出在我們管不到的那一端。這個保證有個前提:檔案系統說到做到。NAS 可以先跟你說「寫好了」,然後在斷線時弄丟還沒真正落盤的資料 —— 在網路磁碟上,連「搬移是原子的」這個前提都不完全成立(詳見文末附註)。沒退出就拔的隨身碟,可以留下一個名字正確、尾巴全是零的檔案。這些檔案在之後的每一次掃描裡,都算「已備份」。</p>
+
+      <h2>看起來成功的失敗</h2>
+      <p>備份工具最可怕的失敗不是跳錯誤訊息 —— 錯誤訊息你看得到,會處理。最可怕的是<strong>看起來成功</strong>:綠色勾勾、「已備份 12,430 張」,然後在你真正需要還原的那天,某張照片打開是半張加一塊灰色。</p>
+      <p>那天可能是好幾年後。來源那時還在不在,沒有人能保證。</p>
+      <p>我擔心的就是這個。我們以為同步完成了,實際擁有的是壞掉的檔案。</p>
+
+      <h2>原始檔不可變,所以貴的事一生只做一次</h2>
+      <p>要證明備份是好的,終究得把位元組讀出來對。這件事有多貴,取決於跟什麼對。</p>
+      <p>這裡有一個先天優勢:「照片」圖庫裡的原始檔是不可變的。你可以編輯、裁切、加濾鏡,原始檔永遠是相機拍下的那一份。所以只要某個檔案「磁碟上的位元組」跟「圖庫給的位元組」對過一次、把雜湊記下來,之後的每一次驗證都只需要讀磁碟這一側。昂貴的比對,每個檔案一生只發生一次。</p>
+      <p>整個功能就圍繞這一件事設計。</p>
+
+      <h2>三道防線</h2>
+      <p><strong>寫入時記錄。</strong>從下個版本起,每次同步寫入檔案的當下,Foldic 會算出它的 SHA-256 和大小,記進備份磁碟根目錄的一份索引。索引跟著磁碟走 —— 這顆碟接到另一台 Mac,證據跟著過去。新寫的檔案天生就有完整記錄,你什麼都不用做。</p>
+      <p><strong>讀回來對。</strong>設定裡多了一個預設開啟的選項:每次同步結束,把剛寫入的檔案從備份磁碟讀回來,跟送出去的內容比對。這一刀正對著「NAS 說寫好了,但它沒有」—— 在錯誤還能免費修正的當下抓到它,而不是幾年後。不符的檔案直接移去垃圾桶,下次掃描自動重寫。</p>
+      <p><strong>深度比對。</strong>在相簿上按右鍵,或在設定裡對所有相簿執行。有記錄的檔案,讀磁碟、對記錄,完全不碰圖庫;沒記錄的(這個版本之前就存在的備份),向圖庫要來位元組、兩邊都算、對完把結果記進索引 —— 所以昂貴的那一次,每個檔案一生只發生一次。原始檔只在 iCloud 上、而你關了「允許下載」的照片,誠實標成「無法驗證」。備份工具不應該在這種事情上替你樂觀。</p>
+      <p>驗證出問題的檔案會直接列在相簿那一行,旁邊一個按鈕:重新備份損壞的檔案。壞的副本進垃圾桶、重新匯出、證據更新。因為來源不可變,修復永遠是無損的。</p>
+
+      <h2>把備份改壞的那個下午</h2>
+      <p>功能寫完,我做了一個實驗。</p>
+      <p>先讓 Foldic 同步了 331 個檔案到一顆測試碟,執行第一次深度比對。這 331 個檔案是「舊備份」,索引裡沒有記錄,所以全部向圖庫驗證:331 個通過,索引落盤。</p>
+      <p>然後我挑了其中一張 3.3 MB 的照片,把它的第 1,000,000 個 byte 翻轉。檔案大小一個位元組都沒變,日期沒變,檔名沒變。在舊的 Foldic 眼裡,這張照片永遠是「已備份」。</p>
+      <p>再跑一次深度比對。這次索引裡有 331 筆記錄,整輪只讀磁碟,六秒跑完 —— 然後它指名道姓:</p>
+      <p><code>DAMAGED 15846A2E-…jpg: recorded 3315306B 06723ae2…, disk has 3315306B c87e7a45…</code></p>
+      <p>記錄的雜湊、磁碟上的雜湊,跟我在終端機裡自己算的完全一致。按下修復,照片重新匯出,第三輪:396 個檔案,全部通過,零損壞。</p>
+      <p>(實驗途中還順便抓到我自己的一個 bug:索引在某個沙盒路徑下會存檔失敗。這種測試的意義就在這裡 —— 它不只驗證功能,也驗證寫功能的人。)</p>
+
+      <h2>備份的價值不在寫入那天</h2>
+      <p>「同步完成」是一句承諾。這次的功能是查帳 —— 而查帳的規矩是:新寫的當場驗,存量的定期驗,驗不了的老實說驗不了。</p>
+      <p>備份的價值從來不在寫入那天,在還原那天。我們希望那天你打開的每一張照片,都是完整的。</p>
+
+      <h2>附註:關於「原子搬移」的邊界</h2>
+      <p>說得精確一點。本機檔案系統(APFS、HFS+)的 rename 是原子系統呼叫,這是「絕不留下半張照片」的依據。SMB 在協定層也有原子 rename 的語意 —— 但那說的是伺服器端的檔案系統。實際的寫入路徑上,client 和 server 兩端都有 write-back 快取:你的 Mac 聽到「寫好了」的時候,資料可能還在任何一端的記憶體裡。連線在這個空窗斷掉,磁碟上留下什麼,協定不做任何承諾。這就是為什麼「讀回來對」要在同步結束時做、而不是相信任何一方的回報 —— 讀回來的位元組,是唯一不經過快取背書、不經過協定承諾的證據。</p>
+      <p>(嚴格說,讀回來也可能命中 client 端的快取。所以深度比對才是最終防線:它可以在任何時間執行 —— 重開機之後,甚至換一台 Mac。)</p>
+
+      <div class="callout"><strong>這些什麼時候能用?</strong>寫入時記錄、讀回驗證和深度比對,都會隨下一個版本(0.8)推出。索引是證據,不是權威:刪掉它不會弄壞任何東西 —— 只是下一次深度比對得重新向圖庫驗證一遍。</div>
+    <p class="outro">Foldic 一次購買 $29.99,<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac 與 iPhone 通用</a>。</p>
+  </main>
+
+  <!-- ============================== JA ============================== -->
+  <main data-lang-page="ja" hidden>
+    <a class="back" href="/notes/">← 開発ノート</a>
+    <h1>自分のバックアップの 1 バイトを、わざと壊した</h1>
+    <p class="byline">2026 年 8 月 9 日 · Foldic 開発ノート</p>
+
+    <p class="lede">きっかけは、夜も眠れなくなる問いでした。あるユーザーの Mac は SMB 経由で Synology にバックアップしていて、ネットワークがときどき切れる。切断を穏やかに乗り切る処理を書いているとき、ふと自問しました——スキャンが「この写真はバックアップ済み」と判定するとき、実際には何を比べているのか? 答え:ファイル名。ファイル名だけ。</p>
+
+      <h2>名前だけ見るのは、わざと</h2>
+      <p>Foldic のスキャンは、アルバムの各写真が持つべきファイル名を計算し、フォルダの中の実際の名前と照合します。名前には写真の識別子が埋め込まれているので、リネームや命名方式の変更は認識できます——けれどサイズは見ない、中身は見ない、日付も見ない。これは意図的なトレードオフです。中身を比べるなら、スキャンのたびにドライブ全体を読むことになり、オリジナルが iCloud にしかない写真は、比べる対象を得るためにまずダウンロードしなければならない。スキャンは数秒から数時間になります。</p>
+      <p>Foldic 側の端は守られています。すべてのファイルはまずステージングフォルダに書かれ、完成してから本来の名前に移されます——APFS のようなローカルファイルシステムでは、この移動はアトミックです。ファイルは完全な形で現れるか、まったく存在しないか、中間状態はない。だからキャンセルも、クラッシュも、ケーブルを抜いても、半分の写真が一枚のふりをして残ることはありません。</p>
+      <p>問題は、こちらの管理が及ばない側です。この保証には前提がある:ファイルシステムが言ったとおりに動くこと。NAS は「書きました」と答えたあと、切断時にまだ着地していなかったデータを失うことがある——ネットワークドライブでは「移動はアトミック」という前提すら完全には成り立ちません(文末の付記へ)。取り出さずに抜かれたドライブは、名前は正しいのに末尾がゼロで埋まったファイルを残すことがある。そしてそれらのファイルは、以後のすべてのスキャンで「バックアップ済み」と数えられます。</p>
+
+      <h2>成功に見える失敗</h2>
+      <p>バックアップツールの最悪の失敗は、エラーメッセージではありません。エラーは見えるし、対処できる。最悪の失敗は<strong>成功に見える</strong>こと:緑のチェックマーク、「12,430 枚バックアップ済み」——そして本当に復元が必要になった日、そのうちの一枚が半分と灰色の四角で開く。</p>
+      <p>その日は何年も先かもしれません。そのときソースがまだ存在するかは、誰にも約束できない。</p>
+      <p>私が恐れていたのはこれです。同期は終わったと信じている。実際に持っているのは壊れたファイル。</p>
+
+      <h2>オリジナルは不変。だから高価な処理は一度きり</h2>
+      <p>バックアップが健全だと証明するには、結局バイトを読んで比べるしかありません。それがどれだけ高くつくかは、何と比べるかで決まります。</p>
+      <p>ここには生まれつきの強みが一つあります:「写真」ライブラリのオリジナルは不変です。編集しても、切り抜いても、フィルタをかけても、オリジナルはカメラが作ったあのファイルのまま。だから、ディスク上のバイトとライブラリが渡すバイトを一度照合してハッシュを記録すれば、以後の検証はディスク側を読むだけでいい。高価な照合は、ファイルごとに生涯一度しか起きません。</p>
+      <p>機能全体が、この一つの事実を軸に設計されています。</p>
+
+      <h2>三つの防衛線</h2>
+      <p><strong>書き込み時に記録する。</strong>次のバージョンから、同期がファイルを書くたびに、Foldic はその SHA-256 とサイズを計算し、バックアップドライブのルートにある索引に記録します。索引はドライブと一緒に旅をします——別の Mac に挿せば、証拠も一緒に付いてくる。新しいファイルは生まれた瞬間から記録済み。あなたは何もしなくていい。</p>
+      <p><strong>読み戻して比べる。</strong>デフォルトでオンの新しい設定:同期が終わるたびに、書いたばかりのファイルをバックアップディスクから読み戻し、送った内容と照合します。これは「NAS は書けたと言ったが、書けていなかった」に真正面から向けた一撃です——何年も後ではなく、まだ無償で直せる唯一の瞬間に捕まえる。合わないファイルはゴミ箱へ移し、次のスキャンが書き直します。</p>
+      <p><strong>ディープ比較。</strong>アルバムを右クリック、または設定からすべてのアルバムに実行。記録のあるファイルはディスクを読むだけで検証し、ライブラリには触れません。記録のないファイル(このバージョン以前からあるバックアップ)は、ライブラリが渡すバイトと照合し、結果を記録します——だから高価なパスはファイルごとに生涯一度。オリジナルが iCloud にしかなく、ダウンロードをオフにしている写真は、正直に「検証不能」と表示します。バックアップツールが、あなたの代わりに楽観する筋合いはありません。</p>
+      <p>問題が見つかったファイルはアルバムの行にそのまま表示され、隣にボタンが一つ:破損ファイルを再バックアップ。壊れたコピーはゴミ箱へ、新しい書き出しが置き換わり、証拠が更新される。ソースが不変だから、修復はつねに無損失です。</p>
+
+      <h2>自分のバックアップを壊した午後</h2>
+      <p>機能ができあがって、実験をしました。</p>
+      <p>まず Foldic にテストドライブへ 331 ファイルを同期させ、最初のディープ比較を実行。この 331 ファイルは「古いバックアップ」——索引に記録がない——ので、すべてライブラリと照合されました:331 件通過、索引がディスクに書かれました。</p>
+      <p>次に 3.3 MB の写真を一枚選び、その 1,000,000 バイト目を反転させました。ファイルサイズは 1 バイトも変わらない。日付も変わらない。名前も変わらない。以前の Foldic の目には、この写真は永遠に「バックアップ済み」です。</p>
+      <p>もう一度ディープ比較。今度は索引に 331 件の記録があるので、パス全体がディスクだけを読んで 6 秒で完了——そして名指ししました:</p>
+      <p><code>DAMAGED 15846A2E-…jpg: recorded 3315306B 06723ae2…, disk has 3315306B c87e7a45…</code></p>
+      <p>記録されたハッシュも、ディスク上のハッシュも、私がターミナルで別途計算した値と完全に一致。修復をワンクリックすると写真は書き出し直され、三度目のパスは報告しました:396 ファイル、すべて検証済み、破損ゼロ。</p>
+      <p>(この実験は途中で私自身のバグも一つ捕まえました——索引がサンドボックスのある経路で保存に失敗する。こういうテストの意味はそこにあります。機能を検証し、機能を書いた人間も検証する。)</p>
+
+      <h2>バックアップの価値は、復元する日に決まる</h2>
+      <p>「同期完了」は約束です。この機能は監査です——そして監査のルールは:新しいファイルはその場で検証する。古いファイルは折を見て再検証する。検証できないものは、検証できないと声に出して言う。</p>
+      <p>バックアップの価値は、書いた日に決まったことなど一度もありません。復元する日に決まります。その日あなたが開くすべての写真が、完全であってほしい。</p>
+
+      <h2>付記:「アトミックな移動」の境界線</h2>
+      <p>正確を期して。ローカルファイルシステム(APFS、HFS+)の rename はアトミックなシステムコールで、これが「半分の写真は決して残らない」の根拠です。SMB もプロトコル層ではアトミックな rename の意味論を持ちます——ただしそれはサーバー側ファイルシステムの話。実際の書き込み経路には、クライアントとサーバーの両側にライトバックキャッシュがあります。あなたの Mac が「書きました」を聞いたとき、データはどちら側のメモリにも残っている可能性がある。その隙間で接続が死んだら、ディスクに何が残るか、プロトコルは何も約束しません。だから「読み戻して比べる」は、誰の応答も信じずに同期の最後に走るのです——読み戻したバイトだけが、キャッシュの保証もプロトコルの約束も経由しない唯一の証拠だから。</p>
+      <p>(厳密には、読み戻しすらクライアントキャッシュに当たることがあります。だからディープ比較が最後の防衛線です:いつでも実行できる——再起動の後でも、別の Mac からでも。)</p>
+
+      <div class="callout"><strong>いつから使える?</strong>書き込み時の記録、読み戻し検証、ディープ比較は次のバージョン(0.8)で届きます。索引は証拠であって権威ではありません:削除しても何も壊れない——次のディープ比較がもう一度ライブラリと照合し直すだけです。</div>
+    <p class="outro">Foldic は一度の購入で $29.99、<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac と iPhone の両方</a>に対応します。</p>
+  </main>
+
+  <!-- ============================== KO ============================== -->
+  <main data-lang-page="ko" hidden>
+    <a class="back" href="/notes/">← 개발 노트</a>
+    <h1>내 백업의 1바이트를 일부러 망가뜨렸다</h1>
+    <p class="byline">2026년 8월 9일 · Foldic 개발 노트</p>
+
+    <p class="lede">시작은 밤잠을 설치게 한 질문 하나였습니다. 어느 사용자의 Mac은 SMB로 Synology에 백업하는데, 네트워크가 가끔 끊깁니다. 끊김을 우아하게 견디는 처리를 만들다가 스스로에게 물었습니다 — 스캔이 "이 사진은 백업됨"이라고 판정할 때, 실제로 무엇을 비교하는가? 답: 파일 이름. 파일 이름뿐.</p>
+
+      <h2>이름만 보는 것은 의도된 설계</h2>
+      <p>Foldic의 스캔은 앨범의 각 사진이 가져야 할 파일 이름을 계산해서 폴더 안의 실제 이름과 대조합니다. 이름에는 사진의 식별자가 들어 있어서 이름 변경이나 명명 방식 전환은 알아봅니다 — 하지만 크기는 안 보고, 내용도 안 보고, 날짜도 안 봅니다. 의도된 트레이드오프입니다. 내용을 비교하려면 스캔할 때마다 드라이브 전체를 읽어야 하고, 원본이 iCloud에만 있는 사진은 비교할 대상을 얻기 위해 먼저 내려받아야 합니다. 스캔이 몇 초에서 몇 시간이 됩니다.</p>
+      <p>Foldic 쪽 끝은 지켜지고 있습니다. 모든 파일은 먼저 스테이징 폴더에 쓰이고, 완성된 뒤에야 제 이름으로 옮겨집니다 — APFS 같은 로컬 파일 시스템에서 이 이동은 원자적입니다. 파일은 온전히 나타나거나 아예 존재하지 않거나, 중간 상태가 없습니다. 그래서 취소도, 크래시도, 케이블을 뽑아도, 반쪽짜리 사진이 온전한 척 남는 일은 없습니다.</p>
+      <p>문제는 우리가 통제하지 못하는 쪽 끝입니다. 이 보장에는 전제가 있습니다: 파일 시스템이 말한 대로 한다는 것. NAS는 "썼습니다"라고 답한 뒤, 연결이 끊길 때 아직 실제로 안착하지 않은 데이터를 잃을 수 있습니다 — 네트워크 드라이브에서는 "이동은 원자적"이라는 전제조차 완전히 성립하지 않습니다(글 끝의 부록 참고). 꺼내지 않고 뽑힌 드라이브는 이름은 맞는데 끝이 0으로 채워진 파일을 남길 수 있습니다. 그리고 그 파일들은 이후의 모든 스캔에서 "백업됨"으로 집계됩니다.</p>
+
+      <h2>성공처럼 보이는 실패</h2>
+      <p>백업 도구의 최악의 실패는 오류 메시지가 아닙니다. 오류는 보이고, 대처할 수 있습니다. 최악의 실패는 <strong>성공처럼 보이는 것</strong>입니다: 초록색 체크, "12,430장 백업됨" — 그리고 정말 복원이 필요한 날, 그중 한 장이 반쪽과 회색 사각형으로 열립니다.</p>
+      <p>그날은 몇 년 뒤일지도 모릅니다. 그때 원본이 아직 존재할지는 아무도 약속할 수 없습니다.</p>
+      <p>제가 두려워한 것이 이것입니다. 동기화가 끝났다고 믿고 있지만, 실제로 가진 것은 깨진 파일들.</p>
+
+      <h2>원본은 불변 — 그래서 비싼 일은 평생 한 번</h2>
+      <p>백업이 온전하다는 것을 증명하려면 결국 바이트를 읽어서 비교해야 합니다. 그 비용이 얼마나 드는지는 무엇과 비교하느냐에 달려 있습니다.</p>
+      <p>여기에는 타고난 이점이 하나 있습니다: '사진' 보관함의 원본은 불변입니다. 편집하고, 자르고, 필터를 입혀도 원본은 카메라가 만든 그 파일 그대로입니다. 그래서 어떤 파일의 디스크 바이트와 보관함이 내어주는 바이트를 한 번 대조해서 해시를 기록해 두면, 이후의 모든 검증은 디스크 쪽만 읽으면 됩니다. 비싼 대조는 파일마다 평생 한 번만 일어납니다.</p>
+      <p>기능 전체가 이 하나의 사실을 축으로 설계되었습니다.</p>
+
+      <h2>세 겹의 방어선</h2>
+      <p><strong>쓸 때 기록한다.</strong> 다음 버전부터, 동기화가 파일을 쓸 때마다 Foldic은 그 파일의 SHA-256과 크기를 계산해 백업 드라이브 루트의 색인에 기록합니다. 색인은 드라이브와 함께 이동합니다 — 다른 Mac에 꽂으면 증거도 함께 갑니다. 새 파일은 태어날 때부터 기록 완료. 당신은 아무것도 하지 않아도 됩니다.</p>
+      <p><strong>다시 읽어 비교한다.</strong> 기본으로 켜져 있는 새 설정: 동기화가 끝날 때마다, 방금 쓴 파일을 백업 디스크에서 다시 읽어 보낸 내용과 대조합니다. "NAS는 썼다고 했지만 쓰지 않았다"를 정면으로 겨눈 한 수입니다 — 몇 년 뒤가 아니라, 아직 공짜로 고칠 수 있는 유일한 순간에 잡아냅니다. 불일치한 파일은 휴지통으로 가고, 다음 스캔이 다시 씁니다.</p>
+      <p><strong>심층 비교.</strong> 앨범에서 우클릭하거나, 설정에서 모든 앨범에 실행합니다. 기록이 있는 파일은 디스크만 읽어 검증하고 보관함은 건드리지 않습니다. 기록이 없는 파일(이 버전 이전부터 있던 백업)은 보관함이 내어주는 바이트와 대조하고 결과를 기록합니다 — 그래서 비싼 단계는 파일마다 평생 한 번입니다. 원본이 iCloud에만 있고 다운로드를 꺼 둔 사진은 정직하게 <em>검증 불가</em>로 표시합니다. 백업 도구가 당신 대신 낙관할 자격은 없습니다.</p>
+      <p>문제가 발견된 파일은 앨범 행에 그대로 표시되고, 옆에 버튼 하나: 손상된 파일 다시 백업. 나쁜 사본은 휴지통으로, 새 내보내기가 자리를 대신하고, 증거가 갱신됩니다. 원본이 불변이므로 복구는 언제나 무손실입니다.</p>
+
+      <h2>내 백업을 망가뜨린 오후</h2>
+      <p>기능이 완성되고, 실험을 했습니다.</p>
+      <p>먼저 Foldic이 테스트 드라이브에 331개 파일을 동기화하게 하고 첫 심층 비교를 실행했습니다. 이 331개는 "옛 백업" — 색인에 기록이 없는 — 이라 전부 보관함과 대조되었습니다: 331개 통과, 색인이 디스크에 기록되었습니다.</p>
+      <p>그다음 3.3 MB 사진 한 장을 골라 1,000,000번째 바이트를 뒤집었습니다. 파일 크기는 1바이트도 변하지 않았습니다. 날짜도 그대로. 이름도 그대로. 예전 Foldic의 눈에 이 사진은 영원히 "백업됨"입니다.</p>
+      <p>심층 비교를 다시 실행했습니다. 이번에는 색인에 331개의 기록이 있으니 전체 패스가 디스크만 읽고 6초에 끝났습니다 — 그리고 그 파일을 지목했습니다:</p>
+      <p><code>DAMAGED 15846A2E-…jpg: recorded 3315306B 06723ae2…, disk has 3315306B c87e7a45…</code></p>
+      <p>기록된 해시도, 디스크의 해시도, 제가 터미널에서 따로 계산한 값과 정확히 일치했습니다. 복구를 한 번 클릭하자 사진이 다시 내보내졌고, 세 번째 패스가 보고했습니다: 396개 파일, 전부 검증됨, 손상 0.</p>
+      <p>(이 실험은 도중에 제 버그도 하나 잡았습니다 — 색인이 샌드박스의 어떤 경로에서 저장에 실패하는 문제. 이런 테스트의 의미가 거기에 있습니다. 기능을 검증하고, 기능을 만든 사람도 검증합니다.)</p>
+
+      <h2>백업의 가치는 복원하는 날 결정된다</h2>
+      <p>"동기화 완료"는 약속입니다. 이 기능은 감사(監査)입니다 — 그리고 감사의 규칙은: 새로 쓴 것은 그 자리에서 검증하고, 오래된 것은 때맞춰 재검증하고, 검증할 수 없는 것은 검증할 수 없다고 소리 내어 말하는 것.</p>
+      <p>백업의 가치는 쓴 날에 결정된 적이 없습니다. 복원하는 날 결정됩니다. 그날 당신이 여는 모든 사진이 온전하기를 바랍니다.</p>
+
+      <h2>부록: "원자적 이동"의 경계</h2>
+      <p>정확히 말해 두자면. 로컬 파일 시스템(APFS, HFS+)의 rename은 원자적 시스템 콜이고, 이것이 "반쪽짜리 사진은 결코 남지 않는다"의 근거입니다. SMB도 프로토콜 층에서는 원자적 rename 의미론을 갖습니다 — 다만 그것은 서버 쪽 파일 시스템 이야기입니다. 실제 쓰기 경로에는 클라이언트와 서버 양쪽에 라이트백 캐시가 있습니다. 당신의 Mac이 "썼습니다"를 들었을 때, 데이터는 어느 쪽 메모리에든 남아 있을 수 있습니다. 그 틈에서 연결이 죽으면 디스크에 무엇이 남는지 프로토콜은 아무것도 약속하지 않습니다. 그래서 "다시 읽어 비교"는 누구의 응답도 믿지 않고 동기화 끝에 실행됩니다 — 다시 읽은 바이트만이 캐시의 보증도 프로토콜의 약속도 거치지 않은 유일한 증거이기 때문입니다.</p>
+      <p>(엄밀히는 다시 읽기조차 클라이언트 캐시에 맞을 수 있습니다. 그래서 심층 비교가 최후의 방어선입니다: 언제든 실행할 수 있습니다 — 재부팅 후에도, 다른 Mac에서도.)</p>
+
+      <div class="callout"><strong>언제부터 쓸 수 있나요?</strong> 쓰기 시 기록, 읽기 검증, 심층 비교는 다음 버전(0.8)과 함께 나옵니다. 색인은 증거이지 권위가 아닙니다: 지워도 아무것도 망가지지 않습니다 — 다음 심층 비교가 보관함과 다시 대조할 뿐입니다.</div>
+    <p class="outro">Foldic은 한 번 구매로 $29.99, <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac과 iPhone 모두</a>에서 사용할 수 있습니다.</p>
+  </main>
+
+  <footer>
+    © 2026 Foldic · <a href="/">foldic.app</a> · <a href="/notes/">Notes</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:support@foldic.app">Support</a>
+  </footer>
+
+  <script>
+    (function () {
+      var LANGS = ["en", "zh", "ja", "ko"];
+      var HTML_LANG = { en: "en", zh: "zh-Hant", ja: "ja", ko: "ko" };
+      var TITLES = {
+          en: "I flipped one byte in my own backup — Foldic Notes",
+          zh: "我故意改壞備份裡的一個 byte — Foldic 開發筆記",
+          ja: "自分のバックアップの 1 バイトを、わざと壊した — Foldic 開発ノート",
+          ko: "내 백업의 1바이트를 일부러 망가뜨렸다 — Foldic 개발 노트",
+        };
+
+      function setLang(lang, remember) {
+        if (LANGS.indexOf(lang) === -1) lang = "en";
+        document.documentElement.lang = HTML_LANG[lang];
+        document.title = TITLES[lang];
+        document.querySelectorAll("[data-lang-page]").forEach(function (page) {
+          page.hidden = page.getAttribute("data-lang-page") !== lang;
+        });
+        document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.getAttribute("data-lang-tab") === lang));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-release-lang", lang); } catch (e) {}
+        }
+      }
+
+      document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          setLang(tab.getAttribute("data-lang-tab"), true);
+        });
+      });
+
+      var initial = null;
+      var param = new URLSearchParams(location.search).get("lang");
+      if (param && LANGS.indexOf(param) !== -1) initial = param;
+      if (!initial) {
+        try { initial = localStorage.getItem("foldic-release-lang"); } catch (e) {}
+      }
+      if (!initial) {
+        var sitePath = null;
+        try { sitePath = localStorage.getItem("foldic-lang"); } catch (e) {}
+        if (sitePath === "/zh/") initial = "zh";
+        else if (sitePath === "/ja/") initial = "ja";
+        else if (sitePath === "/ko/") initial = "ko";
+        else if (sitePath === "/") initial = "en";
+      }
+      if (!initial) {
+        var langs = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ""];
+        for (var i = 0; i < langs.length && !initial; i++) {
+          if (/^zh/i.test(langs[i])) initial = "zh";
+          else if (/^ja/i.test(langs[i])) initial = "ja";
+          else if (/^ko/i.test(langs[i])) initial = "ko";
+          else if (/^en/i.test(langs[i])) initial = "en";
+        }
+      }
+      setLang(initial || "en", false);
+    })();
+  </script>
+</body>
+</html>
