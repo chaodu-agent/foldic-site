@@ -89,6 +89,14 @@
       padding: 0.1rem 0.55rem; margin-left: 0.5rem; vertical-align: 0.12em;
       text-transform: uppercase; letter-spacing: 0.04em;
     }
+    /* Which platforms a version shipped on. Quieter than the Latest badge —
+       it is a fact about the row, not an announcement. */
+    .platforms {
+      font-size: 0.72rem; font-weight: 600; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 0.1rem 0.55rem; margin-left: 0.5rem; vertical-align: 0.12em;
+      white-space: nowrap;
+    }
     footer {
       border-top: 1px solid var(--border);
       padding: 2.2rem 1.5rem; text-align: center;
@@ -112,36 +120,36 @@
   <!-- ============================== EN ============================== -->
   <main data-lang-page="en">
     <h1>Releases</h1>
-    <p class="sub">What each version of Foldic for Mac brought, newest first.</p>
+    <p class="sub">What each version of Foldic brought, newest first. The badge on each row says which platforms it reached.</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">Latest</span></span><span class="when">August 11, 2026</span></div>
-        <p class="blurb">Backup drives that vanish mid-sync: the sync pauses and resumes by itself when the drive returns, and a full or read-only disk stops it with one clear message instead of failing every photo in turn.</p>
+        <div class="row"><span class="version">0.7.1<span class="latest-badge">Latest</span></span><span class="platforms">Mac · iPhone</span><span class="when">August 11, 2026</span></div>
+        <p class="blurb">Backup drives that vanish mid-sync: the sync pauses and resumes by itself when the drive returns, and a full or read-only disk stops it with one clear message instead of failing every photo in turn. On iPhone this version also added Korean.</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.7.0</span><span class="when">August 8, 2026</span></div>
+        <div class="row"><span class="version">0.7.0</span><span class="platforms">Mac · iPhone</span><span class="when">August 8, 2026</span></div>
         <p class="blurb">Rebuilt as a native Mac app: lives in the menu bar, remembers album folders across renames, counts files that belong to no photo, and can back up edited versions too. The iPhone app was rebuilt the same day.</p>
       </div>
       <a class="release" href="/releases/v0.6.0/">
-        <div class="row"><span class="version">0.6.0</span><span class="when">August 3, 2026</span></div>
+        <div class="row"><span class="version">0.6.0</span><span class="platforms">Mac</span><span class="when">August 3, 2026</span></div>
         <p class="blurb">Connect Flickr with your own API key, cancel scans mid-pass, scan single albums, and a built-in diagnostic log.</p>
         <span class="more">Read the release notes →</span>
       </a>
       <a class="release" href="/releases/v0.5.0/">
-        <div class="row"><span class="version">0.5.0</span><span class="when">July 30, 2026</span></div>
+        <div class="row"><span class="version">0.5.0</span><span class="platforms">Mac</span><span class="when">July 30, 2026</span></div>
         <p class="blurb">Readable file names, a faster startup scan, and reliability fixes across the board.</p>
         <span class="more">Read the release notes →</span>
       </a>
       <div class="release">
-        <div class="row"><span class="version">0.4.1</span><span class="when">July 29, 2026</span></div>
+        <div class="row"><span class="version">0.4.1</span><span class="platforms">Mac</span><span class="when">July 29, 2026</span></div>
         <p class="blurb">Fixed Flickr sign-in behind corporate or antivirus TLS inspection, reopening from the Dock, and a first-close hint.</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.4.0</span><span class="when">July 2026</span></div>
-        <p class="blurb">Flickr tab: mirror your Flickr albums to folders alongside Photos, included free.</p>
+        <div class="row"><span class="version">0.4.0</span><span class="platforms">Mac · iPhone</span><span class="when">July 2026</span></div>
+        <p class="blurb">Flickr tab: mirror your Flickr albums to folders alongside Photos, included free. This was also the iPhone app's first release, arriving on August 5 — Photos only, without the Flickr tab.</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.3.0</span><span class="when">July 24, 2026</span></div>
+        <div class="row"><span class="version">0.3.0</span><span class="platforms">Mac</span><span class="when">July 24, 2026</span></div>
         <p class="blurb">First release on the Mac App Store.</p>
       </div>
     </div>
@@ -150,36 +158,36 @@
   <!-- ============================== ZH ============================== -->
   <main data-lang-page="zh" hidden>
     <h1>版本紀錄</h1>
-    <p class="sub">Foldic for Mac 每個版本帶來了什麼，由新到舊。</p>
+    <p class="sub">Foldic 每個版本帶來了什麼，由新到舊。每一列的標籤代表這個版本上架的平台。</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">最新</span></span><span class="when">2026 年 8 月 11 日</span></div>
-        <p class="blurb">處理備份磁碟在同步中途消失:同步會暫停,磁碟回來就自動繼續;磁碟滿了或變成唯讀則直接停下並說明,不再讓每張照片逐一失敗。</p>
+        <div class="row"><span class="version">0.7.1<span class="latest-badge">最新</span></span><span class="platforms">Mac · iPhone</span><span class="when">2026 年 8 月 11 日</span></div>
+        <p class="blurb">處理備份磁碟在同步中途消失:同步會暫停,磁碟回來就自動繼續;磁碟滿了或變成唯讀則直接停下並說明,不再讓每張照片逐一失敗。iPhone 版在這個版本也加入了韓文介面。</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.7.0</span><span class="when">2026 年 8 月 8 日</span></div>
+        <div class="row"><span class="version">0.7.0</span><span class="platforms">Mac · iPhone</span><span class="when">2026 年 8 月 8 日</span></div>
         <p class="blurb">改寫為原生 Mac App:常駐選單列、記住相簿對應的資料夾(改名不再重複複製)、顯示不屬於任何照片的檔案數量,並可選擇一併備份編輯後的版本。iPhone 版同日一起改寫。</p>
       </div>
       <a class="release" href="/releases/v0.6.0/">
-        <div class="row"><span class="version">0.6.0</span><span class="when">2026 年 8 月 3 日</span></div>
+        <div class="row"><span class="version">0.6.0</span><span class="platforms">Mac</span><span class="when">2026 年 8 月 3 日</span></div>
         <p class="blurb">Flickr 改用你自己的 API 金鑰、掃描可中途取消、可單獨掃描一本相簿，並內建診斷記錄。</p>
         <span class="more">閱讀版本說明 →</span>
       </a>
       <a class="release" href="/releases/v0.5.0/">
-        <div class="row"><span class="version">0.5.0</span><span class="when">2026 年 7 月 30 日</span></div>
+        <div class="row"><span class="version">0.5.0</span><span class="platforms">Mac</span><span class="when">2026 年 7 月 30 日</span></div>
         <p class="blurb">更好懂的檔名、更快的啟動掃描，以及全面的穩定性修正。</p>
         <span class="more">閱讀版本說明 →</span>
       </a>
       <div class="release">
-        <div class="row"><span class="version">0.4.1</span><span class="when">2026 年 7 月 29 日</span></div>
+        <div class="row"><span class="version">0.4.1</span><span class="platforms">Mac</span><span class="when">2026 年 7 月 29 日</span></div>
         <p class="blurb">修正企業或防毒軟體 TLS 檢測環境下無法登入 Flickr 的問題、Dock 重新開啟視窗，以及首次關閉視窗的提示。</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.4.0</span><span class="when">2026 年 7 月</span></div>
-        <p class="blurb">新增 Flickr 分頁：將 Flickr 相簿鏡射到資料夾，與「照片」並行，免費內建。</p>
+        <div class="row"><span class="version">0.4.0</span><span class="platforms">Mac · iPhone</span><span class="when">2026 年 7 月</span></div>
+        <p class="blurb">新增 Flickr 分頁：將 Flickr 相簿鏡射到資料夾，與「照片」並行，免費內建。iPhone 版也在這個版本首次上架，時間是 8 月 5 日 —— 只有「照片」，沒有 Flickr 分頁。</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.3.0</span><span class="when">2026 年 7 月 24 日</span></div>
+        <div class="row"><span class="version">0.3.0</span><span class="platforms">Mac</span><span class="when">2026 年 7 月 24 日</span></div>
         <p class="blurb">首次在 Mac App Store 上架。</p>
       </div>
     </div>
@@ -188,36 +196,36 @@
   <!-- ============================== JA ============================== -->
   <main data-lang-page="ja" hidden>
     <h1>リリース</h1>
-    <p class="sub">Foldic for Mac の各バージョンの内容。新しい順。</p>
+    <p class="sub">Foldic の各バージョンの内容。新しい順。各行のバッジは、そのバージョンが届いたプラットフォームを示します。</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">最新</span></span><span class="when">2026年8月11日</span></div>
-        <p class="blurb">同期中にバックアップドライブが消えた場合:同期は一時停止し、ドライブが戻ると自動的に再開します。ディスクがいっぱい、または読み取り専用のときは、一枚ずつ失敗させる代わりに明確なメッセージで停止します。</p>
+        <div class="row"><span class="version">0.7.1<span class="latest-badge">最新</span></span><span class="platforms">Mac · iPhone</span><span class="when">2026年8月11日</span></div>
+        <p class="blurb">同期中にバックアップドライブが消えた場合:同期は一時停止し、ドライブが戻ると自動的に再開します。ディスクがいっぱい、または読み取り専用のときは、一枚ずつ失敗させる代わりに明確なメッセージで停止します。iPhone 版ではこのバージョンで韓国語にも対応しました。</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.7.0</span><span class="when">2026年8月8日</span></div>
+        <div class="row"><span class="version">0.7.0</span><span class="platforms">Mac · iPhone</span><span class="when">2026年8月8日</span></div>
         <p class="blurb">ネイティブ Mac アプリとして作り直しました。メニューバーに常駐し、アルバムとフォルダの対応を記憶(名前を変えても再コピーしません)、どの写真にも属さないファイルの数を表示、編集後のバージョンのバックアップにも対応。iPhone 版も同日に作り直しています。</p>
       </div>
       <a class="release" href="/releases/v0.6.0/">
-        <div class="row"><span class="version">0.6.0</span><span class="when">2026年8月3日</span></div>
+        <div class="row"><span class="version">0.6.0</span><span class="platforms">Mac</span><span class="when">2026年8月3日</span></div>
         <p class="blurb">ご自身のAPIキーでFlickrを連携、スキャンの途中キャンセル、アルバム単体のスキャン、診断ログを内蔵。</p>
         <span class="more">リリースノートを読む →</span>
       </a>
       <a class="release" href="/releases/v0.5.0/">
-        <div class="row"><span class="version">0.5.0</span><span class="when">2026年7月30日</span></div>
+        <div class="row"><span class="version">0.5.0</span><span class="platforms">Mac</span><span class="when">2026年7月30日</span></div>
         <p class="blurb">わかりやすいファイル名、より速い起動スキャン、全体的な信頼性の向上。</p>
         <span class="more">リリースノートを読む →</span>
       </a>
       <div class="release">
-        <div class="row"><span class="version">0.4.1</span><span class="when">2026年7月29日</span></div>
+        <div class="row"><span class="version">0.4.1</span><span class="platforms">Mac</span><span class="when">2026年7月29日</span></div>
         <p class="blurb">企業やウイルス対策ソフトの TLS 検査環境で Flickr にサインインできない問題、Dock からの再表示、初回クローズ時のヒントを修正。</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.4.0</span><span class="when">2026年7月</span></div>
-        <p class="blurb">Flickr タブを追加：写真アプリと並んで Flickr のアルバムもフォルダにミラーリング。無料で搭載。</p>
+        <div class="row"><span class="version">0.4.0</span><span class="platforms">Mac · iPhone</span><span class="when">2026年7月</span></div>
+        <p class="blurb">Flickr タブを追加：写真アプリと並んで Flickr のアルバムもフォルダにミラーリング。無料で搭載。iPhone 版もこのバージョンで初リリース（8月5日）。写真アプリのみで、Flickr タブはありません。</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.3.0</span><span class="when">2026年7月24日</span></div>
+        <div class="row"><span class="version">0.3.0</span><span class="platforms">Mac</span><span class="when">2026年7月24日</span></div>
         <p class="blurb">Mac App Store での最初のリリース。</p>
       </div>
     </div>
@@ -226,36 +234,36 @@
   <!-- ============================== KO ============================== -->
   <main data-lang-page="ko" hidden>
     <h1>릴리스</h1>
-    <p class="sub">Foldic for Mac 각 버전의 변경 사항, 최신순.</p>
+    <p class="sub">Foldic 각 버전의 변경 사항, 최신순. 각 행의 배지는 해당 버전이 출시된 플랫폼을 나타냅니다.</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">최신</span></span><span class="when">2026년 8월 11일</span></div>
-        <p class="blurb">동기화 도중 백업 드라이브가 사라지는 경우: 동기화가 일시 중지되고 드라이브가 돌아오면 자동으로 재개됩니다. 디스크가 가득 차거나 읽기 전용일 때는 사진을 하나씩 실패시키는 대신 명확한 메시지와 함께 중지합니다.</p>
+        <div class="row"><span class="version">0.7.1<span class="latest-badge">최신</span></span><span class="platforms">Mac · iPhone</span><span class="when">2026년 8월 11일</span></div>
+        <p class="blurb">동기화 도중 백업 드라이브가 사라지는 경우: 동기화가 일시 중지되고 드라이브가 돌아오면 자동으로 재개됩니다. 디스크가 가득 차거나 읽기 전용일 때는 사진을 하나씩 실패시키는 대신 명확한 메시지와 함께 중지합니다. iPhone 버전은 이 버전에서 한국어도 추가되었습니다.</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.7.0</span><span class="when">2026년 8월 8일</span></div>
+        <div class="row"><span class="version">0.7.0</span><span class="platforms">Mac · iPhone</span><span class="when">2026년 8월 8일</span></div>
         <p class="blurb">네이티브 Mac 앱으로 다시 만들었습니다. 메뉴 바에 상주하고, 앨범과 폴더의 연결을 기억하며(이름을 바꿔도 다시 복사하지 않습니다), 어떤 사진에도 속하지 않는 파일 수를 표시하고, 편집된 버전 백업도 지원합니다. iPhone 앱도 같은 날 다시 만들었습니다.</p>
       </div>
       <a class="release" href="/releases/v0.6.0/">
-        <div class="row"><span class="version">0.6.0</span><span class="when">2026년 8월 3일</span></div>
+        <div class="row"><span class="version">0.6.0</span><span class="platforms">Mac</span><span class="when">2026년 8월 3일</span></div>
         <p class="blurb">본인의 API 키로 Flickr 연결, 스캔 도중 취소, 앨범 단위 스캔, 내장 진단 로그.</p>
         <span class="more">릴리스 노트 보기 →</span>
       </a>
       <a class="release" href="/releases/v0.5.0/">
-        <div class="row"><span class="version">0.5.0</span><span class="when">2026년 7월 30일</span></div>
+        <div class="row"><span class="version">0.5.0</span><span class="platforms">Mac</span><span class="when">2026년 7월 30일</span></div>
         <p class="blurb">알아보기 쉬운 파일 이름, 더 빠른 시작 스캔, 전반적인 안정성 개선.</p>
         <span class="more">릴리스 노트 보기 →</span>
       </a>
       <div class="release">
-        <div class="row"><span class="version">0.4.1</span><span class="when">2026년 7월 29일</span></div>
+        <div class="row"><span class="version">0.4.1</span><span class="platforms">Mac</span><span class="when">2026년 7월 29일</span></div>
         <p class="blurb">기업용 또는 백신의 TLS 검사 환경에서 Flickr 로그인이 안 되던 문제, Dock에서 창 다시 열기, 첫 창 닫기 안내를 수정.</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.4.0</span><span class="when">2026년 7월</span></div>
-        <p class="blurb">Flickr 탭 추가: 사진 앱과 나란히 Flickr 앨범도 폴더로 미러링. 무료 포함.</p>
+        <div class="row"><span class="version">0.4.0</span><span class="platforms">Mac · iPhone</span><span class="when">2026년 7월</span></div>
+        <p class="blurb">Flickr 탭 추가: 사진 앱과 나란히 Flickr 앨범도 폴더로 미러링. 무료 포함. iPhone 앱도 이 버전으로 처음 출시되었습니다(8월 5일). 사진 앱만 지원하며 Flickr 탭은 없습니다.</p>
       </div>
       <div class="release">
-        <div class="row"><span class="version">0.3.0</span><span class="when">2026년 7월 24일</span></div>
+        <div class="row"><span class="version">0.3.0</span><span class="platforms">Mac</span><span class="when">2026년 7월 24일</span></div>
         <p class="blurb">Mac App Store 첫 출시.</p>
       </div>
     </div>
