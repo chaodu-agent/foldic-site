@@ -78,15 +78,28 @@
       transition: transform 0.15s ease;
     }
     a.release:hover { transform: translateY(-1px); border-color: var(--green); }
-    .release .row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-    .release .version { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em; }
+    /* The labels cluster on the left and the date is pushed to the right.
+       space-between distributed all four evenly once the Latest badge stopped
+       being nested inside the version, which left it floating mid-row. */
+    .release .row { display: flex; align-items: center; justify-content: flex-start; gap: 0.1rem; flex-wrap: wrap; }
+    .release .when { margin-left: auto; padding-left: 1rem; }
+    /* Three labels sit on a row and they are not equal: the version is what
+       the row *is* (solid), Latest is an announcement (tinted), the platforms
+       are a fact about it (outlined). Sizing them alike would flatten that. */
+    .release .version {
+      font-weight: 700; font-size: 0.95rem;
+      font-variant-numeric: tabular-nums;
+      background: var(--green-deep); color: var(--bg);
+      border-radius: 8px; padding: 0.2rem 0.6rem;
+      display: inline-block;
+    }
     .release .when { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
     .release .blurb { color: var(--muted); font-size: 0.93rem; margin-top: 0.25rem; }
     .release .more { color: var(--green-deep); font-size: 0.88rem; font-weight: 600; margin-top: 0.4rem; display: inline-block; }
     .latest-badge {
       font-size: 0.72rem; font-weight: 700; color: var(--green-deep);
       background: var(--green-tint); border-radius: 999px;
-      padding: 0.1rem 0.55rem; margin-left: 0.5rem; vertical-align: 0.12em;
+      padding: 0.1rem 0.55rem; margin-left: 0.4rem; vertical-align: 0.08em;
       text-transform: uppercase; letter-spacing: 0.04em;
     }
     /* Which platforms a version shipped on. Quieter than the Latest badge —
@@ -94,7 +107,7 @@
     .platforms {
       font-size: 0.72rem; font-weight: 600; color: var(--muted);
       border: 1px solid var(--border); border-radius: 999px;
-      padding: 0.1rem 0.55rem; margin-left: 0.5rem; vertical-align: 0.12em;
+      padding: 0.1rem 0.55rem; margin-left: 0.4rem; vertical-align: 0.08em;
       white-space: nowrap;
     }
     footer {
@@ -123,7 +136,7 @@
     <p class="sub">What each version of Foldic brought, newest first. The badge on each row says which platforms it reached.</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">Latest</span></span><span class="platforms">Mac · iPhone</span><span class="when">August 11, 2026</span></div>
+        <div class="row"><span class="version">0.7.1</span><span class="latest-badge">Latest</span><span class="platforms">Mac · iPhone</span><span class="when">August 11, 2026</span></div>
         <p class="blurb">Backup drives that vanish mid-sync: the sync pauses and resumes by itself when the drive returns, and a full or read-only disk stops it with one clear message instead of failing every photo in turn. On iPhone this version also added Korean.</p>
       </div>
       <div class="release">
@@ -161,7 +174,7 @@
     <p class="sub">Foldic 每個版本帶來了什麼，由新到舊。每一列的標籤代表這個版本上架的平台。</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">最新</span></span><span class="platforms">Mac · iPhone</span><span class="when">2026 年 8 月 11 日</span></div>
+        <div class="row"><span class="version">0.7.1</span><span class="latest-badge">最新</span><span class="platforms">Mac · iPhone</span><span class="when">2026 年 8 月 11 日</span></div>
         <p class="blurb">處理備份磁碟在同步中途消失:同步會暫停,磁碟回來就自動繼續;磁碟滿了或變成唯讀則直接停下並說明,不再讓每張照片逐一失敗。iPhone 版在這個版本也加入了韓文介面。</p>
       </div>
       <div class="release">
@@ -199,7 +212,7 @@
     <p class="sub">Foldic の各バージョンの内容。新しい順。各行のバッジは、そのバージョンが届いたプラットフォームを示します。</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">最新</span></span><span class="platforms">Mac · iPhone</span><span class="when">2026年8月11日</span></div>
+        <div class="row"><span class="version">0.7.1</span><span class="latest-badge">最新</span><span class="platforms">Mac · iPhone</span><span class="when">2026年8月11日</span></div>
         <p class="blurb">同期中にバックアップドライブが消えた場合:同期は一時停止し、ドライブが戻ると自動的に再開します。ディスクがいっぱい、または読み取り専用のときは、一枚ずつ失敗させる代わりに明確なメッセージで停止します。iPhone 版ではこのバージョンで韓国語にも対応しました。</p>
       </div>
       <div class="release">
@@ -237,7 +250,7 @@
     <p class="sub">Foldic 각 버전의 변경 사항, 최신순. 각 행의 배지는 해당 버전이 출시된 플랫폼을 나타냅니다.</p>
     <div class="release-list">
       <div class="release">
-        <div class="row"><span class="version">0.7.1<span class="latest-badge">최신</span></span><span class="platforms">Mac · iPhone</span><span class="when">2026년 8월 11일</span></div>
+        <div class="row"><span class="version">0.7.1</span><span class="latest-badge">최신</span><span class="platforms">Mac · iPhone</span><span class="when">2026년 8월 11일</span></div>
         <p class="blurb">동기화 도중 백업 드라이브가 사라지는 경우: 동기화가 일시 중지되고 드라이브가 돌아오면 자동으로 재개됩니다. 디스크가 가득 차거나 읽기 전용일 때는 사진을 하나씩 실패시키는 대신 명확한 메시지와 함께 중지합니다. iPhone 버전은 이 버전에서 한국어도 추가되었습니다.</p>
       </div>
       <div class="release">
