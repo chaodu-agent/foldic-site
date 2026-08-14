@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The NAS had terabytes free. Foldic said it was full — Foldic Notes</title>
+  <meta name="description" content="A NAS with terabytes free was declared full and the backup stopped. The free-space figure we trusted answers 0 on exFAT and SMB — so we stopped guessing from a number and let the filesystem say what happened.">
+  <meta property="og:title" content="The NAS had terabytes free. Foldic said it was full">
+  <meta property="og:description" content="The free-space figure we trusted answers 0 on exFAT and SMB. A bug I shipped, the lesson a rewrite lost, and why the verdict now belongs to the filesystem.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://foldic.app/notes/nas-said-full/og-en.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://foldic.app/notes/nas-said-full/og-en.png">
+  <meta property="og:url" content="https://foldic.app/notes/nas-said-full/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <style>
+    :root {
+      --green: #A9B64B;
+      --green-deep: #3A4A26;
+      --green-tint: #E4E6D0;
+      --ink: #2E3B20;
+      --muted: #6E7A5B;
+      --bg: #F5F3EA;
+      --card: #EFEDDE;
+      --border: rgba(58, 74, 38, 0.16);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #A9B64B;
+        --green-deep: #C3CE72;
+        --green-tint: #2A3319;
+        --ink: #EDEFDC;
+        --muted: #A3AC88;
+        --bg: #171C0F;
+        --card: #202716;
+        --border: rgba(169, 182, 75, 0.2);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 860px; margin: 0 auto; padding: 0.9rem 1.5rem;
+      backdrop-filter: saturate(180%) blur(16px);
+      gap: 0.75rem; flex-wrap: wrap;
+    }
+    nav .brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--ink); }
+    nav .brand img { width: 28px; height: 28px; border-radius: 7px; }
+    .lang-switch {
+      display: inline-flex; gap: 0.25rem;
+      padding: 0.22rem; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .lang-switch button {
+      font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      background: none; border: 0; cursor: pointer;
+      padding: 0.3rem 0.75rem; border-radius: 999px;
+    }
+    .lang-switch button[aria-selected="true"] {
+      background: var(--bg); color: var(--ink);
+      box-shadow: 0 1px 3px rgba(46, 59, 32, 0.14);
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    main[hidden] { display: none; }
+    .back { display: inline-block; color: var(--muted); text-decoration: none; font-size: 0.88rem; margin-bottom: 1.6rem; }
+    .back:hover { color: var(--green-deep); }
+    h1 {
+      font-size: clamp(1.9rem, 4.6vw, 2.5rem);
+      line-height: 1.15; letter-spacing: -0.015em; font-weight: 700;
+    }
+    .byline { color: var(--muted); font-size: 0.9rem; margin-top: 0.7rem; }
+    h2 {
+      font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em;
+      margin: 2.6rem 0 0.8rem;
+    }
+    p { margin-top: 1rem; font-size: 1.02rem; }
+    .lede { font-size: 1.1rem; }
+    ul { margin-top: 0.8rem; padding-left: 1.3rem; }
+    li { margin-bottom: 0.6rem; }
+    li::marker { color: var(--green); }
+    strong { color: var(--green-deep); }
+    code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.86em; background: var(--card);
+      border: 1px solid var(--border); border-radius: 5px; padding: 0.08em 0.35em;
+    }
+    figure.shot { margin: 2rem 0; }
+    figure.shot img {
+      width: 100%; height: auto; display: block;
+    }
+    figure.shot figcaption {
+      color: var(--muted); font-size: 0.85rem; text-align: center;
+      margin-top: 0.4rem;
+    }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2.6rem 0 0; }
+    .callout {
+      background: var(--green-tint); border-radius: 14px;
+      padding: 1.1rem 1.4rem; margin-top: 2.4rem;
+      font-size: 1.02rem;
+    }
+    .callout strong { color: var(--green-deep); }
+    .outro { color: var(--muted); font-size: 0.95rem; }
+    .outro a { color: var(--green-deep); }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.2rem 1.5rem; text-align: center;
+      color: var(--muted); font-size: 0.88rem;
+    }
+    footer a { color: var(--green-deep); text-decoration: none; margin: 0 0.4rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/"><img src="/icon.png" alt="" width="28" height="28">Foldic</a>
+    <div class="lang-switch" role="tablist" aria-label="Language">
+      <button type="button" role="tab" data-lang-tab="en" aria-selected="true">EN</button>
+      <button type="button" role="tab" data-lang-tab="zh" aria-selected="false">中文</button>
+      <button type="button" role="tab" data-lang-tab="ja" aria-selected="false">日本語</button>
+      <button type="button" role="tab" data-lang-tab="ko" aria-selected="false">한국어</button>
+    </div>
+  </nav>
+
+  <!-- ============================== EN ============================== -->
+  <main data-lang-page="en">
+    <a class="back" href="/notes/">← Notes</a>
+    <h1>The NAS had terabytes free. Foldic said it was full</h1>
+    <p class="byline">August 14, 2026 · Foldic development notes</p>
+
+    <p class="lede">A user's backup stopped with "the destination is full." The destination was a NAS with terabytes free. Foldic refused to continue and let go of every album still waiting in the queue — nothing was deleted, nothing was written wrong, but the sync was over and the sentence on screen was false. The cause was mine, and it sat inside the very feature we had shipped days earlier to make disk-full failures clearer.</p>
+
+      <h2>The feature that carried the bug</h2>
+      <p>In 0.7.1 we shipped this: before it, a genuinely full destination was miserable. Every remaining file failed one by one, and by the time the reason travels through PhotoKit to the app it has often been stripped down to a hollow error code — so the wall of red never once said "the disk is full". Our fix: when a file fails to write, probe the volume. Read-only, or less than 20 MB free, stops the whole queue and says why in one plain sentence.</p>
+      <p>Stopping was right. The probe was wrong.</p>
+
+      <h2>A number that means something else on half the world's disks</h2>
+      <p>The probe asked the system for the volume's free space — specifically <code>volumeAvailableCapacityForImportantUsage</code>, the figure that also counts purgeable space. That figure is an APFS notion. Ask an exFAT volume — the format most USB drives arrive in — and it answers <strong>0, not "I don't know"</strong>. Measured, not read in documentation: a drive with 206 MB genuinely free reports 0 here. An SMB share — the protocol a NAS speaks — answers the same way.</p>
+      <p>My code had a fallback — but it was written as "if the first figure is missing, use the second". Zero is not missing. Zero is an answer, and a confidently wrong one. So on every exFAT drive and network share: free = 0, 0 is less than 20 MB, verdict: full. From that moment, any single failed write — one file, for any reason — escalated into "the destination is full" and stopped everything.</p>
+
+      <h2>We had already learned this once</h2>
+      <p>Here is the embarrassing part. The native bridge of Foldic's previous incarnation (the one 0.7.0 replaced) had a <code>&gt; 0</code> check sitting next to this very figure — it confirmed the number was positive before believing it. The Swift rewrite lost that one-line lesson. And the comment I wrote right above my own line shows I half-knew: "network volumes often report only the plain one, so ask for both." Asking for both does nothing when the first one confidently answers zero. A comment that half-knows is worse than no comment: it reads as if the problem were handled.</p>
+
+      <h2>Stop inferring. The filesystem already said what happened</h2>
+      <p>The fix does not tune the guess; it deletes it. The write that just failed carries the filesystem's own explanation: Cocoa error 640 — or POSIX <code>ENOSPC</code> underneath — means full. Cocoa 642, or <code>EROFS</code>, means read-only. Everything else stays exactly what it was: one file that failed, not a verdict about the whole volume.</p>
+      <p>Both codes were confirmed against real volumes rather than looked up: filling an exFAT disk image yields 640 on top of 28; writing to one mounted read-only yields 642 on top of 30. And because PhotoKit has been seen to crush a real cause down to a hollow −1 with the truth buried one level below, the wrapped error is inspected too.</p>
+      <p>No threshold. No per-filesystem special case. The whole class of bug is gone. The capacity figure that lied survives only where it always behaved — the free-space display in the status bar. That code never believed a zero in the first place: when the fancy figure answers 0 it shows the plain one, and when both do, it shows nothing. Nothing rather than zero, because a 0 on screen also says "your disk is full", and saying that falsely is worse than staying silent.</p>
+
+      <h2>Who hit this</h2>
+      <p>The bug shipped in 0.7.1 on both platforms and was still aboard in 0.7.2. And the blast radius is wider than the report that found it: not just NAS. Every exFAT USB drive answers 0 — and an exFAT USB drive is the single most common thing an iPhone backs up to. If Foldic told you the destination was full while the drive plainly was not, this was why. Nothing was harmed: the stop is a refusal, not a cleanup, and syncing again after the update continues from where it stopped.</p>
+
+      <h2>Writing the rule down, this time</h2>
+      <p>The verdict now lives in a file with no dependencies, testable without a photo library or a disk: seven tests, including that an ordinary permission failure must never be read as a statement about the volume. And the lesson, at the end where it belongs: when the filesystem is willing to tell you what happened, do not reconstruct what happened from a number — least of all a number that means "how much can APFS purge" on this disk and "0" on the next. A rewrite discards lessons like this silently; the only place they survive is a test that fails when they are forgotten.</p>
+
+      <div class="callout"><strong>When is it fixed?</strong> The fix is in 0.8, submitted for review on both platforms. Until it arrives, a false "destination is full" on an exFAT drive or a network share stops the queue but harms nothing — sync again after the update and it continues from where it stopped.</div>
+    <p class="outro">Foldic is $29.99 once, for <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac and iPhone together</a>.</p>
+  </main>
+
+  <!-- ============================== ZH ============================== -->
+  <main data-lang-page="zh" hidden>
+    <a class="back" href="/notes/">← 開發筆記</a>
+    <h1>NAS 明明還很空，Foldic 卻說它滿了</h1>
+    <p class="byline">2026 年 8 月 14 日 · Foldic 開發筆記</p>
+
+    <p class="lede">有位用戶的備份停了,畫面上寫著「目的地已滿」。那個目的地,是一台還有好幾 TB 空間的 NAS。Foldic 拒絕繼續,把還在排隊的相簿全部放掉 —— 沒有刪任何東西,也沒寫壞任何東西,但同步就這樣結束了,而螢幕上那句話是錯的。原因在我,而且就藏在幾天前我們特地為了「把磁碟滿講清楚」而推出的那個功能裡。</p>
+
+      <h2>帶著 bug 上線的功能</h2>
+      <p>0.7.1 我們出了這個功能。在那之前,目的地真的滿了的時候很難看:剩下的檔案一個接一個失敗,而理由經過 PhotoKit 傳到 app 手上時,常常已經被剝到只剩一個空洞的錯誤碼 —— 所以滿牆的紅字從頭到尾沒有一句寫著「磁碟滿了」。我們的做法:某個檔案寫入失敗時,去探測那個磁碟區 —— 唯讀,或剩餘空間少於 20 MB,就停下整條隊伍,用一句普通話把原因講清楚。</p>
+      <p>停下來是對的。探測的方法錯了。</p>
+
+      <h2>同一個數字,在半個世界的磁碟上是另一個意思</h2>
+      <p>探測向系統要的是磁碟區的剩餘空間 —— 準確地說是 <code>volumeAvailableCapacityForImportantUsage</code>,連可清除空間也算進去的那個數字。那是 APFS 的概念。拿去問一個 exFAT 磁碟區 —— 大多數 USB 碟出廠就是這個格式 —— 它回答的是 <strong>0,而不是「我不知道」</strong>。實測,不是查文件:一顆真的還有 206 MB 可用的碟,這個數字回報 0。SMB 分享 —— NAS 講的就是這個協定 —— 也用同樣的方式回答。</p>
+      <p>我的程式碼有後備方案 —— 但寫的是「第一個數字拿不到,就用第二個」。0 不是拿不到。0 是一個回答,而且是一個講得很有自信的錯誤回答。於是在每一顆 exFAT 碟和每一個網路分享上:剩餘 = 0,0 小於 20 MB,判定:滿了。從那一刻起,任何一次寫入失敗 —— 一個檔案,不管什麼原因 —— 都會升級成「目的地已滿」,停掉一切。</p>
+
+      <h2>這一課,我們其實學過一次</h2>
+      <p>難堪的部分在這裡。Foldic 前一代(被 0.7.0 換掉的那一個)的原生橋接層裡,就在同一個數字旁邊,有一個 <code>&gt; 0</code> 的檢查 —— 它先確認數字是正的,才肯相信。Swift 重寫的時候,這一行的教訓丟了。而我自己寫在那行上面的註解,顯示我半知半解:「網路磁碟區常常只回報普通的那個數字,所以兩個都要。」第一個數字自信地回答 0 的時候,兩個都要一點用也沒有。半知半解的註解比沒有註解更糟:它讀起來像是問題已經處理好了。</p>
+
+      <h2>別再推論了,檔案系統早就說了</h2>
+      <p>修法不是把猜測調得更準,而是把猜測整個刪掉。剛剛失敗的那次寫入,本身就帶著檔案系統自己的解釋:Cocoa 錯誤 640 —— 或它底下的 POSIX <code>ENOSPC</code> —— 就是滿了;Cocoa 642,或 <code>EROFS</code>,就是唯讀。其他的一切維持原判:一個檔案失敗了,僅此而已,不是對整個磁碟區的判決。</p>
+      <p>兩個代碼都是對著真的磁碟區確認的,不是查表:把一個 exFAT 磁碟映像檔塞滿,得到 640 疊在 28 上;對一個以唯讀掛載的磁碟區寫入,得到 642 疊在 30 上。而因為 PhotoKit 被看過把真正的原因壓成一個空洞的 −1、真話埋在下面一層,包在裡面的錯誤也一併檢查。</p>
+      <p>沒有門檻值,沒有按檔案系統分支的特例,這一整類 bug 消失了。那個說謊的容量數字,只留在它一直表現正常的地方 —— 狀態列的剩餘空間顯示。那段程式碼從來就不信 0:高級的數字回答 0,就改用普通的;兩個都是 0,就什麼都不顯示。寧可空白,也不顯示 0 —— 因為畫面上的 0 也是在說「你的磁碟滿了」,而把這句話說錯,比沉默更糟。</p>
+
+      <h2>誰碰到了</h2>
+      <p>這個 bug 隨 0.7.1 上線,兩個平台都有,0.7.2 也還帶著。而且波及範圍比發現它的那份回報更廣:不只 NAS。每一顆 exFAT 的 USB 碟都回答 0 —— 而 exFAT USB 碟,正是 iPhone 備份最常見的目的地。如果 Foldic 跟你說目的地滿了,而那顆碟明明沒有,原因就是這個。沒有任何東西受損:那個「停」是拒絕繼續,不是清理;更新後再同步一次,就從停住的地方接著走。</p>
+
+      <h2>這次把規矩寫下來</h2>
+      <p>判定邏輯現在住在一個沒有任何依賴的檔案裡,不需要照片圖庫、不需要磁碟就能測:七個測試,其中一條是「一次普通的權限失敗,永遠不能被讀成對磁碟區的判決」。然後是教訓,放在它該在的結尾:當檔案系統願意告訴你發生了什麼,就不要拿一個數字去重建發生了什麼 —— 尤其是一個在這顆碟上意思是「APFS 能清出多少」、在下一顆碟上意思是「0」的數字。重寫會不聲不響地丟掉這種教訓;唯一留得住它們的地方,是一個在它們被忘記時會失敗的測試。</p>
+
+      <div class="callout"><strong>什麼時候修好?</strong>修正在 0.8 裡,兩個平台都已送審。在它到達之前,exFAT 碟或網路分享上假的「目的地已滿」只會停下隊伍,不會傷害任何東西 —— 更新後再同步,從停住的地方繼續。</div>
+    <p class="outro">Foldic 一次購買 $29.99,<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac 與 iPhone 通用</a>。</p>
+  </main>
+
+  <!-- ============================== JA ============================== -->
+  <main data-lang-page="ja" hidden>
+    <a class="back" href="/notes/">← 開発ノート</a>
+    <h1>NAS はがら空きなのに、Foldic は満杯だと言った</h1>
+    <p class="byline">2026 年 8 月 14 日 · Foldic 開発ノート</p>
+
+    <p class="lede">あるユーザーのバックアップが「保存先が満杯です」で止まりました。その保存先は、数 TB の空きがある NAS。Foldic は続行を拒み、キューで待っていたアルバムをすべて手放しました——何も削除していない、何も壊して書いていない、けれど同期はそこで終わり、画面のあの一文は嘘でした。原因は私で、しかも「ディスク満杯をわかりやすく伝える」ために数日前に出した、まさにその機能の中にありました。</p>
+
+      <h2>バグを乗せたまま出た機能</h2>
+      <p>0.7.1 で私たちはこういう機能を出しました。それ以前、本当に満杯の保存先は悲惨でした:残りのファイルが一つずつ失敗し、その理由は PhotoKit を通って app に届く頃には中身のないエラーコードにまで剥がされていることが多い——だから赤い壁のどこにも「ディスクが満杯」とは書かれない。私たちの手当て:ファイルの書き込みが失敗したら、ボリュームを調べる——読み取り専用か、空きが 20 MB 未満なら、キュー全体を止めて、普通の一文で理由を言う。</p>
+      <p>止めるのは正しかった。調べ方が間違っていました。</p>
+
+      <h2>世界の半分のディスクでは別の意味になる数字</h2>
+      <p>プローブがシステムに尋ねたのはボリュームの空き容量——正確には <code>volumeAvailableCapacityForImportantUsage</code>、パージ可能な領域まで数えるあの数字です。あれは APFS の概念です。exFAT のボリューム——ほとんどの USB ドライブが出荷時にこのフォーマットです——に尋ねると、答えは<strong>「わからない」ではなく 0</strong>。ドキュメントではなく実測で:本当に 206 MB 空いているドライブが、ここでは 0 と報告します。SMB 共有——NAS が話すプロトコル——も同じ答え方をします。</p>
+      <p>私のコードには予備がありました——ただし「最初の数字が取れなければ、二番目を使う」と書かれていた。0 は「取れない」ではありません。0 は回答で、しかも自信満々に間違っている回答です。かくして、すべての exFAT ドライブとネットワーク共有で:空き = 0、0 は 20 MB 未満、判定:満杯。その瞬間から、たった一度の書き込み失敗が——ファイル一つ、理由を問わず——「保存先が満杯」に昇格し、すべてを止めました。</p>
+
+      <h2>この教訓は、一度学んでいた</h2>
+      <p>ばつが悪いのはここです。Foldic の先代(0.7.0 が置き換えたあれ)のネイティブブリッジには、まさにこの数字の隣に <code>&gt; 0</code> のチェックがありました——正の数であることを確かめてから、初めて信じる。Swift への書き直しで、その一行の教訓が落ちました。そして私自身がその行の上に書いたコメントは、半分だけ知っていたことを示しています:「ネットワークボリュームはしばしば普通の数字しか報告しない。だから両方を尋ねる」。最初の一つが自信を持って 0 と答えるなら、両方尋ねても何の意味もない。半分だけ知っているコメントは、無いより悪い:問題が処理済みであるかのように読めるからです。</p>
+
+      <h2>推測をやめる。ファイルシステムはもう言っている</h2>
+      <p>修正は推測の精度を上げることではなく、推測そのものを消すことでした。いま失敗した書き込みは、ファイルシステム自身の説明を携えています:Cocoa エラー 640——あるいはその下の POSIX <code>ENOSPC</code>——なら満杯。Cocoa 642、または <code>EROFS</code> なら読み取り専用。それ以外はすべて元のまま:一つのファイルが失敗した、それだけのこと。ボリューム全体への判決ではありません。</p>
+      <p>どちらのコードも、表を引くのではなく実物のボリュームで確認しました:exFAT のディスクイメージを満杯にすると 28 の上に 640 が、読み取り専用でマウントしたボリュームに書き込むと 30 の上に 642 が返る。そして PhotoKit が本当の原因を中身のない −1 に潰し、真実を一段下に埋めるのを見たことがあるので、包まれたエラーの中も検査します。</p>
+      <p>しきい値なし。ファイルシステムごとの特例なし。このクラスのバグごと消えました。嘘をついたあの容量の数字は、ずっと行儀のよかった場所にだけ残っています——ステータスバーの空き容量表示。あそこのコードは最初から 0 を信じませんでした:上等な数字が 0 なら普通の数字を、両方 0 なら何も表示しない。0 ではなく空白——画面の 0 もまた「ディスクが満杯」と言っているのであり、それを偽って言うのは黙っているより悪いからです。</p>
+
+      <h2>誰に起きたか</h2>
+      <p>このバグは 0.7.1 で両プラットフォームに載り、0.7.2 にも残っていました。そして影響範囲は、見つけてくれた報告より広い:NAS だけではありません。exFAT の USB ドライブはどれも 0 と答える——そして exFAT の USB ドライブこそ、iPhone のバックアップ先として一番ありふれたものです。ドライブは明らかに空いているのに Foldic が「満杯」と言ったなら、原因はこれでした。何も傷ついていません:あの停止は拒否であって片付けではなく、アップデート後にもう一度同期すれば、止まったところから続きます。</p>
+
+      <h2>今度こそ、規則を書き残す</h2>
+      <p>判定はいま、依存のないファイルに住んでいます。写真ライブラリもディスクも要らずにテストできる:七つのテスト、そのなかには「ありふれた権限エラーを、ボリュームへの判決として読んではならない」も含まれます。そして教訓は、あるべき場所である結びに:ファイルシステムが何が起きたか教えてくれるとき、別の数字から何が起きたかを再構築しないこと——とりわけ、このディスクでは「APFS がどれだけパージできるか」を意味し、隣のディスクでは「0」を意味する数字からは。書き直しはこの種の教訓を音もなく捨てます。教訓が生き残る唯一の場所は、忘れられたときに失敗するテストです。</p>
+
+      <div class="callout"><strong>いつ直る?</strong>修正は 0.8 に入っていて、両プラットフォームとも審査に提出済みです。届くまでのあいだ、exFAT ドライブやネットワーク共有での偽の「保存先が満杯」はキューを止めるだけで、何も傷つけません——アップデート後に同期し直せば、止まったところから続きます。</div>
+    <p class="outro">Foldic は一度の購入で $29.99、<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac と iPhone の両方</a>に対応します。</p>
+  </main>
+
+  <!-- ============================== KO ============================== -->
+  <main data-lang-page="ko" hidden>
+    <a class="back" href="/notes/">← 개발 노트</a>
+    <h1>NAS는 텅 비어 있는데, Foldic은 가득 찼다고 했다</h1>
+    <p class="byline">2026년 8월 14일 · Foldic 개발 노트</p>
+
+    <p class="lede">한 사용자의 백업이 "대상이 가득 찼습니다"로 멈췄습니다. 그 대상은 수 TB가 비어 있는 NAS였습니다. Foldic은 계속하기를 거부하고 큐에서 기다리던 앨범을 전부 놓아 버렸습니다 — 아무것도 지우지 않았고 아무것도 잘못 쓰지 않았지만, 동기화는 그렇게 끝났고 화면의 그 문장은 거짓이었습니다. 원인은 저였고, 그것도 "디스크 가득 참을 분명하게 알리자"며 며칠 전에 내놓은 바로 그 기능 안에 있었습니다.</p>
+
+      <h2>버그를 실은 채 출시된 기능</h2>
+      <p>0.7.1에서 우리는 이런 기능을 내놓았습니다. 그 전에는 정말로 가득 찬 대상이 참혹했습니다: 남은 파일이 하나씩 차례로 실패하고, 그 이유는 PhotoKit을 지나 앱에 도착할 즈음이면 속이 빈 오류 코드로 벗겨져 있기 일쑤였습니다 — 그래서 빨간 벽 어디에도 "디스크가 가득 참"이라고는 적혀 있지 않았습니다. 우리의 처방: 파일 쓰기가 실패하면 볼륨을 조사한다 — 읽기 전용이거나 남은 공간이 20 MB 미만이면, 큐 전체를 멈추고 평범한 한 문장으로 이유를 말한다.</p>
+      <p>멈추는 것은 옳았습니다. 조사하는 방법이 틀렸습니다.</p>
+
+      <h2>세상의 절반의 디스크에서는 다른 뜻이 되는 숫자</h2>
+      <p>프로브가 시스템에 물은 것은 볼륨의 남은 공간 — 정확히는 <code>volumeAvailableCapacityForImportantUsage</code>, 정리 가능한 공간까지 세는 그 숫자였습니다. 그것은 APFS의 개념입니다. exFAT 볼륨 — 대부분의 USB 드라이브가 공장에서 이 포맷으로 나옵니다 — 에 물으면 답은 <strong>"모른다"가 아니라 0</strong>입니다. 문서가 아니라 실측으로: 실제로 206 MB가 비어 있는 드라이브가 여기서는 0이라고 보고합니다. SMB 공유 — NAS가 쓰는 프로토콜 — 도 똑같이 답합니다.</p>
+      <p>제 코드에는 대비책이 있었습니다 — 다만 "첫 번째 숫자를 못 얻으면 두 번째를 쓴다"라고 적혀 있었습니다. 0은 '못 얻음'이 아닙니다. 0은 대답이고, 그것도 자신만만하게 틀린 대답입니다. 그리하여 모든 exFAT 드라이브와 네트워크 공유에서: 남음 = 0, 0은 20 MB 미만, 판정: 가득 참. 그 순간부터 단 한 번의 쓰기 실패가 — 파일 하나, 이유 불문 — "대상이 가득 참"으로 승격되어 모든 것을 멈췄습니다.</p>
+
+      <h2>이 교훈은 이미 한 번 배웠던 것</h2>
+      <p>민망한 대목은 여기입니다. Foldic의 전신(0.7.0이 교체한 그 앱)의 네이티브 브리지에는 바로 이 숫자 옆에 <code>&gt; 0</code> 검사가 있었습니다 — 양수인지 확인한 뒤에야 믿었습니다. Swift로 다시 쓰면서 그 한 줄의 교훈이 사라졌습니다. 그리고 제가 그 줄 위에 직접 쓴 주석은 제가 반쯤은 알고 있었음을 보여 줍니다: "네트워크 볼륨은 흔히 평범한 쪽 숫자만 보고한다. 그러니 둘 다 물어라." 첫 번째가 자신 있게 0이라고 답하면, 둘 다 물어도 아무 소용이 없습니다. 반쯤 아는 주석은 없는 것보다 나쁩니다: 문제가 이미 처리된 것처럼 읽히니까요.</p>
+
+      <h2>추측을 멈춘다. 파일 시스템이 이미 말했다</h2>
+      <p>수정은 추측을 더 정교하게 만드는 것이 아니라 추측 자체를 지우는 것이었습니다. 방금 실패한 그 쓰기는 파일 시스템 자신의 설명을 지니고 있습니다: Cocoa 오류 640 — 또는 그 아래의 POSIX <code>ENOSPC</code> — 는 가득 참. Cocoa 642, 또는 <code>EROFS</code>는 읽기 전용. 그 밖의 모든 것은 원래대로: 파일 하나가 실패했다는 것일 뿐, 볼륨 전체에 대한 판결이 아닙니다.</p>
+      <p>두 코드 모두 표를 찾아본 것이 아니라 실제 볼륨으로 확인했습니다: exFAT 디스크 이미지를 가득 채우면 28 위에 640이, 읽기 전용으로 마운트한 볼륨에 쓰면 30 위에 642가 돌아옵니다. 그리고 PhotoKit이 진짜 원인을 속이 빈 −1로 뭉개고 진실을 한 층 아래에 묻는 것을 본 적이 있으므로, 감싸인 오류의 속도 함께 검사합니다.</p>
+      <p>임계값 없음. 파일 시스템별 특례 없음. 이 부류의 버그가 통째로 사라졌습니다. 거짓말을 했던 그 용량 숫자는 늘 얌전했던 자리에만 남아 있습니다 — 상태 표시줄의 남은 공간 표시. 그 코드는 처음부터 0을 믿지 않았습니다: 고급 숫자가 0이면 평범한 숫자를, 둘 다 0이면 아무것도 표시하지 않습니다. 0 대신 공백 — 화면의 0 역시 "디스크가 가득 찼다"고 말하는 것이고, 그것을 거짓으로 말하는 것은 침묵보다 나쁘기 때문입니다.</p>
+
+      <h2>누가 겪었나</h2>
+      <p>이 버그는 0.7.1에 실려 두 플랫폼 모두에 나갔고, 0.7.2에도 남아 있었습니다. 그리고 영향 범위는 발견해 준 제보보다 넓습니다: NAS만이 아닙니다. 모든 exFAT USB 드라이브가 0이라고 답합니다 — 그리고 exFAT USB 드라이브야말로 iPhone 백업의 가장 흔한 대상입니다. 드라이브가 분명히 비어 있는데 Foldic이 가득 찼다고 했다면, 원인은 이것이었습니다. 아무것도 다치지 않았습니다: 그 멈춤은 거부이지 정리가 아니며, 업데이트 후 다시 동기화하면 멈춘 곳에서 이어집니다.</p>
+
+      <h2>이번에는 규칙을 적어 둔다</h2>
+      <p>판정은 이제 의존성 없는 파일에 삽니다. 사진 보관함도 디스크도 없이 테스트할 수 있습니다: 일곱 개의 테스트, 그중에는 "평범한 권한 실패를 볼륨에 대한 판결로 읽어서는 안 된다"도 있습니다. 그리고 교훈은, 있어야 할 자리인 끝에: 파일 시스템이 무슨 일이 있었는지 말해 줄 때, 다른 숫자로 무슨 일이 있었는지를 재구성하지 말 것 — 특히 이 디스크에서는 "APFS가 얼마나 정리할 수 있는가"를 뜻하고 옆 디스크에서는 "0"을 뜻하는 숫자로는. 다시 쓰기는 이런 교훈을 소리 없이 버립니다. 교훈이 살아남는 유일한 곳은, 잊혔을 때 실패하는 테스트입니다.</p>
+
+      <div class="callout"><strong>언제 고쳐지나요?</strong> 수정은 0.8에 들어 있고, 두 플랫폼 모두 심사에 제출되어 있습니다. 도착할 때까지 exFAT 드라이브나 네트워크 공유에서 나오는 가짜 "대상이 가득 참"은 큐를 멈출 뿐 아무것도 해치지 않습니다 — 업데이트 후 다시 동기화하면 멈춘 곳에서 계속됩니다.</div>
+    <p class="outro">Foldic은 한 번 구매로 $29.99, <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac과 iPhone 모두</a>에서 사용할 수 있습니다.</p>
+  </main>
+
+  <footer>
+    © 2026 Foldic · <a href="/">foldic.app</a> · <a href="/notes/">Notes</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:tautiu.dev@gmail.com">Support</a>
+  </footer>
+
+  <script>
+    (function () {
+      var LANGS = ["en", "zh", "ja", "ko"];
+      var HTML_LANG = { en: "en", zh: "zh-Hant", ja: "ja", ko: "ko" };
+      var TITLES = {
+          en: "The NAS had terabytes free. Foldic said it was full — Foldic Notes",
+          zh: "NAS 明明還很空，Foldic 卻說它滿了 — Foldic 開發筆記",
+          ja: "NAS はがら空きなのに、Foldic は満杯だと言った — Foldic 開発ノート",
+          ko: "NAS는 텅 비어 있는데, Foldic은 가득 찼다고 했다 — Foldic 개발 노트",
+        };
+
+      function setLang(lang, remember) {
+        if (LANGS.indexOf(lang) === -1) lang = "en";
+        document.documentElement.lang = HTML_LANG[lang];
+        document.title = TITLES[lang];
+        document.querySelectorAll("[data-lang-page]").forEach(function (page) {
+          page.hidden = page.getAttribute("data-lang-page") !== lang;
+        });
+        document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.getAttribute("data-lang-tab") === lang));
+        });
+        if (remember) {
+          try { localStorage.setItem("foldic-release-lang", lang); } catch (e) {}
+        }
+      }
+
+      document.querySelectorAll("[data-lang-tab]").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          setLang(tab.getAttribute("data-lang-tab"), true);
+        });
+      });
+
+      var initial = null;
+      var param = new URLSearchParams(location.search).get("lang");
+      if (param && LANGS.indexOf(param) !== -1) initial = param;
+      if (!initial) {
+        try { initial = localStorage.getItem("foldic-release-lang"); } catch (e) {}
+      }
+      if (!initial) {
+        var sitePath = null;
+        try { sitePath = localStorage.getItem("foldic-lang"); } catch (e) {}
+        if (sitePath === "/zh/") initial = "zh";
+        else if (sitePath === "/ja/") initial = "ja";
+        else if (sitePath === "/ko/") initial = "ko";
+        else if (sitePath === "/") initial = "en";
+      }
+      if (!initial) {
+        var langs = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ""];
+        for (var i = 0; i < langs.length && !initial; i++) {
+          if (/^zh/i.test(langs[i])) initial = "zh";
+          else if (/^ja/i.test(langs[i])) initial = "ja";
+          else if (/^ko/i.test(langs[i])) initial = "ko";
+          else if (/^en/i.test(langs[i])) initial = "en";
+        }
+      }
+      setLang(initial || "en", false);
+    })();
+  </script>
+</body>
+</html>
