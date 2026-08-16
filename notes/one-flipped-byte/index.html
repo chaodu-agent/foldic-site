@@ -176,7 +176,7 @@
       <p>To be precise about the boundary. On local file systems (APFS, HFS+), rename is an atomic system call — that is the basis for "never half a photo". SMB has atomic-rename semantics at the protocol level too, but that describes the server's file system. On the actual write path there are write-back caches on both the client and the server: when your Mac hears "written", the data may still be in memory on either end. If the connection dies in that window, the protocol promises nothing about what is on the disk. That is why "read it back" runs at the end of a sync instead of trusting anyone's acknowledgement — the bytes read back are the only evidence that no cache and no protocol vouched for.</p>
       <p>(Strictly, even a read-back can be served from the client's cache. Which is why Deep Compare is the final line: it can run at any time, after a reboot, even from a different Mac.)</p>
 
-      <div class="callout"><strong>When can you use this?</strong> Write-time recording, read-back verification and Deep Compare ship with the next version (0.8). The index is evidence, not authority: deleting it breaks nothing — the next Deep Compare simply has to verify against the library again.</div>
+      <div class="callout"><strong>When can you use this?</strong> Write-time recording, read-back verification and Deep Compare shipped with version 0.8, available now. The index is evidence, not authority: deleting it breaks nothing — the next Deep Compare simply has to verify against the library again.</div>
     <p class="outro">Foldic is $29.99 once, for <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac and iPhone together</a>.</p>
   </main>
 
@@ -226,7 +226,7 @@
       <p>說得精確一點。本機檔案系統(APFS、HFS+)的 rename 是原子系統呼叫,這是「絕不留下半張照片」的依據。SMB 在協定層也有原子 rename 的語意 —— 但那說的是伺服器端的檔案系統。實際的寫入路徑上,client 和 server 兩端都有 write-back 快取:你的 Mac 聽到「寫好了」的時候,資料可能還在任何一端的記憶體裡。連線在這個空窗斷掉,磁碟上留下什麼,協定不做任何承諾。這就是為什麼「讀回來對」要在同步結束時做、而不是相信任何一方的回報 —— 讀回來的位元組,是唯一不經過快取背書、不經過協定承諾的證據。</p>
       <p>(嚴格說,讀回來也可能命中 client 端的快取。所以深度比對才是最終防線:它可以在任何時間執行 —— 重開機之後,甚至換一台 Mac。)</p>
 
-      <div class="callout"><strong>這些什麼時候能用?</strong>寫入時記錄、讀回驗證和深度比對,都會隨下一個版本(0.8)推出。索引是證據,不是權威:刪掉它不會弄壞任何東西 —— 只是下一次深度比對得重新向圖庫驗證一遍。</div>
+      <div class="callout"><strong>這些什麼時候能用?</strong>寫入時記錄、讀回驗證和深度比對,都已隨 0.8 版上線。索引是證據,不是權威:刪掉它不會弄壞任何東西 —— 只是下一次深度比對得重新向圖庫驗證一遍。</div>
     <p class="outro">Foldic 一次購買 $29.99,<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac 與 iPhone 通用</a>。</p>
   </main>
 
@@ -276,7 +276,7 @@
       <p>正確を期して。ローカルファイルシステム(APFS、HFS+)の rename はアトミックなシステムコールで、これが「半分の写真は決して残らない」の根拠です。SMB もプロトコル層ではアトミックな rename の意味論を持ちます——ただしそれはサーバー側ファイルシステムの話。実際の書き込み経路には、クライアントとサーバーの両側にライトバックキャッシュがあります。あなたの Mac が「書きました」を聞いたとき、データはどちら側のメモリにも残っている可能性がある。その隙間で接続が死んだら、ディスクに何が残るか、プロトコルは何も約束しません。だから「読み戻して比べる」は、誰の応答も信じずに同期の最後に走るのです——読み戻したバイトだけが、キャッシュの保証もプロトコルの約束も経由しない唯一の証拠だから。</p>
       <p>(厳密には、読み戻しすらクライアントキャッシュに当たることがあります。だからディープ比較が最後の防衛線です:いつでも実行できる——再起動の後でも、別の Mac からでも。)</p>
 
-      <div class="callout"><strong>いつから使える?</strong>書き込み時の記録、読み戻し検証、ディープ比較は次のバージョン(0.8)で届きます。索引は証拠であって権威ではありません:削除しても何も壊れない——次のディープ比較がもう一度ライブラリと照合し直すだけです。</div>
+      <div class="callout"><strong>いつから使える?</strong>書き込み時の記録、読み戻し検証、ディープ比較は 0.8 で公開済みです。索引は証拠であって権威ではありません:削除しても何も壊れない——次のディープ比較がもう一度ライブラリと照合し直すだけです。</div>
     <p class="outro">Foldic は一度の購入で $29.99、<a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac と iPhone の両方</a>に対応します。</p>
   </main>
 
@@ -326,7 +326,7 @@
       <p>정확히 말해 두자면. 로컬 파일 시스템(APFS, HFS+)의 rename은 원자적 시스템 콜이고, 이것이 "반쪽짜리 사진은 결코 남지 않는다"의 근거입니다. SMB도 프로토콜 층에서는 원자적 rename 의미론을 갖습니다 — 다만 그것은 서버 쪽 파일 시스템 이야기입니다. 실제 쓰기 경로에는 클라이언트와 서버 양쪽에 라이트백 캐시가 있습니다. 당신의 Mac이 "썼습니다"를 들었을 때, 데이터는 어느 쪽 메모리에든 남아 있을 수 있습니다. 그 틈에서 연결이 죽으면 디스크에 무엇이 남는지 프로토콜은 아무것도 약속하지 않습니다. 그래서 "다시 읽어 비교"는 누구의 응답도 믿지 않고 동기화 끝에 실행됩니다 — 다시 읽은 바이트만이 캐시의 보증도 프로토콜의 약속도 거치지 않은 유일한 증거이기 때문입니다.</p>
       <p>(엄밀히는 다시 읽기조차 클라이언트 캐시에 맞을 수 있습니다. 그래서 심층 비교가 최후의 방어선입니다: 언제든 실행할 수 있습니다 — 재부팅 후에도, 다른 Mac에서도.)</p>
 
-      <div class="callout"><strong>언제부터 쓸 수 있나요?</strong> 쓰기 시 기록, 읽기 검증, 심층 비교는 다음 버전(0.8)과 함께 나옵니다. 색인은 증거이지 권위가 아닙니다: 지워도 아무것도 망가지지 않습니다 — 다음 심층 비교가 보관함과 다시 대조할 뿐입니다.</div>
+      <div class="callout"><strong>언제부터 쓸 수 있나요?</strong> 쓰기 시 기록, 읽기 검증, 심층 비교는 0.8과 함께 출시되었습니다. 색인은 증거이지 권위가 아닙니다: 지워도 아무것도 망가지지 않습니다 — 다음 심층 비교가 보관함과 다시 대조할 뿐입니다.</div>
     <p class="outro">Foldic은 한 번 구매로 $29.99, <a href="https://apps.apple.com/us/app/foldic/id6791302558">Mac과 iPhone 모두</a>에서 사용할 수 있습니다.</p>
   </main>
 
